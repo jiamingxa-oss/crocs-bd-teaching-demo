@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CROCS 企业碳管理经营沙盘 · 展示预览</title>
+<style>
+:root{--bg:#f4f6f3;--panel:#fff;--ink:#112b2b;--muted:#667574;--line:#d9e2dd;--green:#056b5d;--green2:#0d8875;--lime:#d8f48a;--navy:#173548;--amber:#f7d77b;--red:#c74f4f;--soft:#edf4f0;--shadow:0 12px 30px rgba(16,43,43,.08)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,"Microsoft YaHei",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink)}button,input,select,textarea{font:inherit}.app{min-height:100vh;display:grid;grid-template-columns:260px 1fr}.side{position:sticky;top:0;height:100vh;padding:24px 18px;background:linear-gradient(180deg,#102f36,#173e46);color:#fff;display:flex;flex-direction:column}.logo{font-size:20px;font-weight:900;line-height:1.2}.logo small{display:block;margin-top:7px;font-size:11px;letter-spacing:.15em;color:#b9d2cb}.side-note{margin:26px 0 18px;color:#cfe0dc;font-size:13px;line-height:1.7}.step{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:#cfe0dc;font-size:13px}.step.active{background:rgba(216,244,138,.13);color:#fff}.dot{width:8px;height:8px;border-radius:50%;background:#7fa29a}.active .dot{background:var(--lime)}.side-foot{margin-top:auto;font-size:11px;line-height:1.6;color:#a9c2bc}.main{min-width:0}.top{position:sticky;top:0;z-index:10;height:70px;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 26px}.headline{font-weight:900}.tag{display:inline-flex;align-items:center;gap:7px;margin-left:10px;padding:5px 9px;border-radius:99px;background:#eef5f1;color:var(--green);font-size:11px;font-weight:900}.tag:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green2)}.years{display:flex;gap:6px}.year{border:1px solid var(--line);background:#fff;padding:8px 10px;border-radius:9px;color:var(--muted);font-size:12px;font-weight:800}.year.active{background:var(--ink);color:#fff;border-color:var(--ink)}.wrap{max-width:1480px;margin:auto;padding:24px}.brief{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-bottom:18px}.hero{background:linear-gradient(135deg,#153b45,#0d675b);color:#fff;border-radius:18px;padding:28px;box-shadow:var(--shadow)}.eyebrow{font-size:11px;font-weight:900;letter-spacing:.14em;color:#cae2db}.hero h1{margin:9px 0 8px;font-size:34px;line-height:1.15}.hero p{margin:0;color:#d7e8e3;line-height:1.7}.hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}.hero-kpi{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:13px}.hero-kpi span{display:block;color:#bcd4ce;font-size:11px}.hero-kpi strong{display:block;font-size:23px;margin-top:4px}.briefcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}.briefcard h3{margin:0 0 12px}.bullet{display:grid;grid-template-columns:auto 1fr;gap:10px;margin:12px 0;font-size:13px;line-height:1.55}.bullet b{width:28px;height:28px;border-radius:9px;background:var(--soft);display:grid;place-items:center;color:var(--green)}.layout{display:grid;grid-template-columns:minmax(620px,1.35fr) minmax(330px,.65fr);gap:18px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.panel-head h2,.panel-head h3{margin:0}.panel-head small{color:var(--muted)}.decision-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px}.block{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff}.block.full{grid-column:1/-1}.block h4{margin:0 0 7px}.hint{font-size:12px;color:var(--muted);line-height:1.55}.choices{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.choice{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;font-size:12px;font-weight:800}.choice.selected{border-color:var(--green);background:#ecf6f2;color:var(--green)}label.row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-top:12px;font-size:12px;color:var(--muted)}input[type=range]{width:100%;accent-color:var(--green)}select,textarea{width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;padding:10px;color:var(--ink)}textarea{min-height:76px;resize:vertical}.submitbar{display:flex;align-items:center;gap:12px;padding:16px 20px;border-top:1px solid var(--line);background:#fbfcfb}.primary{border:0;border-radius:10px;background:var(--lime);color:var(--ink);font-weight:900;padding:12px 16px}.ghost{border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-weight:800;padding:11px 14px}.submitbar small{color:var(--muted);line-height:1.5}.truth{padding:16px}.truth-banner{background:#eef6f2;border-left:5px solid var(--green);padding:13px 14px;border-radius:10px;font-size:12px;line-height:1.55}.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}.metric{border:1px solid var(--line);border-radius:12px;padding:13px}.metric span{font-size:11px;color:var(--muted)}.metric strong{display:block;font-size:22px;margin-top:5px}.badge{display:inline-block;padding:3px 6px;border-radius:5px;background:#dff0e8;color:#075a4c;font-size:10px;font-weight:900;margin-top:5px}.section-title{margin:26px 0 12px;font-size:13px;font-weight:900;letter-spacing:.06em;color:#49615e}.chain{display:flex;flex-wrap:wrap;align-items:center;gap:7px}.node{padding:9px 10px;border-radius:9px;background:#fff;border:1px solid var(--line);font-size:11px;font-weight:800}.arrow{color:var(--green);font-weight:900}.warning{margin-top:13px;padding:12px;border-radius:10px;background:#fff8df;border:1px solid #f0dda0;font-size:12px;line-height:1.6}.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.mechanism{padding:18px}.mechanism h3{margin-top:0}.mech{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:11px 0;border-top:1px solid var(--line);font-size:12px;line-height:1.55}.mech:first-of-type{border-top:0}.mech b{color:var(--green)}.debrief{padding:18px}.debrief-card{border:1px solid var(--line);border-radius:12px;padding:13px;margin-top:10px}.debrief-card strong{display:block;margin-bottom:4px}.ok{color:var(--green)}.danger{color:var(--red)}.footer-note{margin:20px 0 4px;text-align:center;color:var(--muted);font-size:11px}.toast{position:fixed;right:24px;bottom:24px;max-width:380px;background:#102f36;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 20px 50px rgba(0,0,0,.2);display:none;z-index:30}.toast.show{display:block}.toast b{color:var(--lime)}@media(max-width:1050px){.app{grid-template-columns:1fr}.side{display:none}.brief,.layout,.bottom-grid{grid-template-columns:1fr}.decision-grid{grid-template-columns:1fr}.block.full{grid-column:auto}.top{padding:0 14px;overflow:auto}.years{min-width:max-content}.wrap{padding:14px}.hero-grid{grid-template-columns:1fr 1fr 1fr}}@media(max-width:620px){.headline{display:none}.hero h1{font-size:27px}.hero-grid,.metrics{grid-template-columns:1fr 1fr}.decision-grid{padding:10px}.block{padding:13px}.mech{grid-template-columns:1fr}.hero{padding:20px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="logo">CROCS<br>企业碳管理经营沙盘<small>SHOWCASE PREVIEW · v0.3</small></div>
+  <div class="side-note">企业不是做一次碳核算，而是在连续经营中不断做碳管理决策。</div>
+  <div class="step active"><span class="dot"></span>CEO Briefing</div>
+  <div class="step"><span class="dot"></span>Commitment / 确碳</div>
+  <div class="step"><span class="dot"></span>Reduction / 减碳</div>
+  <div class="step"><span class="dot"></span>Offset / 抵碳</div>
+  <div class="step"><span class="dot"></span>Communication / 披碳</div>
+  <div class="step"><span class="dot"></span>Stimulation / 激碳</div>
+  <div class="step"><span class="dot"></span>Next-cycle Feedback</div>
+  <div class="side-foot">展示页只演示教学沙盘交互与信息结构。Carbon Truth 仍由 CROCS Core 负责；本页面不构成第二套碳事实计算引擎。</div>
+</aside>
+<main class="main">
+  <header class="top">
+    <div class="headline">BD 汽车公司 · 2027 管理接管 <span class="tag">MODEL-INTEGRATED PREVIEW</span></div>
+    <div class="years" id="years"></div>
+  </header>
+  <div class="wrap">
+    <section class="brief">
+      <div class="hero">
+        <div class="eyebrow">CEO BRIEFING · YEAR <span id="heroYear">2027</span></div>
+        <h1>你接手的不是一张碳表，<br>而是一家持续经营的企业。</h1>
+        <p>本年你必须同时面对产品市场竞争、碳责任、减排投资、碳资产、融资约束与下一周期能力积累。短期利润、长期价值与低碳结果不会自动一致。</p>
+        <div class="hero-grid">
+          <div class="hero-kpi"><span>Carbon Price Index</span><strong id="carbonPrice">100</strong></div>
+          <div class="hero-kpi"><span>Visible Horizon</span><strong>6 年预览</strong></div>
+          <div class="hero-kpi"><span>Model Status</span><strong>Batch 3 PASS</strong></div>
+        </div>
+      </div>
+      <div class="briefcard">
+        <h3>本年管理压力</h3>
+        <div class="bullet"><b>1</b><div><strong>产品市场：</strong>CE 维持低价，FG 维持高端定位；价格并不是唯一竞争变量。</div></div>
+        <div class="bullet"><b>2</b><div><strong>低碳转型：</strong>产品碳、真实减排、能力投资将通过成本与需求影响经营结果。</div></div>
+        <div class="bullet"><b>3</b><div><strong>财务边界：</strong>投资必须由现金与融资能力支撑；超出债务容量可能导致经营中断。</div></div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="panel">
+        <div class="panel-head"><div><h2>本年决策工作台</h2><small>仅使用已冻结的学生决策字段，不新增策略按钮。</small></div><span class="tag">DRAFT</span></div>
+        <div class="decision-grid">
+          <div class="block">
+            <h4>1 · Commitment / 确碳立场</h4>
+            <div class="hint">先确认本周期管理姿态与优先对象，事实边界不因选择而改变。</div>
+            <div class="choices" data-single="commitment"><button class="choice selected">平衡管理</button><button class="choice">责任优先</button><button class="choice">经营优先</button></div>
+          </div>
+          <div class="block">
+            <h4>2 · 产品价格</h4>
+            <div class="hint">价格决策与 CROCS 碳战略语义分离，但会共同作用于市场结果。</div>
+            <div class="choices" data-single="price"><button class="choice">LOW</button><button class="choice selected">BASE</button><button class="choice">PREMIUM</button></div>
+          </div>
+          <div class="block">
+            <h4>3 · Reduction / 当年减排行动</h4>
+            <div class="hint">真实减排先形成事实，再影响产品碳、责任与市场后果。</div>
+            <label class="row"><span>Reduction Budget</span><b><span id="rBudget">28</span></b></label>
+            <input id="rRange" type="range" min="0" max="120" value="28" />
+            <div class="choices"><button class="choice selected">低碳电力</button><button class="choice selected">设备效率</button><button class="choice">工艺改进</button><button class="choice">低碳运输</button></div>
+          </div>
+          <div class="block">
+            <h4>4 · Capability / 长期能力投资</h4>
+            <div class="hint">能力投资存在时滞；不会因为当期投入而立即获得“低碳加分”。</div>
+            <label class="row"><span>Capability Budget</span><b><span id="cBudget">22</span></b></label>
+            <input id="cRange" type="range" min="0" max="100" value="22" />
+            <div class="chain" style="margin-top:10px"><span class="node">Investment</span><span class="arrow">→</span><span class="node">Capability</span><span class="arrow">→</span><span class="node">Future Cost / PCF</span></div>
+          </div>
+          <div class="block">
+            <h4>5 · Offset / 剩余责任处理</h4>
+            <div class="hint">Offset 处理剩余责任，不等于 Reduction，也不产生技术能力。</div>
+            <label class="row"><span>Coverage Target</span><b>90%</b></label><input type="range" min="0" max="100" value="90" />
+            <div class="choices" data-single="asset"><button class="choice selected">优先用既有资产</button><button class="choice">保留部分资产</button></div>
+          </div>
+          <div class="block">
+            <h4>6 · Communication / 披碳</h4>
+            <div class="hint">可以决定“披给谁、披多少”，但不能改变 Frozen Carbon Truth。</div>
+            <select><option>政府 / 投资者 / 消费者综合披露</option><option>政府与合规优先</option><option>投资者与长期价值优先</option><option>消费者与产品碳优先</option></select>
+          </div>
+          <div class="block full">
+            <h4>7 · Stimulation / 评价与下一周期</h4>
+            <div class="hint">评价用于识别结果与证据缺口。Missing ≠ Zero；WITHHELD ≠ FAIL；Feedback ≠ 下一轮 Commitment 决策。</div>
+            <div class="choices" data-single="eval"><button class="choice selected">长期能力</button><button class="choice">经济结果</button><button class="choice">碳结果</button><button class="choice">综合证据</button></div>
+            <textarea placeholder="Decision Journal：记录你为什么做出这些管理选择（叙事证据，不属于 Carbon Truth）。"></textarea>
+          </div>
+        </div>
+        <div class="submitbar"><button class="primary" id="freezeBtn">提交并冻结本年决策</button><button class="ghost" id="resetBtn">恢复演示选择</button><small>展示版只演示决策冻结、因果链与结果视图；真实数值解析将由已通过的 Batch 3 runtime 接管。</small></div>
+      </div>
+
+      <aside class="panel">
+        <div class="panel-head"><div><h3>Carbon Truth · 只读</h3><small>CROCS Core Authority</small></div><span class="tag">READ ONLY</span></div>
+        <div class="truth">
+          <div class="truth-banner"><strong>硬边界：</strong>本页经济与教学层不能重算、补造或覆盖 Carbon Truth。产品碳、Actual Reduction、Carbon Out、Operating Carbon Net、Offset Truth 仍由 CROCS Core 提供。</div>
+          <div class="section-title">BD 教材基线 · Cycle 1</div>
+          <div class="metrics">
+            <div class="metric"><span>Procurement Carbon In</span><strong>225 t</strong><i class="badge">FACT</i></div>
+            <div class="metric"><span>Production Carbon Add</span><strong>200 t</strong><i class="badge">FACT</i></div>
+            <div class="metric"><span>Sales Carbon Out</span><strong>327.275 t</strong><i class="badge">FACT</i></div>
+            <div class="metric"><span>Operating Carbon Net</span><strong>97.725 t</strong><i class="badge">FACT</i></div>
+            <div class="metric"><span>Actual Reduction</span><strong>19.600 t</strong><i class="badge">FACT</i></div>
+            <div class="metric"><span>Closing Carbon Balance</span><strong>≈ 5 t</strong><i class="badge">TEXTBOOK</i></div>
+          </div>
+          <div class="section-title">经营因果链</div>
+          <div class="chain"><span class="node">Reduction</span><span class="arrow">→</span><span class="node">PCF ↓</span><span class="arrow">→</span><span class="node">Demand</span></div>
+          <div class="chain" style="margin-top:7px"><span class="node">Capability</span><span class="arrow">→</span><span class="node">Future Cost</span><span class="arrow">→</span><span class="node">Cash Flow</span></div>
+          <div class="chain" style="margin-top:7px"><span class="node">Offset Demand</span><span class="arrow">→</span><span class="node">Carbon Price</span><span class="arrow">→</span><span class="node">Carbon Cost</span></div>
+          <div class="warning"><strong>财务约束已进入模型：</strong>现金不足时允许在债务容量内融资；若融资后仍存在流动性缺口，则进入 <b>DEFAULT_BANKRUPT</b>，并停止正常后继年度。</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="bottom-grid">
+      <div class="panel mechanism">
+        <h3>学生看到的 7 条机制</h3>
+        <div class="mech"><b>① 先确碳</b><span>先确认企业本周期管理什么责任，再谈减排、抵消和披露。</span></div>
+        <div class="mech"><b>② 真减排</b><span>Reduction 通过真实经营活动改变碳事实，不是“买分”。</span></div>
+        <div class="mech"><b>③ 产品竞争</b><span>产品碳通过消费者效用和市场份额形成竞争后果，而非直接奖励分。</span></div>
+        <div class="mech"><b>④ 能力时滞</b><span>长期能力投入影响未来成本与碳强度，不保证当期最好看。</span></div>
+        <div class="mech"><b>⑤ 抵碳有成本</b><span>Offset 解决剩余责任；市场需求还会反过来影响碳资源价格。</span></div>
+        <div class="mech"><b>⑥ 现金是真约束</b><span>低碳方向正确，也不能无视现金、融资成本和债务容量。</span></div>
+        <div class="mech"><b>⑦ 企业持续经营</b><span>教学年度结束不等于企业结束，长期战略价值通过未来经营结果形成。</span></div>
+      </div>
+      <div class="panel debrief">
+        <h3>Instructor Debrief · Batch 3 验证</h3>
+        <div class="debrief-card"><strong class="ok">平衡路径的长期价值优势</strong><span>在当前冻结压力测试中，参考平衡路径相对极端保守路径的长期企业价值至少高 20%。差异来自经营机制，不来自“策略得分”。</span></div>
+        <div class="debrief-card"><strong class="danger">过度激进可以失败</strong><span>极端高投入路径可在第 3 轮因现金与债务容量耗尽进入 DEFAULT_BANKRUPT，而不是因为系统主观判定“激进策略错误”。</span></div>
+        <div class="debrief-card"><strong>展示层不替代模型</strong><span>本页负责教学交互与可解释呈现；下一步把已合并的 Batch 3 runtime 接入后，年度结果将由同一套确定性模型生成并可重放。</span></div>
+      </div>
+    </section>
+    <div class="footer-note">CROCS Teaching Sandbox Showcase Preview · Public teaching/demo surface · Not Carbon Truth authority</div>
+  </div>
+</main>
+</div>
+<div class="toast" id="toast"><b>Decision Set FROZEN</b><br><span id="toastText">本年决策已冻结。展示版不在浏览器重算 Carbon Truth；后续由 Batch 3 runtime 生成年度经营后果与下一年度状态。</span></div>
+<script>
+const years=[2027,2028,2029,2030,2031,2032];const prices=[100,140,196,274.4,384.16,537.824];let current=0;const yearBox=document.getElementById('years');
+years.forEach((y,i)=>{const b=document.createElement('button');b.className='year'+(i===0?' active':'');b.textContent=y;b.onclick=()=>setYear(i);yearBox.appendChild(b)});
+function setYear(i){current=i;document.querySelectorAll('.year').forEach((b,k)=>b.classList.toggle('active',k===i));document.getElementById('heroYear').textContent=years[i];document.getElementById('carbonPrice').textContent=prices[i];}
+document.querySelectorAll('[data-single]').forEach(group=>group.querySelectorAll('.choice').forEach(btn=>btn.onclick=()=>{group.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));btn.classList.add('selected')}));
+document.querySelectorAll('.choices:not([data-single]) .choice').forEach(btn=>btn.onclick=()=>btn.classList.toggle('selected'));
+const rr=document.getElementById('rRange'),cr=document.getElementById('cRange');rr.oninput=()=>document.getElementById('rBudget').textContent=rr.value;cr.oninput=()=>document.getElementById('cBudget').textContent=cr.value;
+function toast(msg){const t=document.getElementById('toast');document.getElementById('toastText').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4200)}
+document.getElementById('freezeBtn').onclick=()=>toast(`${years[current]} 年决策集已冻结。展示版仅冻结交互状态；Carbon Truth 不在浏览器重算。`);
+document.getElementById('resetBtn').onclick=()=>{rr.value=28;cr.value=22;rr.oninput();cr.oninput();setYear(0);toast('已恢复展示预设。')};
+</script>
+</body>
+</html>
