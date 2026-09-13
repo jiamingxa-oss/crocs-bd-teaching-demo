@@ -1,0 +1,350 @@
+"use strict";
+(() => {
+  // packages/simulation-core/src/deterministic-hash.ts
+  function deterministicSha256(value) {
+    const canonical = canonicalize(value);
+    const hostProcess = globalThis.process;
+    const nodeCrypto = hostProcess?.getBuiltinModule ? hostProcess.getBuiltinModule("node:crypto") : void 0;
+    return nodeCrypto?.createHash("sha256").update(canonical).digest("hex") ?? sha256(new TextEncoder().encode(canonical));
+  }
+  var roundConstants = Object.freeze([
+    1116352408,
+    1899447441,
+    3049323471,
+    3921009573,
+    961987163,
+    1508970993,
+    2453635748,
+    2870763221,
+    3624381080,
+    310598401,
+    607225278,
+    1426881987,
+    1925078388,
+    2162078206,
+    2614888103,
+    3248222580,
+    3835390401,
+    4022224774,
+    264347078,
+    604807628,
+    770255983,
+    1249150122,
+    1555081692,
+    1996064986,
+    2554220882,
+    2821834349,
+    2952996808,
+    3210313671,
+    3336571891,
+    3584528711,
+    113926993,
+    338241895,
+    666307205,
+    773529912,
+    1294757372,
+    1396182291,
+    1695183700,
+    1986661051,
+    2177026350,
+    2456956037,
+    2730485921,
+    2820302411,
+    3259730800,
+    3345764771,
+    3516065817,
+    3600352804,
+    4094571909,
+    275423344,
+    430227734,
+    506948616,
+    659060556,
+    883997877,
+    958139571,
+    1322822218,
+    1537002063,
+    1747873779,
+    1955562222,
+    2024104815,
+    2227730452,
+    2361852424,
+    2428436474,
+    2756734187,
+    3204031479,
+    3329325298
+  ]);
+  function sha256(input) {
+    const bitLength = input.length * 8;
+    const byteLength = Math.ceil((input.length + 9) / 64) * 64;
+    const data = new Uint8Array(byteLength);
+    data.set(input);
+    data[input.length] = 128;
+    const view = new DataView(data.buffer);
+    view.setUint32(byteLength - 8, Math.floor(bitLength / 4294967296), false);
+    view.setUint32(byteLength - 4, bitLength >>> 0, false);
+    const hash = [
+      1779033703,
+      3144134277,
+      1013904242,
+      2773480762,
+      1359893119,
+      2600822924,
+      528734635,
+      1541459225
+    ];
+    const words = new Uint32Array(64);
+    for (let offset = 0; offset < byteLength; offset += 64) {
+      for (let i = 0; i < 16; i += 1)
+        words[i] = view.getUint32(offset + i * 4, false);
+      for (let i = 16; i < 64; i += 1) {
+        const a2 = words[i - 15];
+        const b2 = words[i - 2];
+        const s0 = rotate(a2, 7) ^ rotate(a2, 18) ^ a2 >>> 3;
+        const s1 = rotate(b2, 17) ^ rotate(b2, 19) ^ b2 >>> 10;
+        words[i] = words[i - 16] + s0 + words[i - 7] + s1 >>> 0;
+      }
+      let [a, b, c, d, e, f, g, h] = hash;
+      for (let i = 0; i < 64; i += 1) {
+        const sum1 = rotate(e, 6) ^ rotate(e, 11) ^ rotate(e, 25);
+        const choice = e & f ^ ~e & g;
+        const t1 = h + sum1 + choice + roundConstants[i] + words[i] >>> 0;
+        const sum0 = rotate(a, 2) ^ rotate(a, 13) ^ rotate(a, 22);
+        const majority = a & b ^ a & c ^ b & c;
+        const t2 = sum0 + majority >>> 0;
+        h = g;
+        g = f;
+        f = e;
+        e = d + t1 >>> 0;
+        d = c;
+        c = b;
+        b = a;
+        a = t1 + t2 >>> 0;
+      }
+      const next = [a, b, c, d, e, f, g, h];
+      for (let i = 0; i < 8; i += 1) hash[i] = hash[i] + next[i] >>> 0;
+    }
+    return hash.map((word) => word.toString(16).padStart(8, "0")).join("");
+  }
+  function rotate(value, count) {
+    return value >>> count | value << 32 - count;
+  }
+  function canonicalize(value) {
+    if (value === void 0) return "undefined";
+    if (value === null) return "null";
+    if (typeof value === "string" || typeof value === "boolean")
+      return JSON.stringify(value);
+    if (typeof value === "number") {
+      if (!Number.isFinite(value))
+        throw new TypeError("Deterministic values must use finite numbers.");
+      return JSON.stringify(value);
+    }
+    if (Array.isArray(value))
+      return `[${value.map((item) => canonicalize(item)).join(",")}]`;
+    if (typeof value === "object") {
+      const record = value;
+      const entries = Object.entries(record).sort(
+        ([left], [right]) => left.localeCompare(right)
+      );
+      return `{${entries.map(([key, item]) => `${JSON.stringify(key)}:${canonicalize(item)}`).join(",")}}`;
+    }
+    throw new TypeError(`Unsupported deterministic value type: ${typeof value}.`);
+  }
+
+  // packages/domain-kernel/src/domain-error.ts
+  var DomainError = class extends Error {
+    code;
+    details;
+    constructor(code, message, details = {}) {
+      super(message);
+      this.name = new.target.name;
+      this.code = code;
+      this.details = Object.freeze({ ...details });
+    }
+  };
+  var InvalidIdentifierError = class extends DomainError {
+    constructor(kind2, value) {
+      super("INVALID_IDENTIFIER", `${kind2} must be a non-blank identifier.`, {
+        kind: kind2,
+        value
+      });
+    }
+  };
+  var InvalidValidityPeriodError = class extends DomainError {
+    constructor(message) {
+      super("INVALID_VALIDITY_PERIOD", message);
+    }
+  };
+
+  // packages/domain-kernel/src/identifier.ts
+  var Identifier = class _Identifier {
+    kind;
+    value;
+    constructor(kind2, value) {
+      this.kind = kind2;
+      this.value = value;
+      Object.freeze(this);
+    }
+    static create(kind2, value) {
+      const normalized = value.trim();
+      if (normalized.length === 0) {
+        throw new InvalidIdentifierError(kind2, value);
+      }
+      return new _Identifier(kind2, normalized);
+    }
+    equals(other) {
+      return this.kind === other.kind && this.value === other.value;
+    }
+    toString() {
+      return this.value;
+    }
+  };
+  var createEnterpriseId = (value) => Identifier.create("Enterprise", value);
+  var createReportingEntityId = (value) => Identifier.create("ReportingEntity", value);
+  var createReportingEntityVersionId = (value) => Identifier.create("ReportingEntityVersion", value);
+  var createReportingEntityMembershipId = (value) => Identifier.create("ReportingEntityMembership", value);
+  var createFacilityId = (value) => Identifier.create("Facility", value);
+  var createActorId = (value) => Identifier.create("Actor", value);
+
+  // packages/domain-kernel/src/validity-period.ts
+  var ValidityPeriod = class _ValidityPeriod {
+    #validFromTime;
+    #validToTime;
+    constructor(validFromTime, validToTime) {
+      this.#validFromTime = validFromTime;
+      this.#validToTime = validToTime;
+      Object.freeze(this);
+    }
+    static create(validFrom, validTo) {
+      const validFromTime = validFrom.getTime();
+      const validToTime = validTo?.getTime();
+      if (!Number.isFinite(validFromTime)) {
+        throw new InvalidValidityPeriodError(
+          "validFrom must be a valid instant."
+        );
+      }
+      if (validToTime !== void 0 && !Number.isFinite(validToTime)) {
+        throw new InvalidValidityPeriodError("validTo must be a valid instant.");
+      }
+      if (validToTime !== void 0 && validToTime <= validFromTime) {
+        throw new InvalidValidityPeriodError(
+          "validTo must be strictly after validFrom."
+        );
+      }
+      return new _ValidityPeriod(validFromTime, validToTime);
+    }
+    get validFrom() {
+      return new Date(this.#validFromTime);
+    }
+    get validTo() {
+      return this.#validToTime === void 0 ? void 0 : new Date(this.#validToTime);
+    }
+    contains(other) {
+      const thisEnd = this.#validToTime ?? Number.POSITIVE_INFINITY;
+      const otherEnd = other.#validToTime ?? Number.POSITIVE_INFINITY;
+      return this.#validFromTime <= other.#validFromTime && thisEnd >= otherEnd;
+    }
+    containsInstant(instant) {
+      const time = instant.getTime();
+      if (!Number.isFinite(time)) {
+        return false;
+      }
+      return time >= this.#validFromTime && (this.#validToTime === void 0 || time < this.#validToTime);
+    }
+    overlaps(other) {
+      const thisEnd = this.#validToTime ?? Number.POSITIVE_INFINITY;
+      const otherEnd = other.#validToTime ?? Number.POSITIVE_INFINITY;
+      return this.#validFromTime < otherEnd && other.#validFromTime < thisEnd;
+    }
+    equals(other) {
+      return this.#validFromTime === other.#validFromTime && this.#validToTime === other.#validToTime;
+    }
+  };
+
+  // packages/simulation-core/src/simulation-error.ts
+  var simulationFoundationErrorCode = "CARBON_SIMULATION_FOUNDATION_INVALID";
+  function simulationInvalid(message, details = {}) {
+    return new DomainError(simulationFoundationErrorCode, message, details);
+  }
+  function nonBlank(value, field) {
+    const normalized = value.trim();
+    if (normalized.length === 0)
+      throw simulationInvalid(`${field} must be non-blank.`, { field });
+    return normalized;
+  }
+  function positiveSafeInteger(value, field) {
+    if (!Number.isSafeInteger(value) || value <= 0)
+      throw simulationInvalid(`${field} must be a positive safe integer.`, {
+        field,
+        value
+      });
+    return value;
+  }
+  function nonNegativeFinite(value, field) {
+    if (!Number.isFinite(value) || value < 0)
+      throw simulationInvalid(`${field} must be a non-negative finite number.`, {
+        field,
+        value
+      });
+    return value;
+  }
+  function unitInterval(value, field) {
+    if (!Number.isFinite(value) || value < 0 || value > 1)
+      throw simulationInvalid(`${field} must be between 0 and 1.`, {
+        field,
+        value
+      });
+    return value;
+  }
+
+  // packages/simulation-core/src/teaching-v080-business.ts
+  var teachingV080CapabilityKeys = [
+    "ENERGY_EFFICIENCY",
+    "EQUIPMENT_EFFICIENCY",
+    "PROCESS_REDUCTION",
+    "CARBON_MANAGEMENT",
+    "DATA",
+    "DISCLOSURE"
+  ];
+  function createBusinessStateV080(input) {
+    const cash = nonNegativeFinite(input.cash, "cash");
+    const liquidityReserve = nonNegativeFinite(
+      input.liquidityReserve,
+      "liquidityReserve"
+    );
+    const committedFutureOutflow = nonNegativeFinite(
+      input.committedFutureOutflow ?? 0,
+      "committedFutureOutflow"
+    );
+    const financingObligation = nonNegativeFinite(
+      input.financingObligation ?? 0,
+      "financingObligation"
+    );
+    const production = normalizeProduction({
+      c1Production: input.c1Production ?? 0,
+      c2Production: input.c2Production ?? 0,
+      c1Inventory: input.c1Inventory ?? 0,
+      c2Inventory: input.c2Inventory ?? 0,
+      productionCapacity: input.productionCapacity
+    });
+    return Object.freeze({
+      cash,
+      liquidityReserve,
+      roundRevenue: 0,
+      simulationOperatingProfit: 0,
+      operatingCost: 0,
+      investmentSpend: 0,
+      carbonComplianceCost: 0,
+      dataEvidenceCost: 0,
+      carbonAssetBufferCashOutflow: 0,
+      availableDiscretionaryCash: calculateAvailableDiscretionaryCash({
+        cash,
+        liquidityReserve,
+        committedFutureOutflow,
+        financingObligation
+      }),
+      ...production,
+      committedFutureOutflow,
+      financingObligation
+    });
+  }
+  function resolveBusinessRoundV080(input) {
