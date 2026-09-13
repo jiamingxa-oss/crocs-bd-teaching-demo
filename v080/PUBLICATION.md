@@ -22,4 +22,7 @@ Teacher-facing presentation remediation only: restore the BD Enterprise Console 
 ## Frozen
 No change to Carbon Core, P0/P1/P2, Package A, CF1 execution logic, Market Opportunity, Reputation, D1–D20 identities/legal values, business formulas, or carbon formulas.
 
+## Deployment
+Publication repository: `jiamingxa-oss/crocs-bd-teaching-demo` · target: GitHub Pages `v080/`.
+
 `NEXT_GATE = HUMAN_TEACHER_REVIEW_ROUND_2`
