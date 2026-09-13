@@ -15124,6 +15124,175 @@
   }
 
   // 13_Demo/BD_Manufacturing/teaching-ui/playable.js
+  var roles = {
+    CEO: ["CEO \xB7 \u603B\u7ECF\u7406", "\u4F01\u4E1A\u603B\u4F53\u65B9\u5411\u3001\u73B0\u91D1\u5B89\u5168\u4E0E\u957F\u671F\u7ADE\u4E89\u529B"],
+    CFO: ["CFO \xB7 \u8D22\u52A1\u8D1F\u8D23\u4EBA", "\u73B0\u91D1\u3001\u7ECF\u8425\u7ED3\u679C\u3001\u6295\u8D44\u652F\u51FA\u4E0E\u78B3\u6210\u672C"],
+    COO: ["COO \xB7 \u8FD0\u8425\u8D1F\u8D23\u4EBA", "\u751F\u4EA7\u3001\u8BBE\u5907\u3001\u6D41\u7A0B\u4E0E\u80FD\u529B\u80FD\u5426\u8F6C\u5316\u4E3A\u6267\u884C"],
+    CCO: ["CCO \xB7 \u78B3\u7BA1\u7406\u8D1F\u8D23\u4EBA", "Carbon Truth\u3001\u8BC1\u636E\u3001\u51CF\u6392\u4E0E\u62B5\u78B3\u8FB9\u754C"],
+    CMO: ["CMO \xB7 \u5E02\u573A\u8D1F\u8D23\u4EBA", "\u4EA7\u54C1\u78B3\u3001\u7EFF\u8272\u5E02\u573A\u673A\u4F1A\u3001\u62AB\u9732\u4E0E\u58F0\u8A89"]
+  };
+  var rounds = [
+    {
+      no: 1,
+      stage: "COMMITMENT / \u786E\u78B3",
+      short: "\u63A5\u7BA1\u4F01\u4E1A",
+      title: "\u63A5\u7BA1BD\u6C7D\u8F66\uFF1A\u5148\u51B3\u5B9A\u600E\u4E48\u7ECF\u8425\uFF0C\u518D\u627F\u62C5\u78B3\u8D23\u4EFB",
+      question: "\u8D44\u6E90\u6709\u9650\u3002\u56E2\u961F\u9996\u5148\u8981\u5F62\u6210\u4F01\u4E1A\u7ECF\u8425\u59FF\u6001\u4E0E\u78B3\u7BA1\u7406\u627F\u8BFA\u3002",
+      context: "\u672C\u8F6E\u4E0D\u662F\u7B97\u78B3\uFF0C\u800C\u662F\u660E\u786E\u4F01\u4E1A\u51C6\u5907\u5982\u4F55\u7ECF\u8425\u4E0E\u914D\u7F6E\u8D44\u6E90\u3002",
+      goal: "\u5F62\u6210\u521D\u59CB\u627F\u8BFA",
+      constraint: "\u73B0\u91D1\u4E0E\u80FD\u529B",
+      lesson: "\u51B3\u7B56\u4E0D\u7B49\u4E8E\u4E8B\u5B9E",
+      leads: ["CEO", "CFO", "CCO"]
+    },
+    {
+      no: 2,
+      stage: "COMMITMENT / \u786E\u78B3",
+      short: "\u78B3\u4E8B\u5B9E\u5371\u673A",
+      title: "\u6570\u636E\u51FA\u73B0\u51B2\u7A81\uFF1A\u4F60\u770B\u5230\u7684\u6570\u5B57\uFF0C\u80FD\u4E0D\u80FD\u76F4\u63A5\u5F53\u6210\u78B3\u4E8B\u5B9E\uFF1F",
+      question: "\u7F3A\u5931\u3001\u51B2\u7A81\u4E0E\u8BC1\u636E\u4E0D\u8DB3\u540C\u65F6\u51FA\u73B0\u3002\u56E2\u961F\u5FC5\u987B\u5148\u51B3\u5B9A\u5982\u4F55\u5904\u7406\u4E0D\u786E\u5B9A\u6027\u3002",
+      context: "\u5148\u5904\u7406\u6570\u636E\u4E0E\u8BC1\u636E\u6CBB\u7406\uFF0C\u518D\u51B3\u5B9A\u54EA\u4E9B\u7BA1\u7406\u884C\u52A8\u53EF\u4EE5\u7EE7\u7EED\u3002",
+      goal: "\u5F62\u6210\u53EF\u4FE1\u78B3\u4E8B\u5B9E\u57FA\u7840",
+      constraint: "\u7F3A\u5931\u4E0E\u8BC1\u636E\u4E0D\u8DB3",
+      lesson: "Missing \u2260 Zero",
+      leads: ["CCO", "CFO"]
+    },
+    {
+      no: 3,
+      stage: "REDUCTION / \u51CF\u78B3",
+      short: "\u51CF\u6392\u6295\u8D44",
+      title: "\u94B1\u8BE5\u82B1\u5728\u54EA\u91CC\uFF0C\u80FD\u529B\u4EC0\u4E48\u65F6\u5019\u624D\u4F1A\u53D8\u6210\u771F\u6B63\u7684\u51CF\u6392\uFF1F",
+      question: "\u73B0\u91D1\u3001\u6295\u8D44\u5F3A\u5EA6\u3001\u6280\u672F\u7EC4\u5408\u548C\u5B9E\u73B0\u5468\u671F\u53D1\u751F\u6B63\u9762\u51B2\u7A81\u3002",
+      context: "\u6295\u8D44\u4F1A\u6539\u53D8\u80FD\u529B\u548C\u672A\u6765\u6D3B\u52A8\uFF0C\u4F46\u80FD\u529B\u672C\u8EAB\u4E0D\u662F Actual Reduction\u3002",
+      goal: "\u5EFA\u7ACB\u51CF\u6392\u6267\u884C\u8DEF\u5F84",
+      constraint: "\u6295\u8D44\u4E0E\u6D41\u52A8\u6027",
+      lesson: "Capability \u2260 Reduction",
+      leads: ["COO", "CFO", "CCO"]
+    },
+    {
+      no: 4,
+      stage: "REDUCTION / \u51CF\u78B3",
+      short: "\u4F4E\u78B3\u7ADE\u4E89",
+      title: "\u4EA7\u54C1\u78B3\u5F00\u59CB\u8FDB\u5165\u5E02\u573A\uFF1A\u4F4E\u78B3\u80FD\u529B\u80FD\u4E0D\u80FD\u6362\u6765\u8BA2\u5355\uFF1F",
+      question: "\u4EA7\u54C1\u7ED3\u6784\u3001\u4EA7\u80FD\u4E0E\u7EFF\u8272\u5E02\u573A\u673A\u4F1A\u5FC5\u987B\u540C\u65F6\u8003\u8651\u3002",
+      context: "\u4EA7\u54C1\u4E0E\u751F\u4EA7\u7EC4\u5408\u4F1A\u540C\u65F6\u5F71\u54CD\u7ECF\u8425\u4F9B\u7ED9\u3001\u4EA7\u54C1\u78B3\u548C\u5E02\u573A\u673A\u4F1A\u3002",
+      goal: "\u8FDE\u63A5\u4EA7\u54C1\u78B3\u4E0E\u5E02\u573A",
+      constraint: "\u4EA7\u80FD\u4E0E\u5E02\u573A\u8D44\u683C",
+      lesson: "Opportunity \u2260 Revenue",
+      leads: ["CMO", "COO", "CCO"]
+    },
+    {
+      no: 5,
+      stage: "OFFSET / \u62B5\u78B3",
+      short: "\u62B5\u78B3\u8BF1\u60D1",
+      title: "\u5DF2\u7ECF\u51CF\u8FC7\u4EE5\u540E\uFF1A\u4E70\u62B5\u6D88\uFF0C\u8FD8\u662F\u7EE7\u7EED\u4FDD\u7559\u73B0\u91D1\u548C\u51CF\u6392\u80FD\u529B\uFF1F",
+      question: "\u62B5\u78B3\u53EF\u4EE5\u6539\u5584\u78B3\u5934\u5BF8\uFF0C\u4F46\u4E0D\u80FD\u6539\u5199 Actual Reduction\u3002",
+      context: "\u62B5\u78B3\u662F\u78B3\u5934\u5BF8\u7BA1\u7406\uFF0C\u4E0D\u662F\u628A\u672A\u5B8C\u6210\u7684\u771F\u5B9E\u51CF\u6392\u201C\u8865\u6210\u201D\u51CF\u6392\u3002",
+      goal: "\u7BA1\u7406\u5269\u4F59\u78B3\u5934\u5BF8",
+      constraint: "\u73B0\u91D1\u4E0E\u78B3\u8D44\u4EA7",
+      lesson: "Offset \u2260 Reduction",
+      leads: ["CFO", "CCO", "CEO"]
+    },
+    {
+      no: 6,
+      stage: "COMMUNICATION / \u62AB\u78B3",
+      short: "\u62AB\u9732\u4E0E\u58F0\u8A89",
+      title: "\u6709\u4E86\u4E8B\u5B9E\u4EE5\u540E\uFF1A\u8BF4\u4EC0\u4E48\u3001\u600E\u4E48\u8BF4\u3001\u4EC0\u4E48\u65F6\u5019\u8BF4\uFF1F",
+      question: "\u4F20\u64AD\u53EF\u4EE5\u521B\u9020\u8BA4\u77E5\u4E0E\u673A\u4F1A\uFF0C\u4F46\u8BC1\u636E\u8FB9\u754C\u4E0D\u80FD\u88AB\u8425\u9500\u8986\u76D6\u3002",
+      context: "\u62AB\u78B3\u7531\u5185\u5BB9\u3001\u6E20\u9053\u3001\u65F6\u70B9\u3001\u8BC1\u636E\u548C\u4F20\u64AD\u5F3A\u5EA6\u5171\u540C\u6784\u6210\u3002",
+      goal: "\u5F62\u6210\u53EF\u4FE1\u62AB\u9732\u7B56\u7565",
+      constraint: "\u8BC1\u636E\u4E0E\u4F20\u64AD\u6210\u672C",
+      lesson: "Claim needs Evidence",
+      leads: ["CMO", "CCO", "CFO"]
+    },
+    {
+      no: 7,
+      stage: "COMMUNICATION / \u62AB\u78B3",
+      short: "\u6838\u9A8C\u4E0E\u540E\u679C",
+      title: "\u62AB\u9732\u88AB\u6838\u9A8C\uFF1A\u88AB\u6807\u8BB0\u4E0D\u7B49\u4E8E\u5DF2\u7ECF\u8FDD\u89C4",
+      question: "\u56E2\u961F\u8981\u5728\u6838\u9A8C\u3001\u7EA0\u6B63\u3001\u4FE1\u8A89\u4E0E\u5E02\u573A\u540E\u679C\u4E4B\u95F4\u505A\u51FA\u6CBB\u7406\u54CD\u5E94\u3002",
+      context: "\u6838\u9A8C\u7ED3\u679C\u9700\u8981\u6CBB\u7406\u54CD\u5E94\uFF0C\u4F46 FLAGGED \u4E0D\u80FD\u88AB\u754C\u9762\u76F4\u63A5\u89E3\u91CA\u6210\u8FDD\u89C4\u3002",
+      goal: "\u5904\u7406\u6838\u9A8C\u4E0E\u7EA0\u6B63",
+      constraint: "\u53EF\u4FE1\u5EA6\u4E0E\u6574\u6539\u6210\u672C",
+      lesson: "Flag \u2260 Violation",
+      leads: ["CCO", "CMO", "CEO"]
+    },
+    {
+      no: 8,
+      stage: "STIMULATION / \u6FC0\u78B3",
+      short: "\u6FC0\u78B3\u4E0E\u4E0B\u4E00\u5468\u671F",
+      title: "\u8FD9\u4E00\u8F6E\u7ED3\u675F\u4E86\uFF1A\u4F01\u4E1A\u771F\u6B63\u5B66\u5230\u4E86\u4EC0\u4E48\uFF0C\u4E0B\u4E00\u5468\u671F\u627F\u8BFA\u4EC0\u4E48\uFF1F",
+      question: "\u7ECF\u8425\u3001\u51CF\u6392\u3001\u4EA7\u54C1\u78B3\u3001\u62B5\u78B3\u4F9D\u8D56\u3001\u62AB\u9732\u4E0E\u80FD\u529B\u5FC5\u987B\u5206\u7EF4\u5EA6\u590D\u76D8\u3002",
+      context: "Feedback \u7528\u4E8E\u5B66\u4E60\uFF1B\u4E0B\u4E00\u5468\u671F\u627F\u8BFA\u5FC5\u987B\u91CD\u65B0\u7531\u56E2\u961F\u4F5C\u51FA\u3002",
+      goal: "\u5F62\u6210\u4E0B\u4E00\u5468\u671F\u627F\u8BFA",
+      constraint: "\u957F\u671F\u80FD\u529B\u4E0E\u8D44\u6E90",
+      lesson: "Feedback \u2260 Commitment",
+      leads: ["CEO", "CFO", "COO", "CCO", "CMO"]
+    }
+  ];
+  var slotLabels = {
+    D1: "\u521D\u59CB\u6218\u7565\u627F\u8BFA",
+    D2: "\u521D\u59CB\u8D44\u6E90\u59FF\u6001",
+    D3: "\u6570\u636E\u4E0D\u786E\u5B9A\u6027\u54CD\u5E94",
+    D4: "\u6570\u636E\u4E0E\u8BC1\u636E\u6574\u6539\u4F18\u5148\u7EA7",
+    D5: "\u51CF\u6392\u6295\u8D44\u5F3A\u5EA6",
+    D6: "\u51CF\u6392\u9879\u76EE\u7EC4\u5408",
+    D7: "\u6295\u8D44\u671F\u9650",
+    D8: "\u4EA7\u54C1\u4E0E\u751F\u4EA7\u7EC4\u5408",
+    D9: "\u5E02\u573A\u76EE\u6807\u9009\u62E9",
+    D10: "\u5269\u4F59\u51CF\u6392\u627F\u8BFA",
+    D11: "\u62B5\u78B3\u5F3A\u5EA6",
+    D12: "\u78B3\u8D44\u4EA7\u7F13\u51B2",
+    D13: "\u62AB\u9732\u4EC0\u4E48",
+    D14: "\u5982\u4F55 / \u5728\u54EA\u91CC\u62AB\u9732",
+    D15: "\u4F55\u65F6\u62AB\u9732",
+    D16: "\u8BC1\u636E \xD7 \u4F20\u64AD\u5F3A\u5EA6",
+    D17: "\u6838\u9A8C / \u5BA1\u8BA1\u54CD\u5E94",
+    D18: "\u62AB\u9732\u7EA0\u6B63 / \u5371\u673A\u54CD\u5E94",
+    D19: "\u4E0B\u4E00\u5468\u671F\u6218\u7565\u4F18\u5148\u7EA7",
+    D20: "\u4E0B\u4E00\u5468\u671F\u627F\u8BFA\u96C4\u5FC3"
+  };
+  var valueLabels = {
+    STABILIZE_CARBON_TRUTH: "\u7A33\u5B9A\u78B3\u4E8B\u5B9E\u57FA\u7840",
+    PRIORITIZE_REAL_REDUCTION: "\u4F18\u5148\u771F\u5B9E\u51CF\u6392",
+    BUILD_LOW_CARBON_VALUE: "\u5EFA\u7ACB\u4F4E\u78B3\u4EF7\u503C",
+    LIQUIDITY_PROTECTED: "\u4F18\u5148\u4FDD\u969C\u6D41\u52A8\u6027",
+    DISCIPLINED_DEPLOYMENT: "\u5BA1\u614E\u914D\u7F6E\u8D44\u6E90",
+    TRANSFORMATION_CAPACITY: "\u5F3A\u5316\u8F6C\u578B\u80FD\u529B",
+    PROCEED_WITH_LIMITATION: "\u5728\u660E\u786E\u9650\u5236\u6761\u4EF6\u4E0B\u7EE7\u7EED",
+    REMEDIATE_BEFORE_ACTION: "\u5148\u6574\u6539\u518D\u884C\u52A8",
+    WITHHOLD_AFFECTED_ACTION: "\u6682\u7F13\u53D7\u5F71\u54CD\u884C\u52A8",
+    ACTIVITY_DATA: "\u6D3B\u52A8\u6570\u636E",
+    PRODUCT_TRACEABILITY: "\u4EA7\u54C1\u53EF\u8FFD\u6EAF\u6027",
+    DISCLOSURE_EVIDENCE: "\u62AB\u9732\u8BC1\u636E",
+    BASIC: "\u57FA\u7840",
+    STANDARD: "\u6807\u51C6",
+    DEEP: "\u6DF1\u5EA6",
+    LOW: "\u4F4E",
+    MODERATE: "\u4E2D\u7B49",
+    HIGH: "\u9AD8",
+    SHORT: "\u77ED\u671F",
+    MEDIUM: "\u4E2D\u671F",
+    LONG: "\u957F\u671F",
+    NONE: "\u4E0D\u4F7F\u7528\u62B5\u6D88",
+    PARTIAL: "\u90E8\u5206\u62B5\u6D88",
+    FULL_REMAINING_REQUIREMENT: "\u8986\u76D6\u5269\u4F59\u78B3\u9700\u6C42",
+    NO_BUFFER: "\u4E0D\u8BBE\u7F6E\u7F13\u51B2",
+    LIMITED_BUFFER: "\u6709\u9650\u7F13\u51B2",
+    ROBUST_BUFFER: "\u7A33\u5065\u7F13\u51B2"
+  };
+  var dimensionLabels = {
+    BUSINESS: "\u7ECF\u8425\u72B6\u6001",
+    CAPABILITY: "\u7BA1\u7406\u80FD\u529B",
+    REDUCTION: "\u771F\u5B9E\u51CF\u6392",
+    PRODUCT_CARBON: "\u4EA7\u54C1\u78B3",
+    OFFSET: "\u62B5\u78B3",
+    MARKET_OPPORTUNITY: "\u5E02\u573A\u673A\u4F1A",
+    REALIZED_REVENUE: "\u5DF2\u5B9E\u73B0\u6536\u5165",
+    COMMUNICATION: "\u62AB\u78B3\u4F20\u64AD",
+    VERIFICATION: "\u6838\u9A8C",
+    NEXT_CYCLE_COMMITMENT: "\u4E0B\u4E00\u5468\u671F\u627F\u8BFA",
+    NEXT_CYCLE_SEED: "\u4E0B\u4E00\u5468\u671F\u73AF\u5883"
+  };
   function mountPlayableTeachingUI(runtimePort, documentRoot = document) {
     const status = documentRoot.querySelector("#service-status");
     const form = documentRoot.querySelector("#decision-form");
@@ -15138,80 +15307,374 @@
       try {
         await runtimePort.schema();
         session = await runtimePort.createSession();
-        status.textContent = "TEACHING RUNTIME \xB7 AVAILABLE";
+        status.textContent = "\u6559\u5B66\u8FD0\u884C\u73AF\u5883 \xB7 \u53EF\u7528";
         render();
       } catch (error3) {
-        status.textContent = `PLAYABLE MODE UNAVAILABLE \xB7 ${error3.message}`;
+        status.textContent = `\u6559\u5B66\u8FD0\u884C\u73AF\u5883\u6682\u4E0D\u53EF\u7528 \xB7 ${error3.message}`;
       }
     }
     function render() {
       form.replaceChildren();
-      progress.textContent = session.currentRound ? `R${session.currentRound} / R8 \xB7 ${session.currentSchema[0]?.stage} \xB7 ${session.currentRole} \xB7 checkpoints ${session.checkpointCount}` : `COMPLETE \xB7 checkpoints ${session.checkpointCount} \xB7 journal ${session.journalEntryCount}`;
-      for (const schema of session.currentSchema) form.append(field(schema));
+      const roundNo = session.currentRound;
+      const data = roundNo ? rounds[roundNo - 1] : rounds[7];
+      if (roundNo) {
+        progress.textContent = `R${roundNo} / R8 \xB7 ${data.stage} \xB7 \u5DF2\u5B8C\u6210 ${session.checkpointCount} \u8F6E`;
+        for (const schema of session.currentSchema) form.append(field(schema));
+        const button = documentRoot.createElement("button");
+        button.type = "submit";
+        button.className = "primary";
+        button.textContent = `\u63D0\u4EA4\u56E2\u961F\u51B3\u7B56\u5E76\u6267\u884C R${roundNo} \u2192`;
+        form.append(button);
+      } else {
+        progress.textContent = `\u6559\u5B66\u5468\u671F\u5B8C\u6210 \xB7 8 \u4E2A\u68C0\u67E5\u70B9 \xB7 ${session.journalEntryCount} \u9879\u51B3\u7B56\u8BB0\u5F55`;
+        const done = documentRoot.createElement("div");
+        done.className = "decision-option selected";
+        done.textContent = "\u672C\u8F6E\u6559\u5B66\u5468\u671F\u5DF2\u7ECF\u5B8C\u6210\u3002\u53EF\u4EE5\u67E5\u770B\u6700\u7EC8\u7ED3\u679C\u6216\u91CD\u65B0\u5F00\u59CB\u3002";
+        form.append(done);
+      }
+      renderRoundMeta(data, roundNo);
+      renderRoundNav(roundNo);
+      renderRoles(data);
+      renderCfSlots();
+      renderSessionOutcome();
+    }
+    function renderRoundMeta(data, roundNo) {
+      setText("#round-kicker", `ROUND ${data.no} \xB7 ${data.stage}`);
+      setText("#round-title", data.title);
+      setText("#round-question", data.question);
+      setText("#round-context", data.context);
+      setText("#context-goal", data.goal);
+      setText("#context-constraint", data.constraint);
+      setText("#context-lesson", data.lesson);
+      setText("#round-counter", roundNo ? `${roundNo} / 8` : "8 / 8 \xB7 COMPLETE");
+    }
+    function renderRoundNav(roundNo) {
+      const nav = documentRoot.querySelector("#round-nav");
+      if (!nav) return;
+      nav.replaceChildren(
+        ...rounds.map((item) => {
+          const button = documentRoot.createElement("button");
+          button.type = "button";
+          button.className = `round-button ${item.no === roundNo ? "active" : ""}`;
+          button.disabled = true;
+          const state = roundNo === null || item.no < roundNo ? "\u5DF2\u5B8C\u6210" : item.no === roundNo ? "\u5F53\u524D\u8F6E\u6B21" : "\u672A\u89E3\u9501";
+          button.innerHTML = `<span class="round-number">R${item.no}</span><span class="round-copy"><b>${item.short}</b><small>${item.stage} \xB7 ${state}</small></span>`;
+          return button;
+        })
+      );
+    }
+    function renderRoles(data) {
+      const root = documentRoot.querySelector("#lead-roles");
+      if (!root) return;
+      root.replaceChildren(
+        ...data.leads.map((role) => {
+          const tag = documentRoot.createElement("span");
+          tag.className = "role-tab active";
+          tag.textContent = roles[role][0];
+          return tag;
+        })
+      );
+      setText(
+        "#role-insight",
+        data.leads.map((role) => `${roles[role][0]}\uFF1A${roles[role][1]}`).join("\uFF1B")
+      );
+    }
+    function renderCfSlots() {
       cfSlot.replaceChildren(
         ...Object.keys(session.decisions).map(
-          (slotId) => new Option(slotId, slotId)
+          (slotId) => option(`${slotId} \xB7 ${slotLabels[slotId] ?? "\u5DF2\u5B8C\u6210\u51B3\u7B56"}`, slotId)
         )
       );
-      if (session.currentRound) {
-        const button = documentRoot.createElement("button");
-        button.textContent = `\u63D0\u4EA4\u5E76\u6267\u884C R${session.currentRound}`;
-        form.append(button);
-      }
-      output.textContent = JSON.stringify(
-        session.finalResult ?? session.lastCheckpoint ?? {
-          message: "Submit governed learner decisions."
-        },
-        null,
-        2
-      );
-    }
-    async function runCf1() {
-      if (!session || !cfSlot.value) return;
-      try {
-        output.textContent = JSON.stringify(
-          await runtimePort.cf1(session.sessionId, cfSlot.value),
-          null,
-          2
-        );
-      } catch (error3) {
-        output.textContent = `CF1 UNAVAILABLE \xB7 ${error3.message}`;
-      }
     }
     function field(schema) {
-      const label = documentRoot.createElement("label");
-      label.textContent = `${schema.slotId} \xB7 ${schema.authorityReference}`;
-      let input;
+      const wrapper = documentRoot.createElement("div");
+      wrapper.className = "decision-option playable-decision-field";
+      wrapper.dataset.slot = schema.slotId;
+      wrapper.dataset.type = schema.inputType;
+      const heading = documentRoot.createElement("b");
+      heading.textContent = `${schema.slotId} \xB7 ${slotLabels[schema.slotId] ?? humanize(schema.name)}`;
+      wrapper.append(heading);
+      const hint = documentRoot.createElement("small");
+      hint.textContent = decisionHint(schema.slotId);
+      wrapper.append(hint);
       if (schema.legalValues) {
-        input = documentRoot.createElement("select");
-        input.multiple = schema.inputType === "SET_COMBINATION";
+        const select = documentRoot.createElement("select");
+        select.multiple = schema.inputType === "SET_COMBINATION";
+        select.setAttribute(
+          "aria-label",
+          `${schema.slotId} ${slotLabels[schema.slotId] ?? ""}`
+        );
+        if (select.multiple) select.size = Math.min(5, schema.legalValues.length);
         for (const value of schema.legalValues)
-          input.add(new Option(value, value));
+          select.append(option(labelValue(value), value));
+        wrapper.append(select);
+      } else if (schema.inputType === "BOUNDED_TUPLE") {
+        wrapper.append(numberField("C1 \u4EA7\u91CF", "c1Production", 20));
+        wrapper.append(numberField("C2 \u4EA7\u91CF", "c2Production", 20));
+        wrapper.append(numberField("\u603B\u4EA7\u80FD\u4E0A\u9650", "productionCapacity", 100));
       } else {
-        input = documentRoot.createElement("textarea");
-        input.placeholder = schema.inputType === "BOUNDED_TUPLE" ? '{"c1Production":20,"c2Production":20,"productionCapacity":100}' : '{"ambition":"MODERATE","target":"...","capabilityGap":"...","budgetIntent":"..."}';
+        const ambitions = String(schema.structure?.ambition ?? "").replace(/^enum:/, "").split("|").filter(Boolean);
+        const ambition = documentRoot.createElement("select");
+        ambition.dataset.field = "ambition";
+        for (const value of ambitions)
+          ambition.append(option(labelValue(value), value));
+        wrapper.append(ambition);
+        wrapper.append(textField("\u4E0B\u4E00\u5468\u671F\u76EE\u6807", "target"));
+        wrapper.append(textField("\u5173\u952E\u80FD\u529B\u7F3A\u53E3", "capabilityGap"));
+        wrapper.append(textField("\u9884\u7B97\u6295\u5165\u610F\u5411", "budgetIntent"));
       }
-      input.dataset.slot = schema.slotId;
-      input.dataset.type = schema.inputType;
-      label.append(input);
-      return label;
+      return wrapper;
     }
     async function submit(event2) {
       event2.preventDefault();
       try {
         const values2 = {};
-        for (const input of form.querySelectorAll("[data-slot]"))
-          values2[input.dataset.slot] = input.multiple ? [...input.selectedOptions].map(({ value }) => value) : input.tagName === "TEXTAREA" ? JSON.parse(input.value) : input.value;
+        for (const wrapper of form.querySelectorAll("[data-slot][data-type]")) {
+          const slot2 = wrapper.dataset.slot;
+          if (wrapper.dataset.type === "BOUNDED_TUPLE") {
+            values2[slot2] = Object.fromEntries(
+              [...wrapper.querySelectorAll("[data-field]")].map((input) => [
+                input.dataset.field,
+                Number(input.value)
+              ])
+            );
+          } else if (wrapper.dataset.type === "STRUCTURED_INPUT") {
+            values2[slot2] = Object.fromEntries(
+              [...wrapper.querySelectorAll("[data-field]")].map((input) => [
+                input.dataset.field,
+                input.value
+              ])
+            );
+          } else {
+            const select = wrapper.querySelector("select");
+            values2[slot2] = select.multiple ? [...select.selectedOptions].map(({ value }) => value) : select.value;
+          }
+        }
         await runtimePort.decisions(session.sessionId, values2);
         session = await runtimePort.execute(session.sessionId);
         render();
+        documentRoot.querySelector(".mission-card")?.scrollIntoView?.({
+          behavior: "smooth",
+          block: "start"
+        });
       } catch (error3) {
-        output.textContent = `FAIL-CLOSED \xB7 ${error3.message}`;
+        renderNotice("\u672C\u8F6E\u5C1A\u672A\u6267\u884C", friendlyError(error3));
       }
+    }
+    async function runCf1() {
+      if (!session || !cfSlot.value) return;
+      try {
+        renderCf1(await runtimePort.cf1(session.sessionId, cfSlot.value));
+      } catch (error3) {
+        renderNotice("\u6682\u65F6\u65E0\u6CD5\u6BD4\u8F83", friendlyError(error3));
+      }
+    }
+    function renderSessionOutcome() {
+      if (!session.lastCheckpoint && !session.finalResult) {
+        renderNotice(
+          "\u7B49\u5F85\u672C\u8F6E\u51B3\u7B56",
+          "\u5B8C\u6210\u5E76\u63D0\u4EA4\u672C\u8F6E\u5168\u90E8\u9009\u62E9\u540E\uFF0C\u8FD9\u91CC\u4F1A\u663E\u793A\u771F\u5B9E\u8FD0\u884C\u7ED3\u679C\u3002"
+        );
+        return;
+      }
+      const cards = [];
+      const runtime = session.runtimeState ?? {};
+      if (runtime.business !== void 0)
+        cards.push(resultCard("\u7ECF\u8425\u72B6\u6001", semanticSummary(runtime.business)));
+      if (runtime.capability !== void 0)
+        cards.push(resultCard("\u7BA1\u7406\u80FD\u529B", semanticSummary(runtime.capability)));
+      if (runtime.carbonTruth !== void 0)
+        cards.push(
+          resultCard("Carbon Truth", semanticSummary(runtime.carbonTruth))
+        );
+      if (session.finalResult)
+        cards.push(
+          resultCard("\u5468\u671F\u7EFC\u5408\u7ED3\u679C", semanticSummary(session.finalResult))
+        );
+      if (cards.length === 0)
+        cards.push(
+          resultCard(
+            "\u672C\u8F6E\u5DF2\u5B8C\u6210",
+            `\u771F\u5B9E\u8FD0\u884C\u68C0\u67E5\u70B9 ${session.checkpointCount} \u5DF2\u751F\u6210\u3002`
+          )
+        );
+      output.replaceChildren(...cards);
+    }
+    function renderCf1(result) {
+      if (result.status !== "AVAILABLE") {
+        renderNotice(
+          "\u672C\u51B3\u7B56\u6682\u4E0D\u80FD\u505A\u53CD\u4E8B\u5B9E\u6BD4\u8F83",
+          "\u5F53\u524D\u6CA1\u6709\u53D7\u6CBB\u7406\u7684\u6709\u9650\u5907\u9009\u96C6\u5408\u3002"
+        );
+        return;
+      }
+      const cards = [
+        resultCard(
+          `\u5B9E\u9645\u9009\u62E9 \xB7 ${slotLabels[result.slotId] ?? result.slotId}`,
+          displayValue(result.actualSelection)
+        )
+      ];
+      for (const candidate of result.results) {
+        const dimensions = candidate.changedDimensions?.length ? candidate.changedDimensions.map((item) => dimensionLabels[item] ?? humanize(item)).join("\u3001") : "\u6CA1\u6709\u4EA7\u751F\u5B9E\u8D28\u6027\u7ED3\u679C\u5DEE\u5F02";
+        cards.push(
+          resultCard(
+            `\u5982\u679C\u6539\u4E3A\uFF1A${displayValue(candidate.alternativeSelection)}`,
+            candidate.materialDifference ? `\u4F1A\u6539\u53D8\uFF1A${dimensions}` : dimensions
+          )
+        );
+      }
+      output.replaceChildren(...cards);
+    }
+    function renderNotice(title, message) {
+      output.replaceChildren(resultCard(title, message));
+    }
+    function resultCard(title, message) {
+      const article = documentRoot.createElement("article");
+      const small = documentRoot.createElement("small");
+      small.textContent = "TEACHING VIEW";
+      const strong = documentRoot.createElement("b");
+      strong.textContent = title;
+      const span = documentRoot.createElement("span");
+      span.textContent = message;
+      article.append(small, strong, span);
+      return article;
+    }
+    function numberField(label, fieldName, initialValue) {
+      const container = documentRoot.createElement("label");
+      container.textContent = label;
+      const input = documentRoot.createElement("input");
+      input.type = "number";
+      input.min = "0";
+      input.step = "1";
+      input.value = String(initialValue);
+      input.dataset.field = fieldName;
+      container.append(input);
+      return container;
+    }
+    function textField(label, fieldName) {
+      const container = documentRoot.createElement("label");
+      container.textContent = label;
+      const input = documentRoot.createElement("input");
+      input.type = "text";
+      input.required = true;
+      input.dataset.field = fieldName;
+      container.append(input);
+      return container;
+    }
+    function option(label, value) {
+      const item = documentRoot.createElement("option");
+      item.textContent = label;
+      item.value = value;
+      return item;
+    }
+    function setText(selector, value) {
+      const target = documentRoot.querySelector(selector);
+      if (target) target.textContent = value;
     }
     return Object.freeze({ start });
   }
+  function labelValue(value) {
+    return String(value).split("+").map((part) => valueLabels[part] ?? humanize(part)).join(" + ");
+  }
+  function humanize(value) {
+    return String(value ?? "").replaceAll("_", " ").toLowerCase().replace(/(^|\s)\S/g, (letter) => letter.toUpperCase());
+  }
+  function decisionHint(slotId) {
+    const hints = {
+      D1: "\u4F60\u5E0C\u671B\u4F01\u4E1A\u9996\u5148\u5B88\u4F4F\u4EC0\u4E48\uFF1F",
+      D2: "\u8D44\u6E90\u914D\u7F6E\u5E94\u66F4\u504F\u5411\u73B0\u91D1\u5B89\u5168\u3001\u5BA1\u614E\u6295\u5165\u8FD8\u662F\u8F6C\u578B\u80FD\u529B\uFF1F",
+      D3: "\u9762\u5BF9\u6570\u636E\u4E0D\u786E\u5B9A\u6027\uFF0C\u884C\u52A8\u5E94\u8BE5\u7EE7\u7EED\u3001\u6574\u6539\u8FD8\u662F\u6682\u7F13\uFF1F",
+      D4: "\u628A\u6709\u9650\u6574\u6539\u8D44\u6E90\u4F18\u5148\u6295\u5165\u54EA\u4E2A\u8BC1\u636E\u9886\u57DF\u3001\u505A\u5230\u591A\u6DF1\uFF1F",
+      D5: "\u4F60\u613F\u610F\u627F\u62C5\u591A\u5927\u5F3A\u5EA6\u7684\u51CF\u6392\u6295\u8D44\uFF1F",
+      D6: "\u9009\u62E9\u51C6\u5907\u771F\u6B63\u6267\u884C\u7684\u51CF\u6392\u9879\u76EE\u7EC4\u5408\u3002\u53EF\u591A\u9009\u3002",
+      D7: "\u4F60\u63A5\u53D7\u591A\u957F\u7684\u6295\u8D44\u5B9E\u73B0\u5468\u671F\uFF1F",
+      D8: "\u5728\u603B\u4EA7\u80FD\u7EA6\u675F\u4E0B\u51B3\u5B9A C1 \u4E0E C2 \u7684\u751F\u4EA7\u7EC4\u5408\u3002",
+      D9: "\u4F01\u4E1A\u51C6\u5907\u4F18\u5148\u4E89\u53D6\u54EA\u7C7B\u5E02\u573A\uFF1F",
+      D10: "\u9762\u5BF9\u5269\u4F59\u51CF\u6392\u4EFB\u52A1\uFF0C\u56E2\u961F\u51C6\u5907\u5982\u4F55\u7EE7\u7EED\uFF1F",
+      D11: "\u5BF9\u5269\u4F59\u78B3\u5934\u5BF8\u4F7F\u7528\u591A\u5927\u7A0B\u5EA6\u7684\u62B5\u6D88\uFF1F",
+      D12: "\u662F\u5426\u4E3A\u672A\u6765\u4E0D\u786E\u5B9A\u6027\u4FDD\u7559\u78B3\u8D44\u4EA7\u7F13\u51B2\uFF1F",
+      D13: "\u9009\u62E9\u51C6\u5907\u6B63\u5F0F\u5BF9\u5916\u62AB\u9732\u7684\u5185\u5BB9\u3002\u53EF\u591A\u9009\u3002",
+      D14: "\u9009\u62E9\u62AB\u9732\u6E20\u9053\u4E0E\u89E6\u8FBE\u65B9\u5F0F\u3002",
+      D15: "\u51B3\u5B9A\u62AB\u9732\u65F6\u70B9\u3002",
+      D16: "\u8BC1\u636E\u5F3A\u5EA6\u4E0E\u4F20\u64AD\u5F3A\u5EA6\u5FC5\u987B\u4E00\u8D77\u8003\u8651\u3002",
+      D17: "\u9762\u5BF9\u6838\u9A8C\u7ED3\u679C\uFF0C\u9009\u62E9\u6CBB\u7406\u54CD\u5E94\u3002",
+      D18: "\u5982\u9700\u7EA0\u6B63\u62AB\u9732\u6216\u5904\u7406\u5371\u673A\uFF0C\u56E2\u961F\u600E\u4E48\u505A\uFF1F",
+      D19: "\u4E0B\u4E00\u5468\u671F\u6700\u4F18\u5148\u89E3\u51B3\u4EC0\u4E48\uFF1F",
+      D20: "\u7531\u56E2\u961F\u4EB2\u81EA\u5199\u51FA\u4E0B\u4E00\u5468\u671F\u627F\u8BFA\uFF0C\u800C\u4E0D\u662F\u8BA9\u7CFB\u7EDF\u66FF\u4F60\u751F\u6210\u3002"
+    };
+    return hints[slotId] ?? "\u8BF7\u9009\u62E9\u4E00\u4E2A\u53D7\u6CBB\u7406\u7684\u7BA1\u7406\u65B9\u6848\u3002";
+  }
+  function displayValue(value) {
+    if (Array.isArray(value)) return value.map(labelValue).join("\u3001");
+    if (value && typeof value === "object")
+      return Object.entries(value).filter(([key]) => !isTechnicalKey(key)).map(([key, nested]) => `${friendlyKey(key)}\uFF1A${displayValue(nested)}`).join("\uFF1B");
+    return labelValue(value);
+  }
+  function semanticSummary(value) {
+    const leaves = [];
+    collectSemanticLeaves(value, leaves);
+    if (leaves.length === 0) return "\u672C\u8F6E\u5DF2\u7531\u771F\u5B9E\u8FD0\u884C\u65F6\u5B8C\u6210\uFF0C\u7ED3\u679C\u8BC1\u636E\u5DF2\u4FDD\u7559\u3002";
+    return leaves.slice(0, 6).map(([key, nested]) => `${friendlyKey(key)}\uFF1A${displayValue(nested)}`).join("\uFF1B");
+  }
+  function collectSemanticLeaves(value, leaves, prefix = "") {
+    if (leaves.length >= 8 || value === null || value === void 0) return;
+    if (Array.isArray(value)) {
+      if (value.every(
+        (item) => ["string", "number", "boolean"].includes(typeof item)
+      ))
+        leaves.push([prefix || "\u7ED3\u679C", value]);
+      return;
+    }
+    if (typeof value !== "object") {
+      leaves.push([prefix || "\u7ED3\u679C", value]);
+      return;
+    }
+    for (const [key, nested] of Object.entries(value)) {
+      if (isTechnicalKey(key)) continue;
+      const next = prefix ? `${prefix}.${key}` : key;
+      if (nested === null || ["string", "number", "boolean"].includes(typeof nested))
+        leaves.push([next, nested]);
+      else collectSemanticLeaves(nested, leaves, next);
+      if (leaves.length >= 8) break;
+    }
+  }
+  function isTechnicalKey(key) {
+    const normalized = String(key).toLowerCase();
+    return normalized === "id" || normalized.endsWith("id") || normalized.includes("reference") || normalized.includes("provenance") || normalized.includes("lineage") || normalized.includes("authority") || normalized.includes("hash") || normalized.endsWith("at");
+  }
+  function friendlyKey(key) {
+    const last = String(key).split(".").at(-1);
+    const labels = {
+      cash: "\u73B0\u91D1",
+      liquidityReserve: "\u6D41\u52A8\u6027\u50A8\u5907",
+      productionCapacity: "\u751F\u4EA7\u80FD\u529B",
+      actualReduction: "\u771F\u5B9E\u51CF\u6392",
+      operatingCarbonNetChange: "\u7ECF\u8425\u78B3\u51C0\u53D8\u5316",
+      carbonPosition: "\u78B3\u5934\u5BF8",
+      capability: "\u80FD\u529B",
+      status: "\u72B6\u6001",
+      score: "\u8BC4\u5206",
+      revenue: "\u6536\u5165",
+      realizedRevenue: "\u5DF2\u5B9E\u73B0\u6536\u5165",
+      marketOpportunity: "\u5E02\u573A\u673A\u4F1A",
+      strategicPriority: "\u6218\u7565\u4F18\u5148\u7EA7",
+      ambition: "\u627F\u8BFA\u96C4\u5FC3",
+      target: "\u76EE\u6807",
+      capabilityGap: "\u80FD\u529B\u7F3A\u53E3",
+      budgetIntent: "\u9884\u7B97\u610F\u5411"
+    };
+    return labels[last] ?? humanize(last);
+  }
+  function friendlyError(error3) {
+    const message = String(error3?.message ?? error3 ?? "Unknown error");
+    if (message.includes("requires unique frozen BD project IDs"))
+      return "\u51CF\u6392\u9879\u76EE\u7EC4\u5408\u81F3\u5C11\u9700\u8981\u9009\u62E9\u4E00\u4E2A\u9879\u76EE\uFF0C\u5E76\u4E14\u4E0D\u80FD\u91CD\u590D\u3002";
+    if (message.includes("nonblank")) return "\u8BF7\u628A\u672C\u8F6E\u9700\u8981\u586B\u5199\u7684\u5185\u5BB9\u8865\u5145\u5B8C\u6574\u3002";
+    if (message.includes("Unknown frozen"))
+      return "\u5B58\u5728\u4E0D\u7B26\u5408\u672C\u8F6E\u6CBB\u7406\u89C4\u5219\u7684\u9009\u62E9\uFF0C\u8BF7\u91CD\u65B0\u9009\u62E9\u3002";
+    return message.replaceAll("FAIL-CLOSED", "\u7CFB\u7EDF\u5DF2\u963B\u6B62\u65E0\u6548\u63D0\u4EA4");
+  }
 
   // 13_Demo/BD_Manufacturing/teaching-ui/playable-browser-entry.js
-  mountPlayableTeachingUI(new BrowserTeachingRuntimeV080());
+  void mountPlayableTeachingUI(new BrowserTeachingRuntimeV080()).start();
 })();

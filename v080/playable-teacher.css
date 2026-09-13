@@ -1,0 +1,108 @@
+.round-button:disabled {
+  cursor: default;
+  opacity: 0.68;
+}
+.round-button.active:disabled {
+  opacity: 1;
+}
+.round-rail > .primary {
+  width: 100%;
+  margin-top: 14px;
+}
+.playable-decision-field {
+  display: grid;
+  gap: 8px;
+  min-height: 0;
+}
+.playable-decision-field:hover {
+  transform: none;
+}
+.playable-decision-field select,
+.playable-decision-field input,
+.role-position select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line-dark);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 9px 10px;
+  font: inherit;
+  font-size: 12px;
+}
+.playable-decision-field select:focus-visible,
+.playable-decision-field input:focus-visible,
+.role-position select:focus-visible {
+  outline: 3px solid rgba(0, 107, 88, 0.18);
+  border-color: var(--green);
+}
+.playable-decision-field select[multiple] {
+  min-height: 112px;
+  padding: 4px;
+}
+.playable-decision-field select[multiple] option {
+  padding: 8px;
+  border-radius: 5px;
+}
+.playable-decision-field > label {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 10px;
+}
+#decision-form > .primary {
+  grid-column: 1 / -1;
+  justify-self: end;
+  min-width: 210px;
+  margin-top: 5px;
+}
+#outcome.result-flow {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+#outcome.result-flow article {
+  background: #f5f8f5;
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+#outcome.result-flow small {
+  color: var(--green);
+}
+#outcome.result-flow span {
+  color: var(--muted);
+  line-height: 1.55;
+}
+.market .primary {
+  margin-top: 12px;
+}
+.provenance-card p {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+@media (max-width: 840px) {
+  .round-rail > .primary {
+    margin-top: 10px;
+  }
+  .decision-options {
+    grid-template-columns: 1fr;
+  }
+  #decision-form > .primary {
+    width: 100%;
+    justify-self: stretch;
+    min-height: 48px;
+  }
+  #outcome.result-flow {
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+  #outcome.result-flow article {
+    min-width: 0;
+  }
+  .playable-decision-field select,
+  .playable-decision-field input,
+  .role-position select {
+    min-height: 46px;
+    font-size: 16px;
+  }
+}

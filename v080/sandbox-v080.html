@@ -3,59 +3,243 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CROCS v0.8 · Browser Playable Mode</title>
+    <meta
+      name="description"
+      content="CROCS Teaching Simulation v0.8 · BD 汽车企业真实运行教学沙盘"
+    />
+    <title>CROCS v0.8 · BD Enterprise Console</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="playable-teacher.css" />
     <script type="module" src="crocs-teaching-v080.browser.js"></script>
   </head>
   <body>
+    <a class="skip-link" href="#console">跳到企业驾驶舱</a>
+
     <header class="topbar">
-      <div class="brand">
-        <span class="brand-mark">C</span
-        ><span
-          ><strong>CROCS</strong><small>BROWSER PLAYABLE TEACHING</small></span
-        >
+      <div class="brand" aria-label="CROCS 企业智能碳管理系统">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <span><strong>CROCS</strong><small>企业智能碳管理教学沙盘</small></span>
       </div>
-      <div id="service-status">BROWSER RUNTIME · CONNECTING</div>
+      <div class="top-context">
+        <span>BD AUTOMOTIVE</span>
+        <b>Teaching Simulation v0.8</b>
+      </div>
+      <div id="service-status" class="preview-state">
+        <span class="live-dot" aria-hidden="true"></span>
+        教学运行环境正在启动
+      </div>
     </header>
-    <main class="shell">
-      <aside class="round-rail">
-        <h2>Playable Mode</h2>
-        <p>
-          Browser Runtime A-TEMP executes the genuine shared authority locally.
-        </p>
-        <a href="index.html">Static Story Mode</a
-        ><button id="new-session">New in-memory session</button>
+
+    <main id="console" class="shell" tabindex="-1">
+      <aside class="round-rail" aria-label="八轮教学流程">
+        <div class="rail-heading">
+          <small>CROCS CYCLE</small>
+          <h2>8轮经营决策</h2>
+          <p>同一企业 · 连续状态 · 决策有后果</p>
+        </div>
+        <nav id="round-nav" class="round-nav"></nav>
+        <div class="rail-guard">
+          <b>Carbon Truth Guard</b>
+          <span>决策 ≠ 执行事实 ≠ 碳事实 ≠ 经营结果</span>
+        </div>
+        <button id="new-session" class="primary" type="button">
+          重新开始教学周期
+        </button>
       </aside>
+
       <section class="workspace">
         <header class="mission-card panel-accent">
           <div>
-            <div class="kicker">
-              DECISION ≠ EXECUTED FACT ≠ CARBON TRUTH ≠ ECONOMIC OUTCOME ≠
-              TEACHING FEEDBACK
+            <div class="kicker" id="round-kicker">
+              ROUND 1 · COMMITMENT / 确碳
             </div>
-            <h1>CROCS Teaching Simulation v0.8</h1>
-            <p id="progress">Start a session to play R1 → R8.</p>
+            <h1 id="round-title">接管BD汽车：先决定怎么经营，再承担碳责任</h1>
+            <p id="round-question">
+              资源有限。团队首先要形成企业经营姿态与碳管理承诺。
+            </p>
+          </div>
+          <div class="mission-meta">
+            <span class="tag decision">TEAM DECISION</span>
+            <span id="progress">正在建立教学会话…</span>
           </div>
         </header>
+
+        <section class="state-strip" aria-label="当前企业状态">
+          <article>
+            <small>Cash / 现金</small>
+            <strong id="cash-state">教学期初状态</strong>
+            <span class="tag sim">SIM STATE</span>
+          </article>
+          <article>
+            <small>Carbon Truth</small>
+            <strong id="carbon-state">BD基线已载入</strong>
+            <span class="tag fact">CORE FACT</span>
+          </article>
+          <article>
+            <small>Market / 市场</small>
+            <strong id="market-state">基础市场环境</strong>
+            <span class="tag param">SIM PARAM</span>
+          </article>
+          <article>
+            <small>Round / 当前轮次</small>
+            <strong id="round-counter">1 / 8</strong>
+            <span class="tag outcome">RUNTIME</span>
+          </article>
+        </section>
+
         <div class="console-grid">
-          <section class="panel roles">
-            <h2>Current governed D-slots</h2>
-            <form id="decision-form"></form>
+          <section class="panel finance" aria-labelledby="finance-title">
+            <header class="panel-title">
+              <div>
+                <small>01</small>
+                <h2 id="finance-title">Management Context / 经营情境</h2>
+              </div>
+              <span id="round-role">团队共同决策</span>
+            </header>
+            <p id="round-context" class="decision-prompt">
+              本轮不是算碳，而是明确企业准备如何经营与配置资源。
+            </p>
+            <div class="metric-row">
+              <div>
+                <small>经营目标</small><b id="context-goal">形成初始承诺</b>
+              </div>
+              <div>
+                <small>关键约束</small><b id="context-constraint">现金与能力</b>
+              </div>
+              <div>
+                <small>教学重点</small><b id="context-lesson">决策不等于事实</b>
+              </div>
+            </div>
           </section>
-          <section class="panel carbon">
-            <h2>Genuine consequence projection</h2>
-            <label
-              >Same-slot CF1
-              <select id="cf-slot"></select
-            ></label>
-            <button id="run-cf1" type="button">
-              Replay governed alternatives
+
+          <section class="panel resources" aria-labelledby="resource-title">
+            <header class="panel-title">
+              <div>
+                <small>02</small>
+                <h2 id="resource-title">Team Roles / 团队视角</h2>
+              </div>
+              <span>Lead Roles</span>
+            </header>
+            <div id="lead-roles" class="role-tabs"></div>
+            <p id="role-insight" class="caption">
+              不同角色关注不同约束，但最终提交的是团队共同决策。
+            </p>
+          </section>
+
+          <section
+            class="panel decision-panel panel-accent"
+            aria-labelledby="decision-title"
+          >
+            <header class="panel-title">
+              <div>
+                <small>03</small>
+                <h2 id="decision-title">Team Decision / 本轮决策</h2>
+              </div>
+              <span class="tag decision">PLAYER DECISION</span>
+            </header>
+            <p id="decision-prompt" class="decision-prompt">
+              请完成本轮全部决策后提交。系统只接受治理规则允许的选择。
+            </p>
+            <form id="decision-form" class="decision-options"></form>
+          </section>
+
+          <section class="panel carbon" aria-labelledby="result-title">
+            <header class="panel-title">
+              <div>
+                <small>04</small>
+                <h2 id="result-title">Round Result / 本轮结果</h2>
+              </div>
+              <span class="tag outcome">GENUINE RUNTIME</span>
+            </header>
+            <div id="outcome" class="result-flow" aria-live="polite">
+              <article>
+                <small>STATUS</small><b>等待本轮决策</b
+                ><span>执行后显示真实运行结果</span>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel market" aria-labelledby="cf-title">
+            <header class="panel-title">
+              <div>
+                <small>05</small>
+                <h2 id="cf-title">What-if / 同位反事实</h2>
+              </div>
+              <span>CF1</span>
+            </header>
+            <p class="decision-prompt">
+              在不改写真实会话的前提下，比较“如果同一个决策位换一种选择，会发生什么”。
+            </p>
+            <label class="role-position">
+              <span>选择已完成的决策</span>
+              <select id="cf-slot"></select>
+            </label>
+            <button id="run-cf1" class="primary" type="button">
+              比较其他可行选择
             </button>
-            <pre id="outcome">
-No fabricated fallback. Genuine browser runtime is loading.</pre>
+          </section>
+
+          <section class="panel roles" aria-labelledby="evidence-title">
+            <header class="panel-title">
+              <div>
+                <small>06</small>
+                <h2 id="evidence-title">Learning Evidence / 学习证据</h2>
+              </div>
+              <span>可追溯</span>
+            </header>
+            <div class="provenance-list">
+              <span class="tag fact">CORE FACT</span>
+              <span class="tag param">SIM PARAM</span>
+              <span class="tag event">SIM EVENT</span>
+              <span class="tag decision">PLAYER DECISION</span>
+              <span class="tag outcome">SIM OUTCOME</span>
+              <span class="tag feedback">TEACHING FEEDBACK</span>
+            </div>
+            <p class="formula">
+              每个结果都来自受治理的运行链；界面不自行推断 Carbon Truth。
+            </p>
           </section>
         </div>
+
+        <section class="teaching-layer" aria-label="教学反馈与概念提醒">
+          <div class="feedback-card">
+            <header>
+              <small>TEACHING FEEDBACK</small>
+              <h2>管理结果与概念错误分开看</h2>
+            </header>
+            <div class="feedback-types">
+              <span><b>Knowledge Error</b><small>概念理解错误</small></span>
+              <span><b>Management Failure</b><small>经营选择后果</small></span>
+              <span
+                ><b>Governance Violation</b
+                ><small>治理规则被确认违反</small></span
+              >
+            </div>
+            <p>
+              FLAG ≠ VIOLATION · Offset ≠ Reduction · Capability ≠ Actual
+              Reduction
+            </p>
+          </div>
+          <div class="provenance-card">
+            <header>
+              <small>TEACHING PRINCIPLE</small>
+              <h2>先看经营逻辑，再看碳管理后果</h2>
+            </header>
+            <p>
+              学生看到的是管理问题、选择和后果；代码路径、内部枚举和 authority
+              reference 只保留在系统内部。
+            </p>
+          </div>
+        </section>
       </section>
     </main>
+
+    <footer class="footer">
+      <strong>Teaching UI ≠ Carbon Truth authority</strong>
+      <span
+        >本界面只负责教学呈现与输入；真实结果由同一受治理 CROCS runtime
+        执行。</span
+      >
+    </footer>
   </body>
 </html>
