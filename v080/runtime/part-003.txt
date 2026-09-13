@@ -1,0 +1,350 @@
+          }
+        );
+      validateParameterValue(input.value, parameterId);
+      assertParameterClass(input.parameterClass);
+      const calibrationEligible = input.parameterClass === "P2_SIMULATION_PARAMETER";
+      const calibrationVersion = optionalNonBlank(
+        input.calibrationVersion,
+        "calibrationVersion"
+      );
+      if (calibrationEligible && calibrationVersion === void 0)
+        throw simulationInvalid(
+          "P2 simulation parameters require a calibrationVersion.",
+          { parameterId }
+        );
+      if (!calibrationEligible && calibrationVersion !== void 0)
+        throw simulationInvalid(
+          "Only P2 simulation parameters may carry a calibrationVersion.",
+          { parameterId, parameterClass: input.parameterClass }
+        );
+      const normalized = Object.freeze({
+        parameterId,
+        name: nonBlank(input.name, "name"),
+        value: input.value,
+        unit: optionalNonBlank(input.unit, "unit"),
+        parameterClass: input.parameterClass,
+        source: nonBlank(input.source, "source"),
+        scenarioVersion: nonBlank(input.scenarioVersion, "scenarioVersion"),
+        calibrationVersion,
+        notes: optionalNonBlank(input.notes, "notes"),
+        calibrationEligible
+      });
+      const entry = Object.freeze({
+        ...normalized,
+        reference: `parameter:${deterministicSha256(normalized)}`
+      });
+      const next = new Map(this.entriesById);
+      next.set(parameterId, entry);
+      return new _ParameterRegistryV080(next);
+    }
+    get(parameterId) {
+      return this.entriesById.get(nonBlank(parameterId, "parameterId"));
+    }
+    require(parameterId) {
+      const normalized = nonBlank(parameterId, "parameterId");
+      const entry = this.entriesById.get(normalized);
+      if (entry === void 0)
+        throw simulationInvalid(
+          "ParameterRegistryV080 parameter was not found.",
+          {
+            parameterId: normalized
+          }
+        );
+      return entry;
+    }
+    list() {
+      return Object.freeze(
+        [...this.entriesById.values()].sort(
+          (left, right) => left.parameterId.localeCompare(right.parameterId)
+        )
+      );
+    }
+    isCalibrationEligible(parameterId) {
+      return this.require(parameterId).calibrationEligible;
+    }
+  };
+  function assertParameterClass(value) {
+    if (!teachingV080ParameterClasses.includes(value))
+      throw simulationInvalid("Unknown v0.8 parameter class.", { value });
+  }
+  function validateParameterValue(value, parameterId) {
+    if (typeof value === "number" && !Number.isFinite(value))
+      throw simulationInvalid("Parameter value must be finite.", {
+        parameterId,
+        value
+      });
+  }
+  function optionalNonBlank(value, field) {
+    return value === void 0 ? void 0 : nonBlank(value, field);
+  }
+
+  // packages/simulation-core/src/teaching-v080-round-contract.ts
+  var teachingV080DecisionSlotContracts = Object.freeze([
+    slot("D1", 1, "COMMITMENT", "Initial Strategic Commitment"),
+    slot("D2", 1, "COMMITMENT", "Initial Resource Posture"),
+    slot("D3", 2, "COMMITMENT", "Data Uncertainty Response"),
+    slot("D4", 2, "COMMITMENT", "Data / Evidence Remediation Priority"),
+    slot("D5", 3, "REDUCTION", "Reduction Investment Intensity"),
+    slot("D6", 3, "REDUCTION", "Reduction Portfolio"),
+    slot("D7", 3, "REDUCTION", "Investment Horizon"),
+    slot("D8", 4, "REDUCTION", "Product / Production Mix"),
+    slot("D9", 4, "REDUCTION", "Market Targeting"),
+    slot("D10", 4, "REDUCTION", "Remaining Reduction Commitment"),
+    slot("D11", 5, "OFFSET", "Offset Intensity"),
+    slot("D12", 5, "OFFSET", "Carbon Asset Buffer"),
+    slot("D13", 6, "COMMUNICATION", "WHAT Disclosure"),
+    slot("D14", 6, "COMMUNICATION", "HOW / WHERE"),
+    slot("D15", 6, "COMMUNICATION", "WHEN"),
+    slot("D16", 6, "COMMUNICATION", "Evidence \xD7 Communication Intensity"),
+    slot("D17", 7, "COMMUNICATION", "Verification / Audit Response"),
+    slot("D18", 7, "COMMUNICATION", "Disclosure Correction / Crisis"),
+    slot("D19", 8, "STIMULATION", "Next-cycle Strategic Priority"),
+    slot("D20", 8, "STIMULATION", "Next-cycle Commitment Ambition")
+  ]);
+  function teachingV080DecisionSlotsForRound(round) {
+    if (!Number.isSafeInteger(round) || round < 1 || round > 8)
+      throw simulationInvalid(
+        "v0.8 decision-slot round must be an integer 1-8.",
+        {
+          round
+        }
+      );
+    return Object.freeze(
+      teachingV080DecisionSlotContracts.filter((item) => item.round === round)
+    );
+  }
+  function requireTeachingV080DecisionSlot(slotId) {
+    const contract = teachingV080DecisionSlotContracts.find(
+      (item) => item.slotId === slotId
+    );
+    if (contract === void 0)
+      throw simulationInvalid("Unknown frozen v0.8 decision slot.", { slotId });
+    return contract;
+  }
+  function slot(slotId, round, stage, name) {
+    return Object.freeze({ slotId, round, stage, name });
+  }
+
+  // packages/simulation-core/src/teaching-v080-execution-policy.ts
+  var teachingV080DecisionExecutionPolicyVersion = "CROCS_TEACHING_SIM_V080_DECISION_EXECUTION_POLICY_V1";
+  var teachingV080RemainingReductionResponses = [
+    "HOLD_CURRENT_PLAN",
+    "CONTINUE_APPROVED_PLAN",
+    "ACCELERATE_APPROVED_PLAN"
+  ];
+  var teachingV080VerificationResponses = [
+    "SUBMIT_EXISTING_EVIDENCE",
+    "OBTAIN_ADDITIONAL_VERIFICATION",
+    "ACKNOWLEDGE_AND_CORRECT"
+  ];
+  var teachingV080DisclosureCorrectionResponses = [
+    "CORRECT_CLAIM",
+    "WITHDRAW_CLAIM",
+    "MAINTAIN_WITH_SUPPORTING_EVIDENCE"
+  ];
+  var teachingV080DisclosureContentKinds = [
+    "ACTUAL_REDUCTION",
+    "PRODUCT_CARBON",
+    "OFFSET",
+    "CARBON_NEUTRALITY",
+    "FUTURE_COMMITMENT"
+  ];
+  var teachingV080AllowedActionClassesBySlot = Object.freeze({
+    D1: Object.freeze(["INTENT_ONLY"]),
+    D2: Object.freeze(["INTENT_ONLY"]),
+    D3: Object.freeze(["INTENT_ONLY"]),
+    D4: Object.freeze(["RESOURCE_ALLOCATION"]),
+    D5: Object.freeze(["RESOURCE_ALLOCATION"]),
+    D6: Object.freeze(["RESOURCE_ALLOCATION", "CARBON_GOVERNED_ACTION"]),
+    D7: Object.freeze(["RESOURCE_ALLOCATION"]),
+    D8: Object.freeze(["BUSINESS_OPERATION", "CARBON_GOVERNED_ACTION"]),
+    D9: Object.freeze(["BUSINESS_OPERATION"]),
+    D10: Object.freeze(["RESOURCE_ALLOCATION"]),
+    D11: Object.freeze(["CARBON_GOVERNED_ACTION"]),
+    D12: Object.freeze([
+      "RESOURCE_ALLOCATION",
+      "CARBON_GOVERNED_ACTION"
+    ]),
+    D13: Object.freeze(["COMMUNICATION_ACTION"]),
+    D14: Object.freeze(["COMMUNICATION_ACTION"]),
+    D15: Object.freeze(["COMMUNICATION_ACTION"]),
+    D16: Object.freeze(["COMMUNICATION_ACTION"]),
+    D17: Object.freeze(["COMMUNICATION_ACTION"]),
+    D18: Object.freeze(["COMMUNICATION_ACTION"]),
+    D19: Object.freeze(["NEXT_CYCLE_DECISION"]),
+    D20: Object.freeze(["NEXT_CYCLE_DECISION"])
+  });
+  var PlayerDecisionRecordV080 = class _PlayerDecisionRecordV080 {
+    constructor(provenance, decisionId, slotId, round, selectionCode, rationale, reference) {
+      this.provenance = provenance;
+      this.decisionId = decisionId;
+      this.slotId = slotId;
+      this.round = round;
+      this.selectionCode = selectionCode;
+      this.rationale = rationale;
+      this.reference = reference;
+      Object.freeze(this);
+    }
+    #nominal = true;
+    static create(input) {
+      const contract = requireTeachingV080DecisionSlot(input.slotId);
+      if (input.round !== contract.round)
+        throw simulationInvalid(
+          "v0.8 player decision round must match the frozen D-slot contract.",
+          {
+            slotId: input.slotId,
+            expectedRound: contract.round,
+            actualRound: input.round
+          }
+        );
+      const payload = Object.freeze({
+        provenance: "PLAYER_DECISION",
+        decisionId: nonBlank(input.decisionId, "decisionId"),
+        slotId: input.slotId,
+        round: input.round,
+        selectionCode: nonBlank(input.selectionCode, "selectionCode"),
+        rationale: optionalNonBlank2(input.rationale, "rationale")
+      });
+      return new _PlayerDecisionRecordV080(
+        payload.provenance,
+        payload.decisionId,
+        payload.slotId,
+        payload.round,
+        payload.selectionCode,
+        payload.rationale,
+        `player-decision-v080:${deterministicSha256(payload)}`
+      );
+    }
+    assertGenuine() {
+      void this.#nominal;
+    }
+  };
+  var P2ActionEffectPackV080 = class _P2ActionEffectPackV080 {
+    constructor(packId, parameters, reference) {
+      this.packId = packId;
+      this.reference = reference;
+      this.parameters = Object.freeze([...parameters]);
+      Object.freeze(this);
+    }
+    #nominal = true;
+    parameters;
+    static create(input) {
+      if (!(input.registry instanceof ParameterRegistryV080))
+        throw simulationInvalid(
+          "P2 action effect pack requires a genuine ParameterRegistryV080."
+        );
+      if (input.parameterIds.length === 0)
+        throw simulationInvalid("P2 action effect pack requires parameters.");
+      const ids = uniqueNonBlank(input.parameterIds, "parameterIds");
+      const parameters = ids.map((parameterId) => {
+        const parameter3 = input.registry.require(parameterId);
+        if (parameter3.parameterClass !== "P2_SIMULATION_PARAMETER" || !parameter3.calibrationEligible || parameter3.calibrationVersion === void 0)
+          throw simulationInvalid(
+            "Every action-effect parameter must be a versioned P2 simulation parameter.",
+            {
+              parameterId,
+              parameterClass: parameter3.parameterClass
+            }
+          );
+        return parameter3;
+      });
+      const payload = Object.freeze({
+        packId: nonBlank(input.packId, "packId"),
+        policyVersion: teachingV080DecisionExecutionPolicyVersion,
+        parameterReferences: Object.freeze(
+          parameters.map((parameter3) => parameter3.reference)
+        )
+      });
+      return new _P2ActionEffectPackV080(
+        payload.packId,
+        parameters,
+        `action-effect-pack-v080:${deterministicSha256(payload)}`
+      );
+    }
+    assertGenuine() {
+      void this.#nominal;
+    }
+  };
+  var AuthorizedActionPackageV080 = class _AuthorizedActionPackageV080 {
+    constructor(provenance, policyVersion, decision, actionClasses, effectPack, directCarbonTruthAllowed, reference) {
+      this.provenance = provenance;
+      this.policyVersion = policyVersion;
+      this.decision = decision;
+      this.effectPack = effectPack;
+      this.directCarbonTruthAllowed = directCarbonTruthAllowed;
+      this.reference = reference;
+      this.actionClasses = Object.freeze([...actionClasses]);
+      Object.freeze(this);
+    }
+    #nominal = true;
+    actionClasses;
+    static authorize(input) {
+      if (!(input.decision instanceof PlayerDecisionRecordV080))
+        throw simulationInvalid(
+          "Player decision record was structurally forged."
+        );
+      input.decision.assertGenuine();
+      if (input.effectPack !== void 0) {
+        if (!(input.effectPack instanceof P2ActionEffectPackV080))
+          throw simulationInvalid("Action effect pack was structurally forged.");
+        input.effectPack.assertGenuine();
+      }
+      if ((input.decision.slotId === "D1" || input.decision.slotId === "D2") && input.effectPack !== void 0)
+        throw simulationInvalid(
+          "D1/D2 are intent/resource-posture constraints and cannot directly carry numerical effect packs."
+        );
+      const actionClasses = teachingV080AllowedActionClassesBySlot[input.decision.slotId];
+      const payload = Object.freeze({
+        provenance: "PLAYER_DECISION",
+        policyVersion: teachingV080DecisionExecutionPolicyVersion,
+        decisionReference: input.decision.reference,
+        actionClasses,
+        effectPackReference: input.effectPack?.reference,
+        directCarbonTruthAllowed: false
+      });
+      return new _AuthorizedActionPackageV080(
+        payload.provenance,
+        payload.policyVersion,
+        input.decision,
+        actionClasses,
+        input.effectPack,
+        payload.directCarbonTruthAllowed,
+        `authorized-action-package-v080:${deterministicSha256(payload)}`
+      );
+    }
+    assertGenuine() {
+      void this.#nominal;
+    }
+  };
+  var ForwardCommitmentDisclosureV080 = class _ForwardCommitmentDisclosureV080 {
+    constructor(provenance, sourceDecisionReference, statement, evidenceReferences, reference) {
+      this.provenance = provenance;
+      this.sourceDecisionReference = sourceDecisionReference;
+      this.statement = statement;
+      this.reference = reference;
+      this.evidenceReferences = Object.freeze([...evidenceReferences]);
+      Object.freeze(this);
+    }
+    #nominal = true;
+    evidenceReferences;
+    static create(input) {
+      const payload = Object.freeze({
+        provenance: "PLAYER_DECISION",
+        sourceDecisionReference: nonBlank(
+          input.sourceDecisionReference,
+          "sourceDecisionReference"
+        ),
+        statement: nonBlank(input.statement, "statement"),
+        evidenceReferences: uniqueNonBlank(
+          input.evidenceReferences ?? [],
+          "evidenceReferences"
+        )
+      });
+      return new _ForwardCommitmentDisclosureV080(
+        payload.provenance,
+        payload.sourceDecisionReference,
+        payload.statement,
+        payload.evidenceReferences,
+        `forward-commitment-disclosure-v080:${deterministicSha256(payload)}`
+      );
+    }
