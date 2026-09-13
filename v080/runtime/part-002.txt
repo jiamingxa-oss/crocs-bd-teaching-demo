@@ -1,0 +1,350 @@
+    const opening = normalizeBusinessState(input.opening);
+    const roundRevenue = nonNegativeFinite(input.roundRevenue, "roundRevenue");
+    const operatingCost = nonNegativeFinite(input.operatingCost, "operatingCost");
+    const investmentSpend = nonNegativeFinite(
+      input.investmentSpend,
+      "investmentSpend"
+    );
+    const carbonComplianceCost = nonNegativeFinite(
+      input.carbonComplianceCost,
+      "carbonComplianceCost"
+    );
+    const dataEvidenceCost = nonNegativeFinite(
+      input.dataEvidenceCost,
+      "dataEvidenceCost"
+    );
+    const carbonAssetBufferCashOutflow = nonNegativeFinite(
+      input.carbonAssetBufferCashOutflow,
+      "carbonAssetBufferCashOutflow"
+    );
+    const newCommittedFutureOutflow = nonNegativeFinite(
+      input.newCommittedFutureOutflow ?? 0,
+      "newCommittedFutureOutflow"
+    );
+    const voluntaryCashAllocation = investmentSpend + dataEvidenceCost + carbonAssetBufferCashOutflow;
+    if (voluntaryCashAllocation > opening.availableDiscretionaryCash)
+      throw simulationInvalid(
+        "Voluntary Wave 2 spending cannot exceed opening available discretionary cash.",
+        {
+          voluntaryCashAllocation,
+          availableDiscretionaryCash: opening.availableDiscretionaryCash
+        }
+      );
+    const simulationOperatingProfit = roundRevenue - operatingCost - carbonComplianceCost - dataEvidenceCost;
+    const cashChange = simulationOperatingProfit - investmentSpend - carbonAssetBufferCashOutflow;
+    const cash = opening.cash + cashChange;
+    if (cash < 0)
+      throw simulationInvalid(
+        "Wave 2 business resolution produced a cash shortfall; scenario remediation is required because active financing is not authorized.",
+        { openingCash: opening.cash, cashChange }
+      );
+    const committedFutureOutflow = opening.committedFutureOutflow + newCommittedFutureOutflow;
+    const production = normalizeProduction({
+      c1Production: input.c1Production,
+      c2Production: input.c2Production,
+      c1Inventory: input.c1Inventory,
+      c2Inventory: input.c2Inventory,
+      productionCapacity: input.productionCapacity
+    });
+    const closing = Object.freeze({
+      cash,
+      liquidityReserve: opening.liquidityReserve,
+      roundRevenue,
+      simulationOperatingProfit,
+      operatingCost,
+      investmentSpend,
+      carbonComplianceCost,
+      dataEvidenceCost,
+      carbonAssetBufferCashOutflow,
+      availableDiscretionaryCash: calculateAvailableDiscretionaryCash({
+        cash,
+        liquidityReserve: opening.liquidityReserve,
+        committedFutureOutflow,
+        financingObligation: opening.financingObligation
+      }),
+      ...production,
+      committedFutureOutflow,
+      financingObligation: opening.financingObligation
+    });
+    const payload = Object.freeze({
+      provenance: "SIMULATION_OUTCOME",
+      opening,
+      closing,
+      cashChange,
+      voluntaryCashAllocation
+    });
+    return Object.freeze({
+      ...payload,
+      reference: `business-v080:${deterministicSha256(payload)}`
+    });
+  }
+  function validateProductionMixV080(input) {
+    const production = normalizeProduction({
+      ...input,
+      c1Inventory: 0,
+      c2Inventory: 0
+    });
+    return Object.freeze({
+      c1Production: production.c1Production,
+      c2Production: production.c2Production
+    });
+  }
+  function createCapabilityStateV080(input) {
+    return Object.freeze({
+      energyEfficiency: capabilityIndex(
+        input.energyEfficiency,
+        "energyEfficiency"
+      ),
+      equipmentEfficiency: capabilityIndex(
+        input.equipmentEfficiency,
+        "equipmentEfficiency"
+      ),
+      processReduction: capabilityIndex(
+        input.processReduction,
+        "processReduction"
+      ),
+      carbonManagement: capabilityIndex(
+        input.carbonManagement,
+        "carbonManagement"
+      ),
+      data: capabilityIndex(input.data, "data"),
+      disclosure: capabilityIndex(input.disclosure, "disclosure")
+    });
+  }
+  function applyAuthorizedCapabilityGainV080(input) {
+    const opening = createCapabilityStateV080(input.opening);
+    if (!teachingV080CapabilityKeys.includes(input.capability))
+      throw simulationInvalid("Unknown v0.8 capability.", {
+        capability: input.capability
+      });
+    const authorizedGain = nonNegativeFinite(
+      input.authorizedGain,
+      "authorizedGain"
+    );
+    const before = capabilityValue(opening, input.capability);
+    const after = before + authorizedGain;
+    if (after > 100)
+      throw simulationInvalid(
+        "Authorized capability gain would exceed the frozen 0-100 capability range.",
+        { capability: input.capability, before, authorizedGain }
+      );
+    const closing = createCapabilityStateV080(
+      replaceCapability(opening, input.capability, after)
+    );
+    const payload = Object.freeze({
+      provenance: "SIMULATION_OUTCOME",
+      capability: input.capability,
+      before,
+      authorizedGain,
+      after,
+      sourceParameterReference: nonBlank(
+        input.sourceParameterReference,
+        "sourceParameterReference"
+      ),
+      opening,
+      closing
+    });
+    return Object.freeze({
+      ...payload,
+      reference: `capability-v080:${deterministicSha256(payload)}`
+    });
+  }
+  function normalizeBusinessState(state) {
+    const production = normalizeProduction(state);
+    const normalized = Object.freeze({
+      cash: nonNegativeFinite(state.cash, "cash"),
+      liquidityReserve: nonNegativeFinite(
+        state.liquidityReserve,
+        "liquidityReserve"
+      ),
+      roundRevenue: nonNegativeFinite(state.roundRevenue, "roundRevenue"),
+      simulationOperatingProfit: finiteNumber(
+        state.simulationOperatingProfit,
+        "simulationOperatingProfit"
+      ),
+      operatingCost: nonNegativeFinite(state.operatingCost, "operatingCost"),
+      investmentSpend: nonNegativeFinite(
+        state.investmentSpend,
+        "investmentSpend"
+      ),
+      carbonComplianceCost: nonNegativeFinite(
+        state.carbonComplianceCost,
+        "carbonComplianceCost"
+      ),
+      dataEvidenceCost: nonNegativeFinite(
+        state.dataEvidenceCost,
+        "dataEvidenceCost"
+      ),
+      carbonAssetBufferCashOutflow: nonNegativeFinite(
+        state.carbonAssetBufferCashOutflow,
+        "carbonAssetBufferCashOutflow"
+      ),
+      availableDiscretionaryCash: nonNegativeFinite(
+        state.availableDiscretionaryCash,
+        "availableDiscretionaryCash"
+      ),
+      ...production,
+      committedFutureOutflow: nonNegativeFinite(
+        state.committedFutureOutflow,
+        "committedFutureOutflow"
+      ),
+      financingObligation: nonNegativeFinite(
+        state.financingObligation,
+        "financingObligation"
+      )
+    });
+    const expectedAvailable = calculateAvailableDiscretionaryCash(normalized);
+    if (normalized.availableDiscretionaryCash !== expectedAvailable)
+      throw simulationInvalid(
+        "BusinessStateV080 available discretionary cash is inconsistent with its protected obligations.",
+        {
+          actual: normalized.availableDiscretionaryCash,
+          expected: expectedAvailable
+        }
+      );
+    return normalized;
+  }
+  function normalizeProduction(input) {
+    const c1Production = nonNegativeFinite(input.c1Production, "c1Production");
+    const c2Production = nonNegativeFinite(input.c2Production, "c2Production");
+    const productionCapacity = nonNegativeFinite(
+      input.productionCapacity,
+      "productionCapacity"
+    );
+    if (c1Production + c2Production > productionCapacity)
+      throw simulationInvalid("C1 + C2 production cannot exceed capacity.", {
+        c1Production,
+        c2Production,
+        productionCapacity
+      });
+    return Object.freeze({
+      c1Production,
+      c2Production,
+      c1Inventory: nonNegativeFinite(input.c1Inventory, "c1Inventory"),
+      c2Inventory: nonNegativeFinite(input.c2Inventory, "c2Inventory"),
+      productionCapacity
+    });
+  }
+  function calculateAvailableDiscretionaryCash(input) {
+    return Math.max(
+      0,
+      input.cash - input.liquidityReserve - input.committedFutureOutflow - input.financingObligation
+    );
+  }
+  function capabilityIndex(value, field) {
+    if (!Number.isFinite(value) || value < 0 || value > 100)
+      throw simulationInvalid(`${field} must be between 0 and 100.`, {
+        field,
+        value
+      });
+    return value;
+  }
+  function capabilityValue(state, capability) {
+    switch (capability) {
+      case "ENERGY_EFFICIENCY":
+        return state.energyEfficiency;
+      case "EQUIPMENT_EFFICIENCY":
+        return state.equipmentEfficiency;
+      case "PROCESS_REDUCTION":
+        return state.processReduction;
+      case "CARBON_MANAGEMENT":
+        return state.carbonManagement;
+      case "DATA":
+        return state.data;
+      case "DISCLOSURE":
+        return state.disclosure;
+    }
+  }
+  function replaceCapability(state, capability, value) {
+    switch (capability) {
+      case "ENERGY_EFFICIENCY":
+        return { ...state, energyEfficiency: value };
+      case "EQUIPMENT_EFFICIENCY":
+        return { ...state, equipmentEfficiency: value };
+      case "PROCESS_REDUCTION":
+        return { ...state, processReduction: value };
+      case "CARBON_MANAGEMENT":
+        return { ...state, carbonManagement: value };
+      case "DATA":
+        return { ...state, data: value };
+      case "DISCLOSURE":
+        return { ...state, disclosure: value };
+    }
+  }
+  function finiteNumber(value, field) {
+    if (!Number.isFinite(value))
+      throw simulationInvalid(`${field} must be finite.`, { field, value });
+    return value;
+  }
+
+  // packages/simulation-core/src/teaching-v080-bd-reference-catalog.ts
+  var teachingV080BdReferenceScenarioVersion = "BD_TEXTBOOK_REFERENCE_SCENARIO_V1";
+  var teachingV080BdReductionProjectIds = [
+    "SOLAR_ENERGY_SHARE",
+    "DECARBONIZATION_TECHNOLOGY",
+    "EQUIPMENT_OPERATION_EFFICIENCY",
+    "LOW_CARBON_SALES_LOGISTICS"
+  ];
+  var teachingV080BdReductionReferenceProjects = Object.freeze([
+    project(
+      "SOLAR_ENERGY_SHARE",
+      "PRODUCTION_ELECTRICITY",
+      "Increase solar-energy share in manufacturing",
+      0.14
+    ),
+    project(
+      "DECARBONIZATION_TECHNOLOGY",
+      "PRODUCTION_MATERIAL_PROCESS",
+      "Develop and use decarbonization technology",
+      0.02
+    ),
+    project(
+      "EQUIPMENT_OPERATION_EFFICIENCY",
+      "PRODUCTION_EQUIPMENT_OPERATION",
+      "Improve equipment operating efficiency",
+      0.01
+    ),
+    project(
+      "LOW_CARBON_SALES_LOGISTICS",
+      "SALES_TRANSPORT_AND_EXHIBITION",
+      "Low-carbon adjustment to sales transport and exhibition",
+      0.03
+    )
+  ]);
+  function project(projectId, activityDomain, title, referenceReductionRatio) {
+    return Object.freeze({
+      provenance: "P1_SCENARIO_FACT",
+      projectId,
+      activityDomain,
+      title,
+      referenceReductionRatio,
+      sourceReference: "BD_APPENDIX_B_TABLE_B6_B7",
+      scenarioVersion: teachingV080BdReferenceScenarioVersion
+    });
+  }
+
+  // packages/simulation-core/src/teaching-v080-parameters.ts
+  var teachingV080ParameterClasses = [
+    "P0_STRUCTURAL_INVARIANT",
+    "P1_SCENARIO_FACT",
+    "P2_SIMULATION_PARAMETER",
+    "P3_INSTRUCTOR_SETTING"
+  ];
+  var ParameterRegistryV080 = class _ParameterRegistryV080 {
+    constructor(entriesById) {
+      this.entriesById = entriesById;
+      Object.freeze(this);
+    }
+    static empty() {
+      return new _ParameterRegistryV080(/* @__PURE__ */ new Map());
+    }
+    get size() {
+      return this.entriesById.size;
+    }
+    register(input) {
+      const parameterId = nonBlank(input.parameterId, "parameterId");
+      if (this.entriesById.has(parameterId))
+        throw simulationInvalid(
+          "ParameterRegistryV080 parameterId must be unique.",
+          {
+            parameterId
