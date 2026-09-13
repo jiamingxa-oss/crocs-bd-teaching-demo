@@ -1,0 +1,91 @@
+name: Publish governed CROCS v0.8 teacher UI round 1
+
+on:
+  push:
+    branches:
+      - publish/teacher-ui-round1-transfer
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout transfer branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Download exact governed artifact
+        env:
+          ARTIFACT_URL: "https://sdmntprcentralus.oaiusercontent.com/files/00000000-bc28-81f5-aeeb-49c96c88c9cf/raw?se=2026-09-13T15%3A18%3A00Z&sp=r&sv=2026-02-06&sr=b&scid=52d252eb-76d8-51f4-bca7-e07cb2b9460c&skoid=0765b554-4b90-4fa2-9d6d-0055a2427910&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-13T07%3A10%3A38Z&ske=2026-09-14T07%3A10%3A38Z&sks=b&skv=2026-02-06&sig=wTBB7hNpeTTjt3mrnmOPu5uSLYFDMH6IGt9kvPnYRm8%3D"
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/crocs-v080
+          curl --fail --location --silent --show-error "$ARTIFACT_URL" -o /tmp/crocs-v080/site.zip
+          unzip -q /tmp/crocs-v080/site.zip -d /tmp/crocs-v080/site
+          HTML="$(find /tmp/crocs-v080/site -type f -name sandbox-v080.html -print -quit)"
+          JS="$(find /tmp/crocs-v080/site -type f -name crocs-teaching-v080.browser.js -print -quit)"
+          CSS="$(find /tmp/crocs-v080/site -type f -name styles.css -print -quit)"
+          TEACHER_CSS="$(find /tmp/crocs-v080/site -type f -name playable-teacher.css -print -quit)"
+          test -n "$HTML" && test -n "$JS" && test -n "$CSS" && test -n "$TEACHER_CSS"
+          test "$(git hash-object "$HTML")" = "10553e18fb3639b96d76dcc491730721680753e4"
+          test "$(git hash-object "$JS")" = "f78416f95bc9ca01d48aa58fb76e9d5d734bf522"
+          test "$(git hash-object "$CSS")" = "5eeb89024f7c226b0844ef9a6274b286746649e0"
+          test "$(git hash-object "$TEACHER_CSS")" = "d58d07e72c0ecf52a103591c3352dddd4d8274bd"
+          mkdir -p /tmp/crocs-v080/exact
+          cp "$HTML" /tmp/crocs-v080/exact/sandbox-v080.html
+          cp "$JS" /tmp/crocs-v080/exact/crocs-teaching-v080.browser.js
+          cp "$CSS" /tmp/crocs-v080/exact/styles.css
+          cp "$TEACHER_CSS" /tmp/crocs-v080/exact/playable-teacher.css
+
+      - name: Publish exact files to main
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B main origin/main
+          mkdir -p v080
+          cp /tmp/crocs-v080/exact/sandbox-v080.html v080/sandbox-v080.html
+          cp /tmp/crocs-v080/exact/crocs-teaching-v080.browser.js v080/crocs-teaching-v080.browser.js
+          cp /tmp/crocs-v080/exact/styles.css v080/styles.css
+          cp /tmp/crocs-v080/exact/playable-teacher.css v080/playable-teacher.css
+          cat > v080/PUBLICATION.md <<'EOF'
+          # CROCS v0.8 Teaching Sandbox Publication
+
+          Published: 2026-09-13
+
+          ## Authority
+          - Source repository: `jiamingxa-oss/crocs-carbon-management-system`
+          - Source PR: #158 — `fix(teaching): restore v0.8 teacher-facing Enterprise Console`
+          - Source head: `c2226fb0446538b2ea0c93802087d027faf80ff4`
+          - Quality gate: Batch 1 Quality run #509 (`34763693064`) — PASS
+
+          ## Published assets
+          - `sandbox-v080.html`
+          - `crocs-teaching-v080.browser.js`
+          - `styles.css`
+          - `playable-teacher.css`
+
+          The browser assets above are the exact governed v0.8 teacher-review artifacts generated from the source head shown above.
+
+          ## Scope
+          Teacher-facing presentation remediation only: restore the BD Enterprise Console shell, management-language decision labels, structured D8/D20 inputs, semantic outcome/CF1 cards, and phone-width treatment.
+
+          ## Frozen
+          No change to Carbon Core, P0/P1/P2, Package A, CF1 execution logic, Market Opportunity, Reputation, D1–D20 identities/legal values, business formulas, or carbon formulas.
+
+          `NEXT_GATE = HUMAN_TEACHER_REVIEW_ROUND_2`
+          EOF
+          sed -i 's/^          //' v080/PUBLICATION.md
+          git add v080
+          git diff --cached --check
+          git config user.name "CROCS Teaching Publisher"
+          git config user.email "actions@users.noreply.github.com"
+          if git diff --cached --quiet; then
+            echo "No publication changes required."
+            exit 0
+          fi
+          git commit -m "publish(v080): teacher-facing Enterprise Console round 1"
+          git push origin HEAD:main
