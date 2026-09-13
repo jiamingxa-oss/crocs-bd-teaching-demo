@@ -1,0 +1,350 @@
+      Object.freeze(this);
+    }
+    static create(value, unit, gasBasis) {
+      assertMassUnit(unit);
+      assertCarbonGasBasis(gasBasis);
+      if (value.trim().startsWith("-")) {
+        throw new DomainError(
+          "CARBON_QUANTITY_NEGATIVE",
+          "CarbonQuantity cannot be negative.",
+          { value }
+        );
+      }
+      return new _CarbonQuantity(ExactDecimal.parse(value), unit, gasBasis);
+    }
+    convertTo(targetUnit) {
+      assertMassUnit(targetUnit);
+      const converted = convertExactUnitValue(
+        this.#decimal,
+        this.unit,
+        targetUnit
+      );
+      return new _CarbonQuantity(converted, targetUnit, this.gasBasis);
+    }
+    add(other) {
+      this.assertCompatible(other);
+      const normalized = other.convertTo(this.unit);
+      return new _CarbonQuantity(
+        this.#decimal.add(normalized.#decimal),
+        this.unit,
+        this.gasBasis
+      );
+    }
+    subtractNonnegative(other) {
+      this.assertCompatible(other);
+      const normalized = other.convertTo(this.unit);
+      return new _CarbonQuantity(
+        this.#decimal.subtractNonnegative(normalized.#decimal),
+        this.unit,
+        this.gasBasis
+      );
+    }
+    multiply(multiplier) {
+      return new _CarbonQuantity(
+        this.#decimal.multiply(ExactDecimal.parse(multiplier)),
+        this.unit,
+        this.gasBasis
+      );
+    }
+    divideFinite(divisor) {
+      return new _CarbonQuantity(
+        this.#decimal.divideFinite(ExactDecimal.parse(divisor)),
+        this.unit,
+        this.gasBasis
+      );
+    }
+    compare(other) {
+      this.assertCompatible(other);
+      return this.#decimal.compare(other.convertTo(this.unit).#decimal);
+    }
+    assertCompatible(other) {
+      if (!(other instanceof _CarbonQuantity) || other.gasBasis !== this.gasBasis) {
+        throw new DomainError(
+          "CARBON_QUANTITY_INCOMPATIBLE",
+          "Carbon quantities require an exact matching gas basis."
+        );
+      }
+    }
+  };
+
+  // packages/carbon-core/src/offset-truth.ts
+  var createOffsetRequirementSnapshotId = (value) => Identifier.create("OffsetRequirementSnapshot", value);
+  var createOffsetResourceFactId = (value) => Identifier.create("OffsetResourceFact", value);
+  var createOffsetSettlementId = (value) => Identifier.create("OffsetSettlement", value);
+  var offsetResourceKinds = [
+    "OPENING_BALANCE",
+    "FREE_ALLOWANCE",
+    "MARKET_ALLOWANCE",
+    "CARBON_CREDIT",
+    "CARBON_SINK"
+  ];
+  var offsetResourceMovements = [
+    "OPENING",
+    "ACQUIRE",
+    "DISPOSE"
+  ];
+  var OffsetRequirementSnapshot = class _OffsetRequirementSnapshot {
+    constructor(id, carbonInventoryId, reportingEntityVersionId, accountingContextId, reportingPeriod, operatingCarbonNetAfter, capturedAt) {
+      this.id = id;
+      this.carbonInventoryId = carbonInventoryId;
+      this.reportingEntityVersionId = reportingEntityVersionId;
+      this.accountingContextId = accountingContextId;
+      this.reportingPeriod = reportingPeriod;
+      this.operatingCarbonNetAfter = operatingCarbonNetAfter;
+      this.#capturedAtTime = capturedAt.getTime();
+      Object.freeze(this);
+    }
+    #nominal = true;
+    #capturedAtTime;
+    static capture(input) {
+      assertKind(input.id, "OffsetRequirementSnapshot");
+      if (input.inventory.status !== "CLOSED")
+        throw offsetError(
+          "OFFSET_REQUIREMENT_INVENTORY_NOT_CLOSED",
+          "Offset requirement must be captured from a CLOSED governed CarbonInventory."
+        );
+      if (!isValidDate(input.capturedAt))
+        throw offsetError(
+          "OFFSET_TIMESTAMP_INVALID",
+          "capturedAt must be a valid timestamp."
+        );
+      const operatingBalance = input.inventory.operatingBalance;
+      if (operatingBalance.value.startsWith("-"))
+        throw offsetError(
+          "OFFSET_REQUIREMENT_NEGATIVE",
+          "A negative Operating Carbon Net does not create an offset requirement."
+        );
+      return new _OffsetRequirementSnapshot(
+        input.id,
+        input.inventory.id,
+        input.inventory.context.reportingEntityVersionId,
+        input.inventory.context.accountingContextId,
+        input.inventory.context.reportingPeriod,
+        CarbonQuantity.create(
+          operatingBalance.value,
+          operatingBalance.unit,
+          operatingBalance.gasBasis
+        ),
+        new Date(input.capturedAt.getTime())
+      );
+    }
+    assertGenuine() {
+      void this.#nominal;
+    }
+    get capturedAt() {
+      return new Date(this.#capturedAtTime);
+    }
+  };
+  var OffsetResourceFact = class _OffsetResourceFact {
+    constructor(id, resourceKind, movement, quantity, reportingEntityVersionId, accountingContextId, reportingPeriod, resourceLotReference, evidenceReference, occurredAt) {
+      this.id = id;
+      this.resourceKind = resourceKind;
+      this.movement = movement;
+      this.quantity = quantity;
+      this.reportingEntityVersionId = reportingEntityVersionId;
+      this.accountingContextId = accountingContextId;
+      this.reportingPeriod = reportingPeriod;
+      this.resourceLotReference = resourceLotReference;
+      this.evidenceReference = evidenceReference;
+      this.#occurredAtTime = occurredAt.getTime();
+      Object.freeze(this);
+    }
+    #nominal = true;
+    #occurredAtTime;
+    static record(input) {
+      assertKind(input.id, "OffsetResourceFact");
+      if (!offsetResourceKinds.includes(input.resourceKind))
+        throw offsetError(
+          "OFFSET_RESOURCE_KIND_INVALID",
+          "Unknown resource kind."
+        );
+      if (!offsetResourceMovements.includes(input.movement))
+        throw offsetError(
+          "OFFSET_MOVEMENT_INVALID",
+          "Unknown resource movement."
+        );
+      if (input.resourceKind === "OPENING_BALANCE" !== (input.movement === "OPENING"))
+        throw offsetError(
+          "OFFSET_OPENING_SEMANTICS_INVALID",
+          "OPENING_BALANCE and OPENING must be used together and only together."
+        );
+      if (!(input.quantity instanceof CarbonQuantity))
+        throw offsetError("OFFSET_QUANTITY_MISSING", "quantity is required.");
+      assertContext(input);
+      if (!isValidDate(input.occurredAt))
+        throw offsetError(
+          "OFFSET_TIMESTAMP_INVALID",
+          "occurredAt must be a valid timestamp."
+        );
+      return new _OffsetResourceFact(
+        input.id,
+        input.resourceKind,
+        input.movement,
+        input.quantity,
+        input.reportingEntityVersionId,
+        input.accountingContextId,
+        input.reportingPeriod,
+        nonBlank3(input.resourceLotReference, "resourceLotReference"),
+        nonBlank3(input.evidenceReference, "evidenceReference"),
+        new Date(input.occurredAt.getTime())
+      );
+    }
+    assertGenuine() {
+      void this.#nominal;
+    }
+    get occurredAt() {
+      return new Date(this.#occurredAtTime);
+    }
+  };
+  var SignedCarbonQuantity = class _SignedCarbonQuantity {
+    constructor(sign, magnitude) {
+      this.sign = sign;
+      this.magnitude = magnitude;
+      Object.freeze(this);
+    }
+    static difference(minuend, subtrahend) {
+      const comparison = minuend.compare(subtrahend);
+      if (comparison > 0)
+        return new _SignedCarbonQuantity(
+          "POSITIVE",
+          minuend.subtractNonnegative(subtrahend)
+        );
+      if (comparison < 0)
+        return new _SignedCarbonQuantity(
+          "NEGATIVE",
+          subtrahend.subtractNonnegative(minuend)
+        );
+      return new _SignedCarbonQuantity(
+        "ZERO",
+        minuend.subtractNonnegative(subtrahend)
+      );
+    }
+    get value() {
+      return this.sign === "NEGATIVE" ? `-${this.magnitude.value}` : this.magnitude.value;
+    }
+  };
+  var IssuedOffsetSettlementResult = class {
+    constructor(openingBalance, acquisitions, disposals, periodNetOffsetResources, availableOffsetResources, closingBalance, disposition) {
+      this.openingBalance = openingBalance;
+      this.acquisitions = acquisitions;
+      this.disposals = disposals;
+      this.periodNetOffsetResources = periodNetOffsetResources;
+      this.availableOffsetResources = availableOffsetResources;
+      this.closingBalance = closingBalance;
+      this.disposition = disposition;
+      Object.freeze(this);
+    }
+  };
+  var OffsetSettlementAggregate = class _OffsetSettlementAggregate {
+    constructor(id, requirement) {
+      this.id = id;
+      this.requirement = requirement;
+    }
+    #facts = [];
+    #factIds = /* @__PURE__ */ new Set();
+    #resourceLots = /* @__PURE__ */ new Set();
+    #result;
+    static create(input) {
+      assertKind(input.id, "OffsetSettlement");
+      input.requirement.assertGenuine();
+      return new _OffsetSettlementAggregate(input.id, input.requirement);
+    }
+    get facts() {
+      return Object.freeze([...this.#facts]);
+    }
+    get result() {
+      return this.#result;
+    }
+    register(fact) {
+      if (this.#result !== void 0)
+        throw offsetError(
+          "OFFSET_SETTLEMENT_FINALIZED",
+          "A finalized settlement is immutable."
+        );
+      fact.assertGenuine();
+      if (this.#factIds.has(fact.id.value))
+        throw offsetError(
+          "OFFSET_RESOURCE_DOUBLE_USE",
+          "A resource fact may be used only once."
+        );
+      if (this.#resourceLots.has(fact.resourceLotReference))
+        throw offsetError(
+          "OFFSET_RESOURCE_DOUBLE_USE",
+          "A governed resource lot may be used only once in a settlement."
+        );
+      if (!fact.reportingEntityVersionId.equals(
+        this.requirement.reportingEntityVersionId
+      ) || !fact.accountingContextId.equals(this.requirement.accountingContextId) || !sameReportingPeriod(
+        fact.reportingPeriod,
+        this.requirement.reportingPeriod
+      ) || fact.quantity.unit !== this.requirement.operatingCarbonNetAfter.unit || fact.quantity.gasBasis !== this.requirement.operatingCarbonNetAfter.gasBasis)
+        throw offsetError(
+          "OFFSET_RESOURCE_CONTEXT_MISMATCH",
+          "Offset resources must use the requirement ReportingEntityVersion, AccountingContext, ReportingPeriod, carbon unit, and gas basis."
+        );
+      this.#factIds.add(fact.id.value);
+      this.#resourceLots.add(fact.resourceLotReference);
+      this.#facts.push(fact);
+    }
+    finalize() {
+      if (this.#result !== void 0) return this.#result;
+      const opening = this.#facts.filter((fact) => fact.movement === "OPENING");
+      const acquisitions = this.#facts.filter(
+        (fact) => fact.movement === "ACQUIRE"
+      );
+      const disposals = this.#facts.filter((fact) => fact.movement === "DISPOSE");
+      if (opening.length !== 1 || acquisitions.length === 0 || disposals.length === 0)
+        throw offsetError(
+          "OFFSET_RESOURCE_FACTS_INCOMPLETE",
+          "Settlement requires exactly one explicit opening fact and explicit acquisition and disposal facts; missing is not zero."
+        );
+      const zero = CarbonQuantity.create(
+        "0",
+        this.requirement.operatingCarbonNetAfter.unit,
+        this.requirement.operatingCarbonNetAfter.gasBasis
+      );
+      const sum = (facts) => facts.reduce((total, fact) => total.add(fact.quantity), zero);
+      this.#result = calculateSettlement({
+        requirement: this.requirement.operatingCarbonNetAfter,
+        openingBalance: sum(opening),
+        acquisitions: sum(acquisitions),
+        disposals: sum(disposals)
+      });
+      Object.freeze(this.#facts);
+      Object.freeze(this);
+      return this.#result;
+    }
+  };
+  function calculateSettlement(input) {
+    const grossAvailable = input.openingBalance.add(input.acquisitions);
+    if (grossAvailable.compare(input.disposals) < 0)
+      throw offsetError(
+        "OFFSET_RESOURCE_OVER_DISPOSAL",
+        "Disposals cannot exceed opening balance plus acquisitions."
+      );
+    const available = grossAvailable.subtractNonnegative(input.disposals);
+    const closing = SignedCarbonQuantity.difference(available, input.requirement);
+    return new IssuedOffsetSettlementResult(
+      input.openingBalance,
+      input.acquisitions,
+      input.disposals,
+      SignedCarbonQuantity.difference(input.acquisitions, input.disposals),
+      available,
+      closing,
+      closing.sign === "POSITIVE" ? "ACHIEVED_SURPLUS" : closing.sign === "ZERO" ? "ACHIEVED_EXACT" : "SHORTFALL"
+    );
+  }
+  function assertKind(value, expected) {
+    if (!(value instanceof Identifier) || value.kind !== expected)
+      throw offsetError("OFFSET_IDENTIFIER_INVALID", `Expected ${expected}.`);
+  }
+  function nonBlank3(value, field) {
+    const normalized = value.trim();
+    if (normalized.length === 0)
+      throw offsetError("OFFSET_VALUE_MISSING", `${field} is required.`);
+    return normalized;
+  }
+  function isValidDate(value) {
+    return value instanceof Date && Number.isFinite(value.getTime());
+  }
+  function assertContext(input) {
