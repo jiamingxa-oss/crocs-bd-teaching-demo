@@ -1,0 +1,44 @@
+name: Deploy CROCS v0.8 Teacher Review Round 1
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/pages-v080-round1.yml
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact publication
+        uses: actions/checkout@v7
+      - name: Verify governed v0.8 assets
+        run: |
+          set -euo pipefail
+          test "$(git hash-object v080/sandbox-v080.html)" = "10553e18fb3639b96d76dcc491730721680753e4"
+          test "$(git hash-object v080/crocs-teaching-v080.browser.js)" = "f78416f95bc9ca01d48aa58fb76e9d5d734bf522"
+          test "$(git hash-object v080/styles.css)" = "5eeb89024f7c226b0844ef9a6274b286746649e0"
+          test "$(git hash-object v080/playable-teacher.css)" = "d58d07e72c0ecf52a103591c3352dddd4d8274bd"
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
