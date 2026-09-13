@@ -1,0 +1,350 @@
+    endDate;
+    periodType;
+    calendarReference;
+    baseYearRole;
+    constructor(startDate, endDate, metadata2) {
+      this.startDate = startDate;
+      this.endDate = endDate;
+      this.periodType = normalizeMetadata(
+        metadata2.periodType ?? "Custom",
+        "periodType"
+      );
+      this.calendarReference = normalizeOptionalMetadata(
+        metadata2.calendarReference,
+        "calendarReference"
+      );
+      this.baseYearRole = normalizeOptionalMetadata(
+        metadata2.baseYearRole,
+        "baseYearRole"
+      );
+      Object.freeze(this);
+    }
+    static create(startDate, endDate, metadata2 = {}) {
+      assertIsoDateOnly(startDate, "startDate");
+      assertIsoDateOnly(endDate, "endDate");
+      if (endDate < startDate) {
+        throw invalidReportingPeriod(
+          "Reporting period endDate cannot be before startDate.",
+          { startDate, endDate }
+        );
+      }
+      return new _ReportingPeriod(startDate, endDate, metadata2);
+    }
+    includes(date) {
+      assertIsoDateOnly(date, "date");
+      return this.startDate <= date && date <= this.endDate;
+    }
+    overlaps(other) {
+      return this.startDate <= other.endDate && other.startDate <= this.endDate;
+    }
+  };
+  function normalizeMetadata(value, field) {
+    const normalized = value.trim();
+    if (normalized.length === 0) {
+      throw invalidReportingPeriod(`${field} must be non-blank.`, {
+        field,
+        value
+      });
+    }
+    return normalized;
+  }
+  function normalizeOptionalMetadata(value, field) {
+    return value === void 0 ? void 0 : normalizeMetadata(value, field);
+  }
+
+  // packages/carbon-core/src/communication-disclosure.ts
+  var sourceBundleAuthority = Symbol("communication-source-bundle-authority");
+
+  // packages/carbon-core/src/communication-presentation.ts
+  var BD_COMMUNICATION_TABLE_PROFILE_V1 = Object.freeze({
+    profileId: "BD_COMMUNICATION_TABLE_PROFILE_V1",
+    version: "1"
+  });
+  var BD_COMMUNICATION_DISPLAY_RULE_V1 = Object.freeze({
+    displayRuleId: "BD_COMMUNICATION_DISPLAY_RULE_V1",
+    version: "1",
+    percentageDecimals: 2,
+    indexDecimals: 2,
+    roundingMode: "HALF_UP",
+    massAndIntensityMode: "EXACT"
+  });
+
+  // packages/carbon-core/src/exact-decimal.ts
+  var exactDecimalPattern = /^(0|[1-9]\d*)(?:\.(\d+))?$/;
+  var ExactDecimal = class _ExactDecimal {
+    #coefficient;
+    #scale;
+    constructor(coefficient, scale) {
+      let normalizedCoefficient = coefficient;
+      let normalizedScale = scale;
+      while (normalizedScale > 0 && normalizedCoefficient % 10n === 0n) {
+        normalizedCoefficient /= 10n;
+        normalizedScale -= 1;
+      }
+      this.#coefficient = normalizedCoefficient;
+      this.#scale = normalizedScale;
+      Object.freeze(this);
+    }
+    static parse(value, errorCode = "CARBON_DECIMAL_INVALID", subject = "Quantity value") {
+      const normalized = value.trim();
+      const match = exactDecimalPattern.exec(normalized);
+      if (match === null) {
+        throw new DomainError(
+          errorCode,
+          `${subject} must be a nonnegative base-10 decimal string without exponent notation.`,
+          { value }
+        );
+      }
+      const integerPart = match[1];
+      if (integerPart === void 0) {
+        throw new DomainError(
+          errorCode,
+          `${subject} could not be parsed as a base-10 decimal string.`,
+          { value }
+        );
+      }
+      const fractionPart = match[2] ?? "";
+      return new _ExactDecimal(
+        BigInt(`${integerPart}${fractionPart}`),
+        fractionPart.length
+      );
+    }
+    shiftByPowerOfTen(exponent) {
+      if (!Number.isSafeInteger(exponent)) {
+        throw new DomainError(
+          "CARBON_DECIMAL_SHIFT_INVALID",
+          "Decimal shift exponent must be a safe integer.",
+          { exponent }
+        );
+      }
+      if (exponent >= 0) {
+        return new _ExactDecimal(
+          this.#coefficient * 10n ** BigInt(exponent),
+          this.#scale
+        );
+      }
+      return new _ExactDecimal(this.#coefficient, this.#scale - exponent);
+    }
+    compare(other) {
+      const commonScale = Math.max(this.#scale, other.#scale);
+      const left = this.#coefficient * 10n ** BigInt(commonScale - this.#scale);
+      const right = other.#coefficient * 10n ** BigInt(commonScale - other.#scale);
+      return left < right ? -1 : left > right ? 1 : 0;
+    }
+    multiply(other) {
+      return new _ExactDecimal(
+        this.#coefficient * other.#coefficient,
+        this.#scale + other.#scale
+      );
+    }
+    add(other) {
+      const scale = Math.max(this.#scale, other.#scale);
+      return new _ExactDecimal(
+        this.#coefficient * 10n ** BigInt(scale - this.#scale) + other.#coefficient * 10n ** BigInt(scale - other.#scale),
+        scale
+      );
+    }
+    subtractNonnegative(other) {
+      const scale = Math.max(this.#scale, other.#scale);
+      const coefficient = this.#coefficient * 10n ** BigInt(scale - this.#scale) - other.#coefficient * 10n ** BigInt(scale - other.#scale);
+      if (coefficient < 0n) {
+        throw new DomainError(
+          "CARBON_DECIMAL_NEGATIVE_RESULT",
+          "Exact nonnegative subtraction cannot produce a negative result."
+        );
+      }
+      return new _ExactDecimal(coefficient, scale);
+    }
+    divideFinite(other) {
+      if (other.#coefficient === 0n) {
+        throw new DomainError(
+          "CARBON_DECIMAL_DIVIDE_BY_ZERO",
+          "Cannot divide by zero."
+        );
+      }
+      let numerator = this.#coefficient * 10n ** BigInt(other.#scale);
+      let denominator = other.#coefficient * 10n ** BigInt(this.#scale);
+      const divisor = greatestCommonDivisor(numerator, denominator);
+      numerator /= divisor;
+      denominator /= divisor;
+      let twos = 0;
+      let fives = 0;
+      while (denominator % 2n === 0n) {
+        denominator /= 2n;
+        twos += 1;
+      }
+      while (denominator % 5n === 0n) {
+        denominator /= 5n;
+        fives += 1;
+      }
+      if (denominator !== 1n) {
+        throw new DomainError(
+          "CARBON_DECIMAL_NON_FINITE_DIVISION",
+          "Division must have an exact finite base-10 result; Core does not round."
+        );
+      }
+      const scale = Math.max(twos, fives);
+      const coefficient = numerator * 2n ** BigInt(scale - twos) * 5n ** BigInt(scale - fives);
+      return new _ExactDecimal(coefficient, scale);
+    }
+    toString() {
+      const digits = this.#coefficient.toString();
+      if (this.#scale === 0) {
+        return digits;
+      }
+      if (digits.length <= this.#scale) {
+        return `0.${"0".repeat(this.#scale - digits.length)}${digits}`;
+      }
+      const decimalPosition = digits.length - this.#scale;
+      return `${digits.slice(0, decimalPosition)}.${digits.slice(decimalPosition)}`;
+    }
+  };
+  function greatestCommonDivisor(left, right) {
+    while (right !== 0n) [left, right] = [right, left % right];
+    return left;
+  }
+
+  // packages/carbon-core/src/unit.ts
+  var unitCodes = Object.freeze([
+    "g",
+    "kg",
+    "t",
+    "Wh",
+    "kWh",
+    "MWh",
+    "mL",
+    "L",
+    "m3",
+    "m",
+    "km",
+    "item"
+  ]);
+  var unitDefinitions = {
+    g: { dimension: "MASS", powerToBaseUnit: 0 },
+    kg: { dimension: "MASS", powerToBaseUnit: 3 },
+    t: { dimension: "MASS", powerToBaseUnit: 6 },
+    Wh: { dimension: "ENERGY", powerToBaseUnit: 0 },
+    kWh: { dimension: "ENERGY", powerToBaseUnit: 3 },
+    MWh: { dimension: "ENERGY", powerToBaseUnit: 6 },
+    mL: { dimension: "VOLUME", powerToBaseUnit: 0 },
+    L: { dimension: "VOLUME", powerToBaseUnit: 3 },
+    m3: { dimension: "VOLUME", powerToBaseUnit: 6 },
+    m: { dimension: "DISTANCE", powerToBaseUnit: 0 },
+    km: { dimension: "DISTANCE", powerToBaseUnit: 3 },
+    item: { dimension: "COUNT", powerToBaseUnit: 0 }
+  };
+  function requireUnitDefinition(unit) {
+    const definition = unitDefinitions[unit];
+    if (definition === void 0) {
+      throw new DomainError(
+        "CARBON_UNIT_UNKNOWN",
+        "Unit code is not supported.",
+        {
+          unit
+        }
+      );
+    }
+    return definition;
+  }
+  function unitDimensionOf(unit) {
+    return requireUnitDefinition(unit).dimension;
+  }
+  function areUnitsCompatible(left, right) {
+    return unitDimensionOf(left) === unitDimensionOf(right);
+  }
+  function convertExactUnitValue(value, from, to) {
+    const source2 = requireUnitDefinition(from);
+    const target = requireUnitDefinition(to);
+    if (source2.dimension !== target.dimension) {
+      throw new DomainError(
+        "CARBON_UNIT_INCOMPATIBLE",
+        "Unit conversion requires matching physical dimensions.",
+        {
+          from,
+          fromDimension: source2.dimension,
+          to,
+          toDimension: target.dimension
+        }
+      );
+    }
+    return value.shiftByPowerOfTen(
+      source2.powerToBaseUnit - target.powerToBaseUnit
+    );
+  }
+  function assertMassUnit(unit) {
+    if (unitDimensionOf(unit) !== "MASS") {
+      throw new DomainError(
+        "CARBON_QUANTITY_UNIT_INVALID",
+        "CarbonQuantity accepts mass units only.",
+        { unit }
+      );
+    }
+  }
+
+  // packages/carbon-core/src/activity-quantity.ts
+  var ActivityQuantity = class _ActivityQuantity {
+    value;
+    unit;
+    #decimal;
+    constructor(decimal, unit) {
+      this.#decimal = decimal;
+      this.value = decimal.toString();
+      this.unit = unit;
+      Object.freeze(this);
+    }
+    static create(value, unit) {
+      unitDimensionOf(unit);
+      if (value.trim().startsWith("-")) {
+        throw new DomainError(
+          "CARBON_QUANTITY_NEGATIVE",
+          "ActivityQuantity cannot be negative.",
+          { value }
+        );
+      }
+      return new _ActivityQuantity(ExactDecimal.parse(value), unit);
+    }
+    convertTo(targetUnit) {
+      const converted = convertExactUnitValue(
+        this.#decimal,
+        this.unit,
+        targetUnit
+      );
+      return new _ActivityQuantity(converted, targetUnit);
+    }
+  };
+
+  // packages/carbon-core/src/gas-basis.ts
+  var greenhouseGasCodes = Object.freeze([
+    "CO2",
+    "CH4",
+    "N2O",
+    "HFCS",
+    "PFCS",
+    "SF6",
+    "NF3"
+  ]);
+  var carbonGasBasisCodes = Object.freeze([
+    ...greenhouseGasCodes,
+    "CO2E"
+  ]);
+  function assertCarbonGasBasis(gasBasis) {
+    if (!carbonGasBasisCodes.includes(gasBasis)) {
+      throw new DomainError(
+        "CARBON_GAS_BASIS_INVALID",
+        "Carbon gas basis is not supported.",
+        { gasBasis }
+      );
+    }
+  }
+
+  // packages/carbon-core/src/carbon-quantity.ts
+  var CarbonQuantity = class _CarbonQuantity {
+    value;
+    unit;
+    gasBasis;
+    #decimal;
+    constructor(decimal, unit, gasBasis) {
+      this.#decimal = decimal;
+      this.value = decimal.toString();
+      this.unit = unit;
+      this.gasBasis = gasBasis;
