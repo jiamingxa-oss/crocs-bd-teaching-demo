@@ -1,0 +1,350 @@
+      if (this.#status !== expected)
+        throw new DomainError(
+          "CARBON_BATCH4B_INVALID_TRANSITION",
+          `ActivityDataRecord cannot transition from ${this.#status} to ${next}.`
+        );
+    }
+  };
+  function validateInput(input) {
+    assertIdentifierKind(input.id, "ActivityDataRecord", "id");
+    assertIdentifierKind(
+      input.carbonActivityId,
+      "CarbonActivity",
+      "carbonActivityId"
+    );
+    if (input.observations.length === 0 || input.observations.some(
+      (item) => !(item instanceof ObservationFactReference)
+    ))
+      throw new DomainError(
+        "CARBON_BATCH4B_INVALID_REFERENCE",
+        "An ActivityDataRecord requires one or more Observation fact references."
+      );
+    const ids = input.observations.map((item) => item.observationId.value);
+    if (new Set(ids).size !== ids.length)
+      throw new DomainError(
+        "CARBON_BATCH4B_DUPLICATE_OBSERVATION",
+        "Observation references must be unique within an ActivityDataRecord."
+      );
+    if (input.observations.some(
+      (item) => !item.carbonActivityId.equals(input.carbonActivityId)
+    ))
+      throw new DomainError(
+        "CARBON_BATCH4B_ACTIVITY_MISMATCH",
+        "All Observations must belong to the ActivityDataRecord CarbonActivity."
+      );
+  }
+  function nonBlank4(value) {
+    const result = value.trim();
+    if (!result)
+      throw new DomainError(
+        "CARBON_BATCH4B_INVALID_VALUE",
+        "Value must be non-blank."
+      );
+    return result;
+  }
+  function supersessionError() {
+    return new DomainError(
+      "CARBON_BATCH4B_SUPERSESSION_INVALID",
+      "Supersession must be directional, linear, and acyclic."
+    );
+  }
+
+  // packages/carbon-core/src/data-trust.ts
+  var DataTrustAggregate = class _DataTrustAggregate {
+    id;
+    activityDataRecordReference;
+    #assessments = [];
+    #evidence = [];
+    #lineage = [];
+    #events = [];
+    #status = "Created";
+    constructor(id, reference, metadata2) {
+      this.id = id;
+      this.activityDataRecordReference = reference;
+      this.#events.push(
+        Batch4BEvent.create({
+          ...metadata2,
+          eventType: "DataTrustRecordCreated",
+          aggregateId: id,
+          payload: { activityDataRecordId: reference.activityDataRecordId.value }
+        })
+      );
+    }
+    static create(id, reference, metadata2) {
+      assertIdentifierKind(id, "DataTrust", "id");
+      if (!(reference instanceof ActivityDataRecordReference))
+        throw new DomainError(
+          "CARBON_BATCH4B_INVALID_REFERENCE",
+          "DataTrust requires exactly one ActivityDataRecord reference."
+        );
+      return new _DataTrustAggregate(id, reference, metadata2);
+    }
+    get status() {
+      return this.#status;
+    }
+    get assessments() {
+      return Object.freeze(
+        this.#assessments.map((item) => Object.freeze({ ...item }))
+      );
+    }
+    get evidenceReferenceIds() {
+      return Object.freeze([...this.#evidence]);
+    }
+    get lineage() {
+      return Object.freeze([...this.#lineage]);
+    }
+    get events() {
+      return Object.freeze([...this.#events]);
+    }
+    markNeedsReview(metadata2) {
+      this.assertMutable();
+      if (this.#status !== "Created")
+        throw invalidTransition(this.#status, "NeedsReview");
+      this.#status = "NeedsReview";
+      this.empty("DataTrustMarkedNeedsReview", metadata2);
+    }
+    addAssessment(id, criterion, metadata2) {
+      this.assertMutable();
+      id = required(id);
+      criterion = required(criterion);
+      if (this.#assessments.some((item) => item.id === id))
+        throw new DomainError(
+          "CARBON_BATCH4B_DUPLICATE_ASSESSMENT",
+          "Assessment identifiers must be unique."
+        );
+      this.#assessments.push(Object.freeze({ id, criterion }));
+      this.#events.push(
+        Batch4BEvent.create({
+          ...metadata2,
+          eventType: "DataQualityAssessmentAdded",
+          aggregateId: this.id,
+          payload: { assessmentId: id, criterion }
+        })
+      );
+    }
+    completeAssessment(id, outcome2, metadata2) {
+      this.assertMutable();
+      const index = this.#assessments.findIndex((item) => item.id === id);
+      if (index < 0)
+        throw new DomainError(
+          "CARBON_BATCH4B_ASSESSMENT_NOT_FOUND",
+          "Assessment must exist before completion."
+        );
+      const current = this.#assessments[index];
+      if (current === void 0)
+        throw new DomainError(
+          "CARBON_BATCH4B_ASSESSMENT_NOT_FOUND",
+          "Assessment must exist before completion."
+        );
+      if (current.outcome !== void 0)
+        throw new DomainError(
+          "CARBON_BATCH4B_ASSESSMENT_IMMUTABLE",
+          "Completed assessments cannot be overwritten."
+        );
+      outcome2 = required(outcome2);
+      this.#assessments[index] = Object.freeze({
+        id: current.id,
+        criterion: current.criterion,
+        outcome: outcome2
+      });
+      this.#events.push(
+        Batch4BEvent.create({
+          ...metadata2,
+          eventType: "DataQualityAssessmentCompleted",
+          aggregateId: this.id,
+          payload: { assessmentId: id, outcome: outcome2 }
+        })
+      );
+    }
+    linkEvidence(id, metadata2) {
+      this.assertMutable();
+      assertIdentifierKind(id, "EvidenceReference", "evidenceReferenceId");
+      if (this.#evidence.some((item) => item.equals(id)))
+        throw new DomainError(
+          "CARBON_BATCH4B_DUPLICATE_EVIDENCE",
+          "Evidence links are immutable and unique."
+        );
+      this.#evidence.push(id);
+      this.#events.push(
+        Batch4BEvent.create({
+          ...metadata2,
+          eventType: "EvidenceLinked",
+          aggregateId: this.id,
+          payload: { evidenceReferenceId: id.value }
+        })
+      );
+    }
+    recordLineage(reference, metadata2) {
+      this.addLineage(reference, "DataLineageRecorded", metadata2);
+    }
+    expandLineage(reference, metadata2) {
+      this.addLineage(reference, "DataLineageExpanded", metadata2);
+    }
+    validate(metadata2) {
+      this.assertVerifiable();
+      this.empty("DataTrustValidated", metadata2);
+    }
+    verify(metadata2) {
+      this.assertVerifiable();
+      this.#status = "Verified";
+      this.empty("DataTrustVerified", metadata2);
+    }
+    archive(metadata2) {
+      if (this.#status !== "Verified")
+        throw invalidTransition(this.#status, "Archived");
+      this.#status = "Archived";
+      this.empty("DataTrustArchived", metadata2);
+    }
+    isReadyForLaterFactorSelection(snapshot) {
+      return snapshot instanceof ActivityDataRecordAdmissionSnapshot && snapshot.activityDataRecordId.equals(
+        this.activityDataRecordReference.activityDataRecordId
+      ) && this.#status === "Verified" && (snapshot.status === "Accepted" || snapshot.status === "Locked");
+    }
+    assertVerifiable() {
+      if (this.#status !== "NeedsReview" || this.#assessments.length === 0 || this.#assessments.some(
+        (assessment) => assessment.outcome === void 0
+      ) || this.#evidence.length === 0 || this.#lineage.length === 0) {
+        throw new DomainError(
+          "CARBON_BATCH4B_TRUST_NOT_VERIFIABLE",
+          "DataTrust verification requires NeedsReview status, completed assessments, evidence, and lineage."
+        );
+      }
+    }
+    addLineage(reference, eventType, metadata2) {
+      this.assertMutable();
+      reference = required(reference);
+      this.#lineage.push(reference);
+      this.#events.push(
+        Batch4BEvent.create({
+          ...metadata2,
+          eventType,
+          aggregateId: this.id,
+          payload: { reference }
+        })
+      );
+    }
+    empty(eventType, metadata2) {
+      this.#events.push(
+        Batch4BEvent.create({
+          ...metadata2,
+          eventType,
+          aggregateId: this.id,
+          payload: {}
+        })
+      );
+    }
+    assertMutable() {
+      if (this.#status === "Archived")
+        throw invalidTransition("Archived", "Archived");
+    }
+  };
+  function required(value) {
+    const result = value.trim();
+    if (!result)
+      throw new DomainError(
+        "CARBON_BATCH4B_INVALID_VALUE",
+        "Value must be non-blank."
+      );
+    return result;
+  }
+  function invalidTransition(from, to) {
+    return new DomainError(
+      "CARBON_BATCH4B_INVALID_TRANSITION",
+      `DataTrust cannot transition from ${from} to ${to}.`
+    );
+  }
+
+  // packages/carbon-core/src/batch4a-events.ts
+  var batch4AEventTypes = Object.freeze([
+    "EmissionSourceDrafted",
+    "EmissionSourceRegistered",
+    "EmissionSourceActivated",
+    "EmissionSourceSuspended",
+    "EmissionSourceReactivated",
+    "EmissionSourceRetired",
+    "EmissionSourceDetailsChanged",
+    "CarbonActivityPlanned",
+    "CarbonActivityOccurred",
+    "CarbonActivityObserved",
+    "CarbonActivityRecorded",
+    "CarbonActivityClosed",
+    "CarbonActivityCancelled",
+    "ObservationCreated",
+    "ObservationCaptured",
+    "ObservationValidated",
+    "ObservationConsumed",
+    "ObservationDiscarded"
+  ]);
+  var payloadKeys = Object.freeze({
+    EmissionSourceDrafted: Object.freeze([
+      "reportingEntityVersionId",
+      "accountingContextId",
+      "sourceCategory"
+    ]),
+    EmissionSourceRegistered: Object.freeze([]),
+    EmissionSourceActivated: Object.freeze([]),
+    EmissionSourceSuspended: Object.freeze([]),
+    EmissionSourceReactivated: Object.freeze([]),
+    EmissionSourceRetired: Object.freeze([]),
+    EmissionSourceDetailsChanged: Object.freeze([
+      "sourceName",
+      "sourceCategory"
+    ]),
+    CarbonActivityPlanned: Object.freeze([
+      "emissionSourceId",
+      "activityDefinitionCode",
+      "expectedUnit"
+    ]),
+    CarbonActivityOccurred: Object.freeze([
+      "occurrenceKind",
+      "startAt",
+      "endAt"
+    ]),
+    CarbonActivityObserved: Object.freeze(["observationId"]),
+    CarbonActivityRecorded: Object.freeze([]),
+    CarbonActivityClosed: Object.freeze([]),
+    CarbonActivityCancelled: Object.freeze([]),
+    ObservationCreated: Object.freeze([
+      "carbonActivityId",
+      "measurementType",
+      "versionNumber",
+      "supersedesId"
+    ]),
+    ObservationCaptured: Object.freeze(["measurementType", "value", "unit"]),
+    ObservationValidated: Object.freeze([]),
+    ObservationConsumed: Object.freeze([]),
+    ObservationDiscarded: Object.freeze([])
+  });
+  function aggregateKind(eventType) {
+    if (eventType.startsWith("EmissionSource")) return "EmissionSource";
+    if (eventType.startsWith("CarbonActivity")) return "CarbonActivity";
+    return "Observation";
+  }
+  var Batch4AEvent = class _Batch4AEvent {
+    eventId;
+    eventType;
+    aggregateId;
+    actorId;
+    schemaVersion = 1;
+    payload;
+    #occurredAtTime;
+    constructor(input) {
+      this.eventId = input.eventId;
+      this.eventType = input.eventType;
+      this.aggregateId = input.aggregateId;
+      this.actorId = input.actorId;
+      this.#occurredAtTime = input.occurredAt.getTime();
+      this.payload = Object.freeze({ ...input.payload });
+      Object.freeze(this);
+    }
+    static create(input) {
+      assertEvent2(input);
+      return new _Batch4AEvent(input);
+    }
+    get occurredAt() {
+      return new Date(this.#occurredAtTime);
+    }
+  };
+  function invalidEvent() {
+    return new DomainError(
+      "CARBON_BATCH4A_EVENT_INVALID",
