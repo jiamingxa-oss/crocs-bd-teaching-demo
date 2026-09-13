@@ -1,0 +1,350 @@
+    if (!hasIdentifierKind(
+      input.reportingEntityVersionId,
+      "ReportingEntityVersion"
+    ) || !hasIdentifierKind(input.accountingContextId, "CarbonAccountingContext") || !(input.reportingPeriod instanceof ReportingPeriod))
+      throw offsetError(
+        "OFFSET_RESOURCE_CONTEXT_INVALID",
+        "A governed ReportingEntityVersion, AccountingContext, and ReportingPeriod are required."
+      );
+  }
+  function hasIdentifierKind(value, kind2) {
+    return value instanceof Identifier && value.kind === kind2;
+  }
+  function sameReportingPeriod(left, right) {
+    return left.startDate === right.startDate && left.endDate === right.endDate && left.periodType === right.periodType && left.calendarReference === right.calendarReference && left.baseYearRole === right.baseYearRole;
+  }
+  function offsetError(code, message) {
+    return new DomainError(code, message);
+  }
+
+  // packages/carbon-core/src/classification.ts
+  var scopeCodes = Object.freeze([
+    "SCOPE_1",
+    "SCOPE_2",
+    "SCOPE_3"
+  ]);
+  function assertScopeCode(scope) {
+    if (!scopeCodes.includes(scope)) {
+      throw new DomainError(
+        "CARBON_SCOPE_INVALID",
+        "Carbon source scope is not supported.",
+        { scope }
+      );
+    }
+  }
+  var SourceCategoryCode = class _SourceCategoryCode {
+    scope;
+    code;
+    constructor(scope, code) {
+      this.scope = scope;
+      this.code = code;
+      Object.freeze(this);
+    }
+    static create(scope, code) {
+      assertScopeCode(scope);
+      const normalized = code.trim();
+      if (normalized.length === 0) {
+        throw new DomainError(
+          "CARBON_SOURCE_CATEGORY_INVALID",
+          "Carbon source category code must be non-blank.",
+          { code, scope }
+        );
+      }
+      return new _SourceCategoryCode(scope, normalized);
+    }
+    equals(other) {
+      return this.scope === other.scope && this.code === other.code;
+    }
+    toString() {
+      return `${this.scope}:${this.code}`;
+    }
+  };
+
+  // packages/carbon-core/src/status.ts
+  var measurementTypes = Object.freeze([
+    "MEASURED",
+    "ESTIMATED",
+    "DERIVED",
+    "MISSING"
+  ]);
+  var dataQualityStatuses = Object.freeze([
+    "UNASSESSED",
+    "ACCEPTABLE",
+    "QUALIFIED",
+    "REJECTED"
+  ]);
+  var calculationStatuses = Object.freeze([
+    "DRAFT",
+    "CALCULATED",
+    "FAILED",
+    "SUPERSEDED"
+  ]);
+  var inventoryStatuses = Object.freeze([
+    "DRAFT",
+    "RECONCILING",
+    "RECONCILED",
+    "CLOSED",
+    "SUPERSEDED"
+  ]);
+
+  // packages/carbon-core/src/batch4a-value-objects.ts
+  var emissionSourceLifecycleStatuses = Object.freeze([
+    "Draft",
+    "Registered",
+    "Active",
+    "Suspended",
+    "Retired"
+  ]);
+  var carbonActivityLifecycleStatuses = Object.freeze([
+    "Planned",
+    "Occurred",
+    "Observed",
+    "Recorded",
+    "Closed",
+    "Cancelled"
+  ]);
+  var observationLifecycleStatuses = Object.freeze([
+    "Created",
+    "Captured",
+    "Validated",
+    "Consumed",
+    "Discarded"
+  ]);
+  function assertBatch4ANonBlank(value) {
+    const normalized = value.trim();
+    if (normalized.length === 0) {
+      throw new DomainError(
+        "CARBON_BATCH4A_INVALID_VALUE",
+        "Batch 4A text values must be non-blank.",
+        { value }
+      );
+    }
+    return normalized;
+  }
+  function assertBatch4ATimestamp(value) {
+    const timestamp = value.getTime();
+    if (!Number.isFinite(timestamp)) {
+      throw new DomainError(
+        "CARBON_BATCH4A_INVALID_VALUE",
+        "Batch 4A timestamps must be valid dates."
+      );
+    }
+    return timestamp;
+  }
+  function assertIdentifierKind(value, kind2, field) {
+    if (!(value instanceof Identifier) || value.kind !== kind2) {
+      throw new DomainError(
+        "CARBON_BATCH4A_INVALID_REFERENCE",
+        `${field} must be a ${kind2} identifier.`,
+        {
+          actualKind: value instanceof Identifier ? value.kind : void 0,
+          field
+        }
+      );
+    }
+  }
+  var EmissionSourceReference = class _EmissionSourceReference {
+    constructor(emissionSourceId, reportingEntityVersionId, accountingContextId, sourceCategory) {
+      this.emissionSourceId = emissionSourceId;
+      this.reportingEntityVersionId = reportingEntityVersionId;
+      this.accountingContextId = accountingContextId;
+      this.sourceCategory = sourceCategory;
+      Object.freeze(this);
+    }
+    static create(input) {
+      assertIdentifierKind(
+        input.emissionSourceId,
+        "EmissionSource",
+        "emissionSourceId"
+      );
+      assertIdentifierKind(
+        input.reportingEntityVersionId,
+        "ReportingEntityVersion",
+        "reportingEntityVersionId"
+      );
+      assertIdentifierKind(
+        input.accountingContextId,
+        "CarbonAccountingContext",
+        "accountingContextId"
+      );
+      if (!(input.sourceCategory instanceof SourceCategoryCode)) {
+        throw new DomainError(
+          "CARBON_BATCH4A_INVALID_REFERENCE",
+          "sourceCategory must be a SourceCategoryCode."
+        );
+      }
+      return new _EmissionSourceReference(
+        input.emissionSourceId,
+        input.reportingEntityVersionId,
+        input.accountingContextId,
+        input.sourceCategory
+      );
+    }
+  };
+  var CarbonActivityReference = class _CarbonActivityReference {
+    constructor(carbonActivityId, emissionSourceReference, activityDefinitionCode, expectedUnit) {
+      this.carbonActivityId = carbonActivityId;
+      this.emissionSourceReference = emissionSourceReference;
+      this.activityDefinitionCode = activityDefinitionCode;
+      this.expectedUnit = expectedUnit;
+      Object.freeze(this);
+    }
+    static create(input) {
+      assertIdentifierKind(
+        input.carbonActivityId,
+        "CarbonActivity",
+        "carbonActivityId"
+      );
+      if (!(input.emissionSourceReference instanceof EmissionSourceReference)) {
+        throw new DomainError(
+          "CARBON_BATCH4A_INVALID_REFERENCE",
+          "emissionSourceReference must be an EmissionSourceReference."
+        );
+      }
+      const activityDefinitionCode = assertBatch4ANonBlank(
+        input.activityDefinitionCode
+      );
+      unitDimensionOf(input.expectedUnit);
+      return new _CarbonActivityReference(
+        input.carbonActivityId,
+        input.emissionSourceReference,
+        activityDefinitionCode,
+        input.expectedUnit
+      );
+    }
+  };
+  var ObservationReference = class _ObservationReference {
+    constructor(observationId, carbonActivityId) {
+      this.observationId = observationId;
+      this.carbonActivityId = carbonActivityId;
+      Object.freeze(this);
+    }
+    static create(input) {
+      assertIdentifierKind(input.observationId, "Observation", "observationId");
+      assertIdentifierKind(
+        input.carbonActivityId,
+        "CarbonActivity",
+        "carbonActivityId"
+      );
+      return new _ObservationReference(
+        input.observationId,
+        input.carbonActivityId
+      );
+    }
+  };
+  var ActivityOccurrence = class _ActivityOccurrence {
+    constructor(kind2, startAt, endAt) {
+      this.kind = kind2;
+      this.startAt = startAt;
+      this.endAt = endAt;
+      Object.freeze(this);
+    }
+    static at(instant) {
+      assertBatch4ATimestamp(instant);
+      return new _ActivityOccurrence("INSTANT", instant.toISOString(), null);
+    }
+    static during(period) {
+      if (!(period instanceof ValidityPeriod)) {
+        throw new DomainError(
+          "CARBON_BATCH4A_INVALID_VALUE",
+          "Activity occurrence period must be a ValidityPeriod."
+        );
+      }
+      return new _ActivityOccurrence(
+        "PERIOD",
+        period.validFrom.toISOString(),
+        period.validTo?.toISOString() ?? null
+      );
+    }
+  };
+  var CapturedObservationFact = class _CapturedObservationFact {
+    constructor(measurementType, quantity, expectedUnit, evidenceReferenceIds, capturedAt) {
+      this.measurementType = measurementType;
+      this.quantity = quantity;
+      this.expectedUnit = expectedUnit;
+      this.evidenceReferenceIds = evidenceReferenceIds;
+      this.#capturedAtValue = new Date(capturedAt.getTime());
+      Object.freeze(this);
+    }
+    #capturedAtValue;
+    static create(input) {
+      if (!measurementTypes.includes(input.measurementType)) {
+        throw new DomainError(
+          "CARBON_BATCH4A_INVALID_VALUE",
+          "Observation measurement type is not supported.",
+          { measurementType: input.measurementType }
+        );
+      }
+      unitDimensionOf(input.expectedUnit);
+      assertBatch4ATimestamp(input.capturedAt);
+      for (const evidenceReferenceId of input.evidenceReferenceIds) {
+        assertIdentifierKind(
+          evidenceReferenceId,
+          "EvidenceReference",
+          "evidenceReferenceIds"
+        );
+      }
+      if (input.measurementType === "MISSING") {
+        if (input.quantity !== void 0) {
+          throw new DomainError(
+            "CARBON_BATCH4A_INVALID_VALUE",
+            "Missing observations cannot carry an activity quantity."
+          );
+        }
+      } else {
+        if (!(input.quantity instanceof ActivityQuantity)) {
+          throw new DomainError(
+            "CARBON_BATCH4A_INVALID_VALUE",
+            "Measured, estimated, and derived observations require an activity quantity.",
+            { measurementType: input.measurementType }
+          );
+        }
+        if (!areUnitsCompatible(input.quantity.unit, input.expectedUnit)) {
+          throw new DomainError(
+            "CARBON_BATCH4A_INVALID_VALUE",
+            "Observation quantity and expected unit must have compatible dimensions.",
+            {
+              expectedUnit: input.expectedUnit,
+              quantityUnit: input.quantity.unit
+            }
+          );
+        }
+      }
+      return new _CapturedObservationFact(
+        input.measurementType,
+        input.quantity,
+        input.expectedUnit,
+        Object.freeze([...input.evidenceReferenceIds]),
+        input.capturedAt
+      );
+    }
+    get capturedAt() {
+      return new Date(this.#capturedAtValue.getTime());
+    }
+  };
+
+  // packages/carbon-core/src/batch4b-events.ts
+  var batch4BEventTypes = Object.freeze([
+    "ActivityDataRecordDrafted",
+    "ActivityDataRecordSubmitted",
+    "ActivityDataRecordAccepted",
+    "ActivityDataRecordRejected",
+    "ActivityDataRecordLocked",
+    "ActivityDataRecordSuperseded",
+    "ActivityDataRecordCorrectionCreated",
+    "DataTrustRecordCreated",
+    "DataQualityAssessmentAdded",
+    "DataQualityAssessmentCompleted",
+    "EvidenceLinked",
+    "DataTrustValidated",
+    "DataTrustArchived",
+    "DataLineageRecorded",
+    "DataLineageExpanded",
+    "DataTrustMarkedNeedsReview",
+    "DataTrustVerified"
+  ]);
+  var keys = {
+    ActivityDataRecordDrafted: [
+      "carbonActivityId",
+      "observationIds",
+      "supersedesId"
