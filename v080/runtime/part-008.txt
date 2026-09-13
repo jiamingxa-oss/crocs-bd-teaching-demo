@@ -1,0 +1,350 @@
+    ],
+    ActivityDataRecordSubmitted: [],
+    ActivityDataRecordAccepted: [],
+    ActivityDataRecordRejected: ["reason"],
+    ActivityDataRecordLocked: [],
+    ActivityDataRecordSuperseded: ["successorId"],
+    ActivityDataRecordCorrectionCreated: ["predecessorId", "reason"],
+    DataTrustRecordCreated: ["activityDataRecordId"],
+    DataQualityAssessmentAdded: ["assessmentId", "criterion"],
+    DataQualityAssessmentCompleted: ["assessmentId", "outcome"],
+    EvidenceLinked: ["evidenceReferenceId"],
+    DataTrustValidated: [],
+    DataTrustArchived: [],
+    DataLineageRecorded: ["reference"],
+    DataLineageExpanded: ["reference"],
+    DataTrustMarkedNeedsReview: [],
+    DataTrustVerified: []
+  };
+  var Batch4BEvent = class _Batch4BEvent {
+    eventId;
+    eventType;
+    aggregateId;
+    actorId;
+    schemaVersion = 1;
+    payload;
+    #occurredAtTime;
+    constructor(input) {
+      this.eventId = input.eventId;
+      this.eventType = input.eventType;
+      this.aggregateId = input.aggregateId;
+      this.actorId = input.actorId;
+      this.#occurredAtTime = input.occurredAt.getTime();
+      this.payload = Object.freeze({ ...input.payload });
+      Object.freeze(this);
+    }
+    static create(input) {
+      assertEvent(input);
+      return new _Batch4BEvent(input);
+    }
+    get occurredAt() {
+      return new Date(this.#occurredAtTime);
+    }
+  };
+  function assertEvent(value) {
+    const fail = () => {
+      throw new DomainError(
+        "CARBON_BATCH4B_EVENT_INVALID",
+        "Batch 4B event does not match the frozen runtime contract."
+      );
+    };
+    if (typeof value !== "object" || value === null) fail();
+    const input = value;
+    if (!(input.eventId instanceof Identifier) || input.eventId.kind !== "CarbonDomainEvent" || !(input.actorId instanceof Identifier) || input.actorId.kind !== "Actor" || !(input.occurredAt instanceof Date) || !Number.isFinite(input.occurredAt.getTime()) || typeof input.eventType !== "string" || !batch4BEventTypes.includes(input.eventType))
+      fail();
+    const eventType = input.eventType;
+    const kind2 = eventType.startsWith("ActivityDataRecord") ? "ActivityDataRecord" : "DataTrust";
+    if (!(input.aggregateId instanceof Identifier) || input.aggregateId.kind !== kind2 || typeof input.payload !== "object" || input.payload === null)
+      fail();
+    const payload = input.payload;
+    const actual = Object.keys(payload).sort();
+    const expected = [...keys[eventType]].sort();
+    if (actual.length !== expected.length || actual.some((key, i) => key !== expected[i]))
+      fail();
+    if (!validPayload(eventType, payload)) fail();
+  }
+  var text = (value) => typeof value === "string" && value.trim().length > 0;
+  function validPayload(type, p) {
+    switch (type) {
+      case "ActivityDataRecordDrafted":
+        return text(p.carbonActivityId) && Array.isArray(p.observationIds) && p.observationIds.length > 0 && p.observationIds.every(text) && (p.supersedesId === null || text(p.supersedesId));
+      case "ActivityDataRecordRejected":
+        return text(p.reason);
+      case "ActivityDataRecordSuperseded":
+        return text(p.successorId);
+      case "ActivityDataRecordCorrectionCreated":
+        return text(p.predecessorId) && text(p.reason);
+      case "DataTrustRecordCreated":
+        return text(p.activityDataRecordId);
+      case "DataQualityAssessmentAdded":
+        return text(p.assessmentId) && text(p.criterion);
+      case "DataQualityAssessmentCompleted":
+        return text(p.assessmentId) && text(p.outcome);
+      case "EvidenceLinked":
+        return text(p.evidenceReferenceId);
+      case "DataLineageRecorded":
+      case "DataLineageExpanded":
+        return text(p.reference);
+      default:
+        return true;
+    }
+  }
+
+  // packages/carbon-core/src/batch4b-value-objects.ts
+  var activityDataRecordStatuses = Object.freeze([
+    "Draft",
+    "Submitted",
+    "Accepted",
+    "Rejected",
+    "Locked",
+    "Superseded"
+  ]);
+  var dataTrustStatuses = Object.freeze([
+    "Created",
+    "NeedsReview",
+    "Verified",
+    "Archived"
+  ]);
+  var ObservationFactReference = class _ObservationFactReference {
+    observationId;
+    carbonActivityId;
+    measurementType;
+    quantity;
+    unit;
+    evidenceReferenceIds;
+    lifecycleStatus;
+    #capturedAtTime;
+    constructor(input) {
+      this.observationId = input.observationReference.observationId;
+      this.carbonActivityId = input.observationReference.carbonActivityId;
+      this.measurementType = input.fact.measurementType;
+      this.quantity = input.fact.quantity;
+      this.unit = input.fact.expectedUnit;
+      this.evidenceReferenceIds = Object.freeze([
+        ...input.fact.evidenceReferenceIds
+      ]);
+      this.lifecycleStatus = input.lifecycleStatus;
+      this.#capturedAtTime = input.fact.capturedAt.getTime();
+      Object.freeze(this);
+    }
+    static create(input) {
+      if (!(input.observationReference instanceof ObservationReference)) {
+        throw invalidReference("observationReference");
+      }
+      if (!(input.fact instanceof CapturedObservationFact)) {
+        throw invalidReference("fact");
+      }
+      assertBatch4ATimestamp(input.fact.capturedAt);
+      return new _ObservationFactReference(input);
+    }
+    get capturedAt() {
+      return new Date(this.#capturedAtTime);
+    }
+  };
+  var ActivityDataRecordReference = class _ActivityDataRecordReference {
+    constructor(activityDataRecordId) {
+      this.activityDataRecordId = activityDataRecordId;
+      Object.freeze(this);
+    }
+    static create(id) {
+      assertIdentifierKind(id, "ActivityDataRecord", "activityDataRecordId");
+      return new _ActivityDataRecordReference(id);
+    }
+  };
+  var ActivityDataRecordAdmissionSnapshot = class _ActivityDataRecordAdmissionSnapshot {
+    constructor(activityDataRecordId, status) {
+      this.activityDataRecordId = activityDataRecordId;
+      this.status = status;
+      Object.freeze(this);
+    }
+    static create(activityDataRecordId, status) {
+      assertIdentifierKind(
+        activityDataRecordId,
+        "ActivityDataRecord",
+        "activityDataRecordId"
+      );
+      if (!activityDataRecordStatuses.includes(status)) {
+        throw new DomainError(
+          "CARBON_BATCH4B_INVALID_VALUE",
+          "status must be a valid ActivityDataRecord status."
+        );
+      }
+      return new _ActivityDataRecordAdmissionSnapshot(
+        activityDataRecordId,
+        status
+      );
+    }
+  };
+  function invalidReference(field) {
+    return new DomainError(
+      "CARBON_BATCH4B_INVALID_REFERENCE",
+      `${field} is not a valid Batch 4B reference.`
+    );
+  }
+
+  // packages/carbon-core/src/activity-data-record.ts
+  var governedSnapshotAuthority = Symbol("governed-calculation-snapshot");
+  var ActivityDataRecordCalculationSnapshot = class _ActivityDataRecordCalculationSnapshot {
+    constructor(activityDataRecordRef, observationFactRef, activityQuantitySnapshot) {
+      this.activityDataRecordRef = activityDataRecordRef;
+      this.observationFactRef = observationFactRef;
+      this.activityQuantitySnapshot = activityQuantitySnapshot;
+      Object.freeze(this);
+    }
+    static fromOwnedFact(recordId, fact, authority) {
+      if (authority !== governedSnapshotAuthority) {
+        throw new DomainError(
+          "CARBON_BATCH6_UNGOVERNED_QUANTITY",
+          "Calculation snapshots may be created only by an ActivityDataRecord."
+        );
+      }
+      if (fact.quantity === void 0) {
+        throw new DomainError(
+          "CARBON_BATCH6_QUANTITY_MISSING",
+          "A calculation quantity must be present; missing data is not zero."
+        );
+      }
+      return new _ActivityDataRecordCalculationSnapshot(
+        ActivityDataRecordReference.create(recordId),
+        fact,
+        ActivityQuantity.create(fact.quantity.value, fact.quantity.unit)
+      );
+    }
+  };
+  var ActivityDataRecordAggregate = class _ActivityDataRecordAggregate {
+    id;
+    carbonActivityId;
+    supersedesId;
+    #observations;
+    #ancestors;
+    #events = [];
+    #status = "Draft";
+    #successorId;
+    constructor(input, metadata2, supersedesId, ancestors = []) {
+      validateInput(input);
+      this.id = input.id;
+      this.carbonActivityId = input.carbonActivityId;
+      this.#observations = Object.freeze([...input.observations]);
+      this.supersedesId = supersedesId;
+      this.#ancestors = Object.freeze([...ancestors]);
+      this.#events.push(
+        Batch4BEvent.create({
+          ...metadata2,
+          eventType: "ActivityDataRecordDrafted",
+          aggregateId: this.id,
+          payload: {
+            carbonActivityId: this.carbonActivityId.value,
+            observationIds: this.#observations.map(
+              (item) => item.observationId.value
+            ),
+            supersedesId: supersedesId?.value ?? null
+          }
+        })
+      );
+    }
+    static create(input, metadata2) {
+      return new _ActivityDataRecordAggregate(input, metadata2);
+    }
+    get status() {
+      return this.#status;
+    }
+    get observations() {
+      return Object.freeze([...this.#observations]);
+    }
+    get events() {
+      return Object.freeze([...this.#events]);
+    }
+    get successorId() {
+      return this.#successorId;
+    }
+    createCalculationSnapshot(quantityFact) {
+      const governedFact = this.#observations.find(
+        (fact) => fact === quantityFact
+      );
+      if (governedFact === void 0) {
+        throw new DomainError(
+          "CARBON_BATCH6_RECORD_FACT_MISMATCH",
+          "The quantity fact must belong to the same ActivityDataRecord."
+        );
+      }
+      return ActivityDataRecordCalculationSnapshot.fromOwnedFact(
+        this.id,
+        governedFact,
+        governedSnapshotAuthority
+      );
+    }
+    submit(metadata2) {
+      this.transition(
+        "Draft",
+        "Submitted",
+        "ActivityDataRecordSubmitted",
+        metadata2
+      );
+    }
+    accept(metadata2) {
+      this.transition(
+        "Submitted",
+        "Accepted",
+        "ActivityDataRecordAccepted",
+        metadata2
+      );
+    }
+    reject(reason, metadata2) {
+      this.assertStatus("Submitted", "Rejected");
+      this.#status = "Rejected";
+      this.#events.push(
+        Batch4BEvent.create({
+          ...metadata2,
+          eventType: "ActivityDataRecordRejected",
+          aggregateId: this.id,
+          payload: { reason: nonBlank4(reason) }
+        })
+      );
+    }
+    lock(metadata2) {
+      this.transition("Accepted", "Locked", "ActivityDataRecordLocked", metadata2);
+    }
+    createCorrection(input, metadata2) {
+      if (this.#status !== "Accepted" && this.#status !== "Locked" || this.#successorId !== void 0 || input.id.equals(this.id) || this.#ancestors.includes(input.id.value) || !input.carbonActivityId.equals(this.carbonActivityId)) {
+        throw supersessionError();
+      }
+      const reason = nonBlank4(input.reason);
+      const successor = new _ActivityDataRecordAggregate(
+        input,
+        metadata2,
+        this.id,
+        [...this.#ancestors, this.id.value]
+      );
+      this.#successorId = successor.id;
+      this.#status = "Superseded";
+      this.#events.push(
+        Batch4BEvent.create({
+          ...metadata2,
+          eventType: "ActivityDataRecordSuperseded",
+          aggregateId: this.id,
+          payload: { successorId: successor.id.value }
+        })
+      );
+      successor.#events.push(
+        Batch4BEvent.create({
+          ...metadata2,
+          eventType: "ActivityDataRecordCorrectionCreated",
+          aggregateId: successor.id,
+          payload: { predecessorId: this.id.value, reason }
+        })
+      );
+      return successor;
+    }
+    transition(from, to, eventType, metadata2) {
+      this.assertStatus(from, to);
+      this.#status = to;
+      this.#events.push(
+        Batch4BEvent.create({
+          ...metadata2,
+          eventType,
+          aggregateId: this.id,
+          payload: {}
+        })
+      );
+    }
+    assertStatus(expected, next) {
