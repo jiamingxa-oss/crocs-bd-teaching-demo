@@ -1,0 +1,350 @@
+      "Batch 4A event does not match the frozen runtime contract."
+    );
+  }
+  function isIdentifier(value, kind2) {
+    return value instanceof Identifier && value.kind === kind2;
+  }
+  function nonBlank5(value) {
+    return typeof value === "string" && value.trim().length > 0;
+  }
+  function validIso(value) {
+    return typeof value === "string" && Number.isFinite(Date.parse(value));
+  }
+  function assertEvent2(value) {
+    if (typeof value !== "object" || value === null) throw invalidEvent();
+    const input = value;
+    if (!isIdentifier(input.eventId, "CarbonDomainEvent") || !isIdentifier(input.actorId, "Actor") || !(input.occurredAt instanceof Date) || !Number.isFinite(input.occurredAt.getTime()) || typeof input.eventType !== "string" || !batch4AEventTypes.includes(input.eventType)) {
+      throw invalidEvent();
+    }
+    const eventType = input.eventType;
+    if (!isIdentifier(input.aggregateId, aggregateKind(eventType))) {
+      throw invalidEvent();
+    }
+    if (typeof input.payload !== "object" || input.payload === null) {
+      throw invalidEvent();
+    }
+    const payload = input.payload;
+    const actual = Object.keys(payload).sort();
+    const expected = [...payloadKeys[eventType]].sort();
+    if (actual.length !== expected.length || actual.some((key, index) => key !== expected[index])) {
+      throw invalidEvent();
+    }
+    assertPayload(eventType, payload);
+  }
+  function assertPayload(eventType, payload) {
+    let valid;
+    switch (eventType) {
+      case "EmissionSourceDrafted":
+        valid = nonBlank5(payload.reportingEntityVersionId) && nonBlank5(payload.accountingContextId) && nonBlank5(payload.sourceCategory);
+        break;
+      case "EmissionSourceDetailsChanged":
+        valid = nonBlank5(payload.sourceName) && nonBlank5(payload.sourceCategory);
+        break;
+      case "CarbonActivityPlanned":
+        valid = nonBlank5(payload.emissionSourceId) && nonBlank5(payload.activityDefinitionCode) && validUnit(payload.expectedUnit);
+        break;
+      case "CarbonActivityOccurred":
+        valid = (payload.occurrenceKind === "INSTANT" || payload.occurrenceKind === "PERIOD") && validIso(payload.startAt) && (payload.endAt === null || validIso(payload.endAt) && Date.parse(payload.endAt) >= Date.parse(payload.startAt)) && (payload.occurrenceKind === "PERIOD" || payload.endAt === null);
+        break;
+      case "CarbonActivityObserved":
+        valid = nonBlank5(payload.observationId);
+        break;
+      case "ObservationCreated":
+        valid = nonBlank5(payload.carbonActivityId) && validMeasurement(payload.measurementType) && Number.isSafeInteger(payload.versionNumber) && payload.versionNumber > 0 && (payload.supersedesId === null || nonBlank5(payload.supersedesId));
+        break;
+      case "ObservationCaptured":
+        valid = validMeasurement(payload.measurementType) && (payload.measurementType === "MISSING" && payload.value === null && payload.unit === null || payload.measurementType !== "MISSING" && nonBlank5(payload.value) && validUnit(payload.unit));
+        break;
+      default:
+        valid = true;
+    }
+    if (!valid) throw invalidEvent();
+  }
+  function validMeasurement(value) {
+    return typeof value === "string" && measurementTypes.includes(value);
+  }
+  function validUnit(value) {
+    try {
+      unitDimensionOf(value);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // packages/carbon-core/src/carbon-activity.ts
+  var CarbonActivityAggregate = class _CarbonActivityAggregate {
+    id;
+    emissionSourceReference;
+    activityDefinitionCode;
+    expectedUnit;
+    plannedPeriod;
+    #status = "Planned";
+    #occurrence;
+    #observationReference;
+    #events = [];
+    constructor(input, metadata2) {
+      this.id = input.id;
+      this.emissionSourceReference = input.emissionSourceReference;
+      this.activityDefinitionCode = assertBatch4ANonBlank(
+        input.activityDefinitionCode
+      );
+      this.expectedUnit = input.expectedUnit;
+      this.plannedPeriod = input.plannedPeriod;
+      this.#events.push(
+        Batch4AEvent.create({
+          ...metadata2,
+          eventType: "CarbonActivityPlanned",
+          aggregateId: this.id,
+          payload: {
+            emissionSourceId: this.emissionSourceReference.emissionSourceId.value,
+            activityDefinitionCode: this.activityDefinitionCode,
+            expectedUnit: this.expectedUnit
+          }
+        })
+      );
+    }
+    static create(input, metadata2) {
+      assertIdentifierKind(input.id, "CarbonActivity", "id");
+      if (!(input.emissionSourceReference instanceof EmissionSourceReference)) {
+        throw new DomainError(
+          "CARBON_BATCH4A_INVALID_REFERENCE",
+          "emissionSourceReference must be an EmissionSourceReference."
+        );
+      }
+      unitDimensionOf(input.expectedUnit);
+      if (!(input.plannedPeriod instanceof ValidityPeriod)) {
+        throw new DomainError(
+          "CARBON_BATCH4A_INVALID_VALUE",
+          "plannedPeriod must be a ValidityPeriod."
+        );
+      }
+      return new _CarbonActivityAggregate(input, metadata2);
+    }
+    get status() {
+      return this.#status;
+    }
+    get occurrence() {
+      return this.#occurrence;
+    }
+    get observationReference() {
+      return this.#observationReference;
+    }
+    get events() {
+      return Object.freeze([...this.#events]);
+    }
+    toReference() {
+      return CarbonActivityReference.create({
+        carbonActivityId: this.id,
+        emissionSourceReference: this.emissionSourceReference,
+        activityDefinitionCode: this.activityDefinitionCode,
+        expectedUnit: this.expectedUnit
+      });
+    }
+    occur(occurrence, metadata2) {
+      this.assertStatus("Planned", "Occurred");
+      if (!(occurrence instanceof ActivityOccurrence)) {
+        throw new DomainError(
+          "CARBON_BATCH4A_INVALID_VALUE",
+          "occurrence must be an ActivityOccurrence."
+        );
+      }
+      this.#occurrence = occurrence;
+      this.#status = "Occurred";
+      this.#events.push(
+        Batch4AEvent.create({
+          ...metadata2,
+          eventType: "CarbonActivityOccurred",
+          aggregateId: this.id,
+          payload: {
+            occurrenceKind: occurrence.kind,
+            startAt: occurrence.startAt,
+            endAt: occurrence.endAt
+          }
+        })
+      );
+    }
+    observe(reference, metadata2) {
+      this.assertStatus("Occurred", "Observed");
+      if (!(reference instanceof ObservationReference) || !reference.carbonActivityId.equals(this.id)) {
+        throw new DomainError(
+          "CARBON_BATCH4A_INVALID_REFERENCE",
+          "Observation reference must identify this Carbon Activity."
+        );
+      }
+      this.#observationReference = reference;
+      this.#status = "Observed";
+      this.#events.push(
+        Batch4AEvent.create({
+          ...metadata2,
+          eventType: "CarbonActivityObserved",
+          aggregateId: this.id,
+          payload: { observationId: reference.observationId.value }
+        })
+      );
+    }
+    record(metadata2) {
+      this.transition("Observed", "Recorded", "CarbonActivityRecorded", metadata2);
+    }
+    close(metadata2) {
+      this.transition("Recorded", "Closed", "CarbonActivityClosed", metadata2);
+    }
+    cancel(metadata2) {
+      this.transition(
+        "Planned",
+        "Cancelled",
+        "CarbonActivityCancelled",
+        metadata2
+      );
+    }
+    transition(expected, next, eventType, metadata2) {
+      this.assertStatus(expected, next);
+      this.#status = next;
+      this.#events.push(
+        Batch4AEvent.create({
+          ...metadata2,
+          eventType,
+          aggregateId: this.id,
+          payload: {}
+        })
+      );
+    }
+    assertStatus(expected, next) {
+      if (this.#status !== expected) {
+        throw new DomainError(
+          "CARBON_BATCH4A_INVALID_TRANSITION",
+          `Carbon Activity cannot transition from ${this.#status} to ${next}.`,
+          { from: this.#status, to: next }
+        );
+      }
+    }
+  };
+
+  // packages/carbon-core/src/batch4a-identifiers.ts
+  var createEmissionSourceId = (value) => Identifier.create("EmissionSource", value);
+  var createCarbonActivityId = (value) => Identifier.create("CarbonActivity", value);
+  var createObservationId = (value) => Identifier.create("Observation", value);
+  var createActivityDataRecordId = (value) => Identifier.create("ActivityDataRecord", value);
+  var createDataTrustId = (value) => Identifier.create("DataTrust", value);
+  var createFactorDatasetVersionId = (value) => Identifier.create("FactorDatasetVersion", value);
+  var createEmissionFactorId = (value) => Identifier.create("EmissionFactor", value);
+  var createFactorSelectionPolicyId = (value) => Identifier.create("FactorSelectionPolicy", value);
+  var createFactorSelectionId = (value) => Identifier.create("FactorSelection", value);
+  var createEmissionCalculationId = (value) => Identifier.create("EmissionCalculation", value);
+
+  // packages/carbon-core/src/batch5-value-objects.ts
+  var FactorDatasetVersionReference = class _FactorDatasetVersionReference {
+    constructor(id) {
+      this.id = id;
+      Object.freeze(this);
+    }
+    static create(id) {
+      assertIdentifierKind(id, "FactorDatasetVersion", "factorDatasetVersionId");
+      return new _FactorDatasetVersionReference(id);
+    }
+  };
+  var EmissionFactorReference = class _EmissionFactorReference {
+    constructor(id) {
+      this.id = id;
+      Object.freeze(this);
+    }
+    static create(id) {
+      assertIdentifierKind(id, "EmissionFactor", "emissionFactorId");
+      return new _EmissionFactorReference(id);
+    }
+  };
+  var FactorApplicability = class _FactorApplicability {
+    constructor(activitySemanticKey, accountingContextReference) {
+      this.activitySemanticKey = activitySemanticKey;
+      this.accountingContextReference = accountingContextReference;
+      Object.freeze(this);
+    }
+    static create(activitySemanticKey, accountingContextReference) {
+      return new _FactorApplicability(
+        required2(activitySemanticKey, "activitySemanticKey"),
+        required2(accountingContextReference, "accountingContextReference")
+      );
+    }
+    matches(other) {
+      return this.activitySemanticKey === other.activitySemanticKey && this.accountingContextReference === other.accountingContextReference;
+    }
+  };
+  var ApplicabilitySnapshot = class _ApplicabilitySnapshot {
+    constructor(activitySemanticKey, accountingContextReference) {
+      this.activitySemanticKey = activitySemanticKey;
+      this.accountingContextReference = accountingContextReference;
+      Object.freeze(this);
+    }
+    static from(value) {
+      if (!(value instanceof FactorApplicability)) throw invalid("applicability");
+      return new _ApplicabilitySnapshot(
+        value.activitySemanticKey,
+        value.accountingContextReference
+      );
+    }
+  };
+  var FactorUnit = class _FactorUnit {
+    constructor(carbonOutputUnit, carbonGasBasis, denominatorUnit) {
+      this.carbonOutputUnit = carbonOutputUnit;
+      this.carbonGasBasis = carbonGasBasis;
+      this.denominatorUnit = denominatorUnit;
+      Object.freeze(this);
+    }
+    static create(carbonOutputUnit, carbonGasBasis, denominatorUnit) {
+      assertMassUnit(carbonOutputUnit);
+      assertCarbonGasBasis(carbonGasBasis);
+      areUnitsCompatible(denominatorUnit, denominatorUnit);
+      return new _FactorUnit(carbonOutputUnit, carbonGasBasis, denominatorUnit);
+    }
+    accepts(activityUnit) {
+      return areUnitsCompatible(activityUnit, this.denominatorUnit);
+    }
+  };
+  var FactorUnitSnapshot = class _FactorUnitSnapshot {
+    constructor(carbonOutputUnit, carbonGasBasis, denominatorUnit) {
+      this.carbonOutputUnit = carbonOutputUnit;
+      this.carbonGasBasis = carbonGasBasis;
+      this.denominatorUnit = denominatorUnit;
+      Object.freeze(this);
+    }
+    static from(value) {
+      if (!(value instanceof FactorUnit)) throw invalid("factorUnit");
+      return new _FactorUnitSnapshot(
+        value.carbonOutputUnit,
+        value.carbonGasBasis,
+        value.denominatorUnit
+      );
+    }
+  };
+  var FactorValueSnapshot = class _FactorValueSnapshot {
+    constructor(value) {
+      this.value = value;
+      Object.freeze(this);
+    }
+    static from(value) {
+      return new _FactorValueSnapshot(value.toString());
+    }
+  };
+  var PolicySnapshot = class _PolicySnapshot {
+    constructor(policyId, version, resolutionRule) {
+      this.policyId = policyId;
+      this.version = version;
+      this.resolutionRule = resolutionRule;
+      Object.freeze(this);
+    }
+    static create(policyId, version) {
+      assertIdentifierKind(policyId, "FactorSelectionPolicy", "policyId");
+      return new _PolicySnapshot(
+        policyId,
+        required2(version, "policyVersion"),
+        "UniqueEligibleCandidate"
+      );
+    }
+  };
+  var ActivityDataRecordSelectionSemanticsSnapshot = class _ActivityDataRecordSelectionSemanticsSnapshot {
+    activityDataRecordId;
+    applicability;
+    quantityUnit;
+    #relevantAtTime;
+    constructor(input) {
+      this.activityDataRecordId = input.activityDataRecordId;
