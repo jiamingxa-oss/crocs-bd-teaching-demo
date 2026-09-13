@@ -1,0 +1,350 @@
+      this.applicability = input.applicability;
+      this.quantityUnit = input.quantityUnit;
+      this.#relevantAtTime = input.relevantAt.getTime();
+      Object.freeze(this);
+    }
+    static create(input) {
+      assertIdentifierKind(
+        input.activityDataRecordId,
+        "ActivityDataRecord",
+        "activityDataRecordId"
+      );
+      if (!(input.applicability instanceof FactorApplicability))
+        throw invalid("applicability");
+      areUnitsCompatible(input.quantityUnit, input.quantityUnit);
+      if (!Number.isFinite(input.relevantAt.getTime()))
+        throw invalid("relevantAt");
+      return new _ActivityDataRecordSelectionSemanticsSnapshot(input);
+    }
+    get relevantAt() {
+      return new Date(this.#relevantAtTime);
+    }
+  };
+  var ActivityFactorSelectionContext = class _ActivityFactorSelectionContext {
+    activityDataRecordId;
+    admissionSnapshot;
+    selectionSemanticsSnapshot;
+    constructor(input) {
+      this.activityDataRecordId = input.activityDataRecordId;
+      this.admissionSnapshot = input.admissionSnapshot;
+      this.selectionSemanticsSnapshot = input.selectionSemanticsSnapshot;
+      Object.freeze(this);
+    }
+    static create(input) {
+      assertIdentifierKind(
+        input.activityDataRecordId,
+        "ActivityDataRecord",
+        "activityDataRecordId"
+      );
+      if (!input.admissionSnapshot.activityDataRecordId.equals(
+        input.activityDataRecordId
+      )) {
+        throw invalid("admissionSnapshot");
+      }
+      if (!(input.selectionSemanticsSnapshot instanceof ActivityDataRecordSelectionSemanticsSnapshot) || !input.selectionSemanticsSnapshot.activityDataRecordId.equals(
+        input.activityDataRecordId
+      )) {
+        throw invalid("selectionSemanticsSnapshot");
+      }
+      return new _ActivityFactorSelectionContext(input);
+    }
+    get applicability() {
+      return this.selectionSemanticsSnapshot.applicability;
+    }
+    get quantityUnit() {
+      return this.selectionSemanticsSnapshot.quantityUnit;
+    }
+    get relevantAt() {
+      return this.selectionSemanticsSnapshot.relevantAt;
+    }
+  };
+  function isValidAt(validity2, instant) {
+    return validity2.containsInstant(instant);
+  }
+  function required2(value, field) {
+    const normalized = value.trim();
+    if (!normalized) throw invalid(field);
+    return normalized;
+  }
+  function invalid(field) {
+    return new DomainError("CARBON_BATCH5_INVALID_VALUE", `${field} is invalid.`);
+  }
+
+  // packages/carbon-core/src/factor-selection.ts
+  var FrozenFactorSelection = class _FrozenFactorSelection {
+    constructor(factorSelectionId, activityDataRecordRef, activityDataRecordAdmissionSnapshot, emissionFactorRef, factorDatasetVersionRef, factorValueSnapshot, factorUnitSnapshot, applicabilitySnapshot, policySnapshot) {
+      this.factorSelectionId = factorSelectionId;
+      this.activityDataRecordRef = activityDataRecordRef;
+      this.activityDataRecordAdmissionSnapshot = activityDataRecordAdmissionSnapshot;
+      this.emissionFactorRef = emissionFactorRef;
+      this.factorDatasetVersionRef = factorDatasetVersionRef;
+      this.factorValueSnapshot = factorValueSnapshot;
+      this.factorUnitSnapshot = factorUnitSnapshot;
+      this.applicabilitySnapshot = applicabilitySnapshot;
+      this.policySnapshot = policySnapshot;
+      Object.freeze(this);
+    }
+    status = "Frozen";
+    static create(id, context, factor, policy) {
+      return new _FrozenFactorSelection(
+        id,
+        context.activityDataRecordId,
+        context.admissionSnapshot,
+        factor.toReference(),
+        factor.datasetVersionReference,
+        FactorValueSnapshot.from(factor.value),
+        FactorUnitSnapshot.from(factor.unit),
+        ApplicabilitySnapshot.from(factor.applicability),
+        policy.snapshot
+      );
+    }
+  };
+  var FactorSelection = class _FactorSelection {
+    id;
+    activityContext;
+    #status = "Draft";
+    #frozen;
+    constructor(id, context) {
+      this.id = id;
+      this.activityContext = context;
+    }
+    static create(id, context) {
+      assertIdentifierKind(id, "FactorSelection", "id");
+      if (!(context instanceof ActivityFactorSelectionContext))
+        throw new DomainError(
+          "CARBON_BATCH5_INVALID_VALUE",
+          "Selection context is invalid."
+        );
+      return new _FactorSelection(id, context);
+    }
+    get status() {
+      return this.#status;
+    }
+    get frozenSelection() {
+      return this.#frozen;
+    }
+    get isEligibleForBatch6() {
+      return this.#status === "Frozen";
+    }
+    evaluate(trust, candidates, policy) {
+      if (this.#status !== "Draft")
+        throw new DomainError(
+          "CARBON_BATCH5_SELECTION_IMMUTABLE",
+          "A completed FactorSelection cannot be changed."
+        );
+      if (!trust.isReadyForLaterFactorSelection(
+        this.activityContext.admissionSnapshot
+      )) {
+        this.#status = "Unresolved";
+        return;
+      }
+      const eligible = candidates.filter(
+        (factor) => factor.status === "Published" && factor.applicability.matches(this.activityContext.applicability) && factor.unit.accepts(this.activityContext.quantityUnit) && isValidAt(factor.validity, this.activityContext.relevantAt)
+      );
+      const resolved = policy.resolve(eligible);
+      if (resolved === void 0) {
+        this.#status = "Unresolved";
+        return;
+      }
+      this.#frozen = FrozenFactorSelection.create(
+        this.id,
+        this.activityContext,
+        resolved,
+        policy
+      );
+      this.#status = "Frozen";
+    }
+  };
+
+  // packages/carbon-core/src/emission-result.ts
+  var EmissionResult = class _EmissionResult {
+    constructor(emissionCalculationId, activityDataRecordRef, factorSelectionRef, activityQuantitySnapshot, factorValueSnapshot, factorUnitSnapshot, result, calculatedAt) {
+      this.emissionCalculationId = emissionCalculationId;
+      this.activityDataRecordRef = activityDataRecordRef;
+      this.factorSelectionRef = factorSelectionRef;
+      this.activityQuantitySnapshot = activityQuantitySnapshot;
+      this.factorValueSnapshot = factorValueSnapshot;
+      this.factorUnitSnapshot = factorUnitSnapshot;
+      this.result = result;
+      this.#calculatedAtTime = calculatedAt.getTime();
+      Object.freeze(this);
+    }
+    #calculatedAtTime;
+    static calculate(id, quantity, factor, calculatedAt) {
+      assertIdentifierKind(id, "EmissionCalculation", "emissionCalculationId");
+      if (!(quantity instanceof ActivityDataRecordCalculationSnapshot)) {
+        throw new DomainError(
+          "CARBON_BATCH6_INVALID_VALUE",
+          "A governed ActivityDataRecordCalculationSnapshot is required."
+        );
+      }
+      if (!(factor instanceof FrozenFactorSelection)) {
+        throw new DomainError(
+          "CARBON_BATCH6_INVALID_VALUE",
+          "A FrozenFactorSelection is required."
+        );
+      }
+      if (!(calculatedAt instanceof Date) || !Number.isFinite(calculatedAt.getTime())) {
+        throw new DomainError(
+          "CARBON_BATCH6_TIMESTAMP_INVALID",
+          "calculatedAt must be a valid timestamp."
+        );
+      }
+      if (!factor.activityDataRecordRef.equals(
+        quantity.activityDataRecordRef.activityDataRecordId
+      )) {
+        throw new DomainError(
+          "CARBON_BATCH6_RECORD_MISMATCH",
+          "Quantity and FrozenFactorSelection must reference the same ActivityDataRecord."
+        );
+      }
+      const unit = factor.factorUnitSnapshot;
+      const normalizedQuantity = quantity.activityQuantitySnapshot.convertTo(
+        unit.denominatorUnit
+      );
+      const product = ExactDecimal.parse(normalizedQuantity.value).multiply(
+        ExactDecimal.parse(
+          factor.factorValueSnapshot.value,
+          "CARBON_BATCH6_FACTOR_INVALID",
+          "Frozen factor value"
+        )
+      );
+      return new _EmissionResult(
+        id,
+        quantity.activityDataRecordRef,
+        factor.factorSelectionId,
+        ActivityQuantity.create(
+          quantity.activityQuantitySnapshot.value,
+          quantity.activityQuantitySnapshot.unit
+        ),
+        factor.factorValueSnapshot,
+        factor.factorUnitSnapshot,
+        CarbonQuantity.create(
+          product.toString(),
+          unit.carbonOutputUnit,
+          unit.carbonGasBasis
+        ),
+        calculatedAt
+      );
+    }
+    get calculatedAt() {
+      return new Date(this.#calculatedAtTime);
+    }
+  };
+
+  // packages/carbon-core/src/reduction-identifiers.ts
+  var createReductionPlanId = (value) => Identifier.create("ReductionPlan", value);
+  var createReductionMeasureId = (value) => Identifier.create("ReductionMeasure", value);
+  var createReductionExecutionFactId = (value) => Identifier.create("ReductionExecutionFact", value);
+  var createReductionAccountingUnitId = (value) => Identifier.create("ReductionAccountingUnit", value);
+  var createReductionOutcomeId = (value) => Identifier.create("ReductionOutcome", value);
+
+  // packages/carbon-core/src/reduction-outcome-events.ts
+  var ReductionOutcomeEvent = class _ReductionOutcomeEvent {
+    constructor(eventId, eventType, aggregateId, actorId, occurredAt, payload) {
+      this.eventId = eventId;
+      this.eventType = eventType;
+      this.aggregateId = aggregateId;
+      this.actorId = actorId;
+      this.payload = payload;
+      this.#occurredAt = occurredAt.getTime();
+      Object.freeze(this.payload);
+      Object.freeze(this);
+    }
+    schemaVersion = 1;
+    #occurredAt;
+    static create(input) {
+      const value = input;
+      if (!(value.eventId instanceof Identifier) || value.eventId.kind !== "CarbonDomainEvent" || !(value.actorId instanceof Identifier) || value.actorId.kind !== "Actor" || !(value.aggregateId instanceof Identifier) || value.aggregateId.kind !== "ReductionOutcome" || !["ReductionSourceAssessed", "ReductionOutcomeFinalized"].includes(
+        input.eventType
+      ) || !(input.occurredAt instanceof Date) || !Number.isFinite(input.occurredAt.getTime()) || Object.keys(input.payload).length === 0 || Object.values(input.payload).some(
+        (value2) => typeof value2 !== "string" || value2.trim().length === 0
+      ))
+        throw new DomainError(
+          "CARBON_REDUCTION_R3_EVENT_INVALID",
+          "Reduction outcome event is invalid."
+        );
+      return new _ReductionOutcomeEvent(
+        input.eventId,
+        input.eventType,
+        input.aggregateId,
+        input.actorId,
+        input.occurredAt,
+        Object.freeze({ ...input.payload })
+      );
+    }
+    get occurredAt() {
+      return new Date(this.#occurredAt);
+    }
+  };
+
+  // packages/carbon-core/src/reduction-outcome.ts
+  var ObservedEmissionChange = class _ObservedEmissionChange {
+    constructor(direction, magnitude) {
+      this.direction = direction;
+      this.magnitude = magnitude;
+      Object.freeze(this);
+    }
+    static compare(before, after) {
+      const comparison = before.compare(after);
+      if (comparison > 0)
+        return new _ObservedEmissionChange(
+          "REDUCTION",
+          before.subtractNonnegative(after)
+        );
+      if (comparison < 0)
+        return new _ObservedEmissionChange(
+          "INCREASE",
+          after.subtractNonnegative(before)
+        );
+      return new _ObservedEmissionChange(
+        "NO_CHANGE",
+        CarbonQuantity.create("0", before.unit, before.gasBasis)
+      );
+    }
+  };
+  var ReductionAttribution = class _ReductionAttribution {
+    constructor(classification, evidenceKind, evidenceReferenceIds = [], accountingUnitId, measureId, executionFactId) {
+      this.classification = classification;
+      this.evidenceKind = evidenceKind;
+      this.evidenceReferenceIds = evidenceReferenceIds;
+      this.accountingUnitId = accountingUnitId;
+      this.measureId = measureId;
+      this.executionFactId = executionFactId;
+      Object.freeze(this.evidenceReferenceIds);
+      Object.freeze(this);
+    }
+    static active(input) {
+      assertKind2(input.accountingUnitId, "ReductionAccountingUnit");
+      assertKind2(input.measureId, "ReductionMeasure");
+      assertKind2(input.executionFactId, "ReductionExecutionFact");
+      return new _ReductionAttribution(
+        "ACTIVE_REDUCTION",
+        void 0,
+        [],
+        input.accountingUnitId,
+        input.measureId,
+        input.executionFactId
+      );
+    }
+    static activityLevel(input) {
+      const evidence = input.evidenceReferenceIds;
+      if (!["OUTPUT", "OPERATING_TIME", "SALES_VOLUME"].includes(
+        input.evidenceKind
+      ) || input.evidenceReferenceIds.length === 0 || evidence.some(
+        (id) => !(id instanceof Identifier) || id.kind !== "EvidenceReference"
+      ))
+        throw r3(
+          "CARBON_REDUCTION_R3_ACTIVITY_EVIDENCE_REQUIRED",
+          "Activity-level reduction requires governed Lite evidence."
+        );
+      return new _ReductionAttribution(
+        "ACTIVITY_LEVEL_REDUCTION",
+        input.evidenceKind,
+        [...input.evidenceReferenceIds]
+      );
+    }
+    static otherOrUnresolved() {
+      return new _ReductionAttribution("OTHER_OR_UNRESOLVED");
+    }
+  };
