@@ -1,0 +1,350 @@
+    assertGenuine() {
+      void this.#nominal;
+    }
+  };
+  function createDisclosureContentSelectionV080(input) {
+    if (input.contentKinds.length === 0)
+      throw simulationInvalid(
+        "D13 WHAT requires at least one disclosure content."
+      );
+    const contentKinds = uniqueDisclosureContentKinds(input.contentKinds);
+    const selectsFuture = contentKinds.includes("FUTURE_COMMITMENT");
+    if (selectsFuture && input.forwardCommitment === void 0)
+      throw simulationInvalid(
+        "FUTURE_COMMITMENT content requires a genuine PLAYER_DECISION-backed forward commitment."
+      );
+    if (!selectsFuture && input.forwardCommitment !== void 0)
+      throw simulationInvalid(
+        "Forward commitment cannot be attached unless FUTURE_COMMITMENT is selected."
+      );
+    if (input.forwardCommitment !== void 0) {
+      if (!(input.forwardCommitment instanceof ForwardCommitmentDisclosureV080))
+        throw simulationInvalid(
+          "Forward commitment disclosure was structurally forged."
+        );
+      input.forwardCommitment.assertGenuine();
+    }
+    const coreClaimTypes = Object.freeze(
+      contentKinds.flatMap((kind2) => {
+        switch (kind2) {
+          case "ACTUAL_REDUCTION":
+            return ["REDUCTION_OUTCOME"];
+          case "PRODUCT_CARBON":
+            return ["PRODUCT_CARBON"];
+          case "OFFSET":
+            return ["OFFSET_OUTCOME"];
+          case "CARBON_NEUTRALITY":
+            return ["CARBON_NEUTRALITY"];
+          case "FUTURE_COMMITMENT":
+            return [];
+        }
+      })
+    );
+    const payload = Object.freeze({
+      provenance: "PLAYER_DECISION",
+      contentKinds,
+      coreClaimTypes,
+      forwardCommitmentReference: input.forwardCommitment?.reference
+    });
+    return Object.freeze({
+      provenance: payload.provenance,
+      contentKinds,
+      coreClaimTypes,
+      forwardCommitment: input.forwardCommitment,
+      reference: `disclosure-content-selection-v080:${deterministicSha256(payload)}`
+    });
+  }
+  function assertRemainingReductionResponseV080(value) {
+    if (!teachingV080RemainingReductionResponses.includes(value))
+      throw simulationInvalid("Unknown D10 remaining-reduction response.", {
+        value
+      });
+    return value;
+  }
+  function assertVerificationResponseV080(value) {
+    if (!teachingV080VerificationResponses.includes(value))
+      throw simulationInvalid("Unknown D17 verification response.", { value });
+    return value;
+  }
+  function assertDisclosureCorrectionResponseV080(value) {
+    if (!teachingV080DisclosureCorrectionResponses.includes(value))
+      throw simulationInvalid("Unknown D18 disclosure correction response.", {
+        value
+      });
+    return value;
+  }
+  function uniqueNonBlank(values2, field) {
+    const normalized = values2.map(
+      (value, index) => nonBlank(value, `${field}[${String(index)}]`)
+    );
+    if (new Set(normalized).size !== normalized.length)
+      throw simulationInvalid(`${field} must not contain duplicates.`);
+    return Object.freeze(normalized);
+  }
+  function uniqueDisclosureContentKinds(values2) {
+    for (const value of values2)
+      if (!teachingV080DisclosureContentKinds.includes(value))
+        throw simulationInvalid("Unknown D13 disclosure content.", { value });
+    if (new Set(values2).size !== values2.length)
+      throw simulationInvalid("D13 disclosure content must be unique.");
+    return Object.freeze([...values2]);
+  }
+  function optionalNonBlank2(value, field) {
+    return value === void 0 ? void 0 : nonBlank(value, field);
+  }
+
+  // packages/carbon-core/src/communication-decision.ts
+  var disclosureClaimTypes = [
+    "CARBON_INVENTORY",
+    "REDUCTION_OUTCOME",
+    "PRODUCT_CARBON",
+    "OFFSET_OUTCOME",
+    "CARBON_NEUTRALITY"
+  ];
+  var disclosureClaimAuthority = Symbol(
+    "communication-disclosure-claim-authority"
+  );
+
+  // packages/carbon-core/src/communication-publication.ts
+  var VerificationSnapshot = class _VerificationSnapshot {
+    constructor(disclosureVersionId, verifierReference, verifiedAt, sourceIntegrity, claimConsistency, completeness, overallResult) {
+      this.disclosureVersionId = disclosureVersionId;
+      this.verifierReference = verifierReference;
+      this.sourceIntegrity = sourceIntegrity;
+      this.claimConsistency = claimConsistency;
+      this.completeness = completeness;
+      this.overallResult = overallResult;
+      this.verifiedAt = copyDate(verifiedAt, "verifiedAt");
+      Object.freeze(this);
+    }
+    #nominal = true;
+    verifiedAt;
+    static verify(input, sourceBundle, selection, claimSet) {
+      sourceBundle.assertGenuine();
+      selection.assertGenuine();
+      claimSet.assertGenuine();
+      const expectedVersion = sourceBundle.disclosureVersionId.value;
+      const machineSourceIntegrity = verifySourceIntegrity(sourceBundle);
+      const machineClaimConsistency = verifyClaimConsistency(
+        sourceBundle,
+        selection,
+        claimSet
+      );
+      const machineCompleteness = verifyCompleteness(sourceBundle, claimSet);
+      const sourceIntegrity = combineCheck(
+        input.sourceIntegrity,
+        machineSourceIntegrity
+      );
+      const claimConsistency = combineCheck(
+        input.claimConsistency,
+        machineClaimConsistency
+      );
+      const completeness = combineCheck(input.completeness, machineCompleteness);
+      const overallResult = sourceIntegrity === "PASS" && claimConsistency === "PASS" && completeness === "PASS" ? "VERIFIED" : "REJECTED";
+      return new _VerificationSnapshot(
+        expectedVersion,
+        nonBlank2(input.verifierReference, "verifierReference"),
+        input.verifiedAt,
+        sourceIntegrity,
+        claimConsistency,
+        completeness,
+        overallResult
+      );
+    }
+    assertGenuine() {
+      void this.#nominal;
+    }
+  };
+  var PublicationSnapshot = class _PublicationSnapshot {
+    constructor(disclosureVersionId, publicationReference, publishedAt, decisionReference, claimIds, claimTypes) {
+      this.disclosureVersionId = disclosureVersionId;
+      this.publicationReference = publicationReference;
+      this.decisionReference = decisionReference;
+      this.publishedAt = copyDate(publishedAt, "publishedAt");
+      this.claimIds = Object.freeze([...claimIds]);
+      this.claimTypes = Object.freeze([...claimTypes]);
+      Object.freeze(this);
+    }
+    #nominal = true;
+    publishedAt;
+    claimIds;
+    claimTypes;
+    static issue(input) {
+      input.sourceBundle.assertGenuine();
+      input.selection.assertGenuine();
+      input.claimSet.assertGenuine();
+      input.verification.assertGenuine();
+      const version = input.sourceBundle.disclosureVersionId.value;
+      if (input.selection.disclosureVersionId !== version || input.claimSet.disclosureVersionId !== version || input.verification.disclosureVersionId !== version)
+        throw cb3Error(
+          "CARBON_COMMUNICATION_CB3_VERSION_MISMATCH",
+          "Publication inputs must bind the exact same disclosure version."
+        );
+      if (input.verification.overallResult !== "VERIFIED")
+        throw cb3Error(
+          "CARBON_COMMUNICATION_CB3_NOT_VERIFIED",
+          "Only a VERIFIED disclosure may be published."
+        );
+      nonBlank2(input.approvalReference, "approvalReference");
+      const claimIds = input.claimSet.claims.map((claim) => claim.claimId);
+      const claimTypes = uniqueClaimTypes(
+        input.claimSet.claims.map((claim) => claim.claimType)
+      );
+      if (claimIds.length === 0)
+        throw cb3Error(
+          "CARBON_COMMUNICATION_CB3_CLAIMS_REQUIRED",
+          "Published disclosure must contain at least one governed claim."
+        );
+      return new _PublicationSnapshot(
+        version,
+        nonBlank2(input.publicationReference, "publicationReference"),
+        input.publishedAt,
+        input.selection.decisionReference,
+        claimIds,
+        claimTypes
+      );
+    }
+    assertGenuine() {
+      void this.#nominal;
+    }
+  };
+  function verifySourceIntegrity(sourceBundle) {
+    if (sourceBundle.sourceSnapshots.length === 0) return "FAIL";
+    const keys2 = /* @__PURE__ */ new Set();
+    for (const snapshot of sourceBundle.sourceSnapshots) {
+      snapshot.assertGenuine();
+      if (keys2.has(snapshot.sourceKey)) return "FAIL";
+      keys2.add(snapshot.sourceKey);
+      if (!snapshot.reportingEntityVersionId.equals(
+        sourceBundle.reportingEntityVersionId
+      ) || !snapshot.accountingContextId.equals(sourceBundle.accountingContextId) || snapshot.unit !== sourceBundle.reportingMassUnit || snapshot.gasBasis !== sourceBundle.carbonGasBasis)
+        return "FAIL";
+    }
+    return "PASS";
+  }
+  function verifyClaimConsistency(sourceBundle, selection, claimSet) {
+    const version = sourceBundle.disclosureVersionId.value;
+    if (selection.disclosureVersionId !== version || claimSet.disclosureVersionId !== version || claimSet.decisionReference !== selection.decisionReference)
+      return "FAIL";
+    const bundleKeys = new Set(
+      sourceBundle.sourceSnapshots.map((snapshot) => snapshot.sourceKey)
+    );
+    for (const claim of claimSet.claims) {
+      claim.assertGenuine();
+      if (claim.disclosureVersionId !== version || claim.supportingTruthKeys.length === 0 || claim.supportingTruthKeys.some((key) => !bundleKeys.has(key)))
+        return "FAIL";
+    }
+    return "PASS";
+  }
+  function verifyCompleteness(sourceBundle, claimSet) {
+    if (claimSet.claims.length === 0) return "FAIL";
+    const snapshotByKey = new Map(
+      sourceBundle.sourceSnapshots.map((snapshot) => [
+        snapshot.sourceKey,
+        snapshot
+      ])
+    );
+    for (const claim of claimSet.claims) {
+      const supporting = claim.supportingTruthKeys.map((key) => snapshotByKey.get(key)).filter(
+        (snapshot) => snapshot !== void 0
+      );
+      if (supporting.length !== claim.supportingTruthKeys.length) return "FAIL";
+      if (claim.claimType === "PRODUCT_CARBON") {
+        if (claim.subjectRef === void 0) return "FAIL";
+        const hasExactProductResult = supporting.some(
+          (snapshot) => snapshot.sourceRole === "CURRENT" && snapshot.factKind === "PRODUCT_CARBON_RESULT" && snapshot.subjectRef === claim.subjectRef
+        );
+        if (!hasExactProductResult) return "FAIL";
+      }
+      if (claim.claimType === "CARBON_NEUTRALITY") {
+        if (!neutralitySupportComplete(supporting)) return "FAIL";
+      }
+    }
+    return "PASS";
+  }
+  function neutralitySupportComplete(snapshots) {
+    const hasCurrentOperatingNet = snapshots.some(
+      (snapshot) => snapshot.sourceRole === "CURRENT" && snapshot.factKind === "OPERATING_CARBON_NET"
+    );
+    const requiredKinds = [
+      "ENTERPRISE_ACTUAL_REDUCTION",
+      "OFFSET_REQUIREMENT",
+      "OFFSET_RESOURCE",
+      "OFFSET_PERIOD_NET_RESOURCES",
+      "OFFSET_CLOSING_BALANCE",
+      "CARBON_NEUTRALITY_RESULT"
+    ];
+    return hasCurrentOperatingNet && requiredKinds.every(
+      (kind2) => snapshots.some((snapshot) => snapshot.factKind === kind2)
+    );
+  }
+  function combineCheck(declared, machine) {
+    return declared === "PASS" && machine === "PASS" ? "PASS" : "FAIL";
+  }
+  function uniqueClaimTypes(values2) {
+    return Object.freeze([...new Set(values2)]);
+  }
+  function copyDate(value, field) {
+    if (!(value instanceof Date) || Number.isNaN(value.getTime()))
+      throw cb3Error(
+        "CARBON_COMMUNICATION_CB3_DATE_INVALID",
+        `${field} must be a valid Date.`
+      );
+    return new Date(value.getTime());
+  }
+  function nonBlank2(value, field) {
+    const normalized = value.trim();
+    if (normalized.length === 0)
+      throw cb3Error(
+        "CARBON_COMMUNICATION_CB3_REFERENCE_REQUIRED",
+        `${field} must be nonblank.`
+      );
+    return normalized;
+  }
+  function cb3Error(code, message) {
+    return new DomainError(code, message);
+  }
+
+  // packages/carbon-core/src/reporting-period.ts
+  var isoDateOnlyPattern = /^(\d{4})-(\d{2})-(\d{2})$/;
+  function isLeapYear(year) {
+    return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  }
+  function assertIsoDateOnly(value, field) {
+    const match = isoDateOnlyPattern.exec(value);
+    if (match === null) {
+      throw invalidReportingPeriod(
+        `${field} must use the ISO YYYY-MM-DD date-only format.`,
+        { field, value }
+      );
+    }
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+    const daysInMonth = [
+      31,
+      isLeapYear(year) ? 29 : 28,
+      31,
+      30,
+      31,
+      30,
+      31,
+      31,
+      30,
+      31,
+      30,
+      31
+    ];
+    const maximumDay = daysInMonth[month - 1];
+    if (year === 0 || month < 1 || month > 12 || maximumDay === void 0 || day < 1 || day > maximumDay) {
+      throw invalidReportingPeriod(`${field} must be a valid calendar date.`, {
+        field,
+        value
+      });
+    }
+  }
+  function invalidReportingPeriod(message, details) {
+    return new DomainError("CARBON_REPORTING_PERIOD_INVALID", message, details);
+  }
+  var ReportingPeriod = class _ReportingPeriod {
+    startDate;
