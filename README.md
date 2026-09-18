@@ -2,6 +2,8 @@
 
 Public showcase:
 
+- Current v1 read-only preview: https://jiamingxa-oss.github.io/crocs-bd-teaching-demo/v100-preview/
+
 - Teaching Sandbox v0.7 (preserved historical review version): https://jiamingxa-oss.github.io/crocs-bd-teaching-demo/sandbox.html
 - Teaching Sandbox v0.8 Review (current teacher-review entry): https://jiamingxa-oss.github.io/crocs-bd-teaching-demo/sandbox-v080.html
 - Story Mode: https://jiamingxa-oss.github.io/crocs-bd-teaching-demo/

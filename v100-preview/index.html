@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="CROCS Teaching Simulation v0.8 · BD 汽车企业课堂验收预览"
+    />
+    <title>CROCS v0.8 · BD Enterprise Console</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#console">跳到企业驾驶舱</a>
+
+    <header class="topbar">
+      <div class="brand" aria-label="CROCS 企业智能碳管理系统">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <span><strong>CROCS</strong><small>企业智能碳管理教学沙盘</small></span>
+      </div>
+      <div class="top-context">
+        <span>BD AUTOMOTIVE</span>
+        <b>Teaching Simulation v0.8</b>
+      </div>
+      <div class="preview-state">
+        <span class="live-dot" aria-hidden="true"></span>
+        UI PREVIEW · NON-PERSISTENT
+      </div>
+    </header>
+
+    <main id="console" class="shell" tabindex="-1">
+      <aside class="round-rail" aria-label="八轮教学流程">
+        <div class="rail-heading">
+          <small>CROCS CYCLE</small>
+          <h2>8轮经营决策</h2>
+          <p>同一企业 · 连续状态 · 决策有后果</p>
+        </div>
+        <nav id="round-nav" class="round-nav"></nav>
+        <div class="rail-guard">
+          <b>Carbon Truth Guard</b>
+          <span>Decision ≠ Fact ≠ Outcome</span>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <header class="mission-card panel-accent">
+          <div>
+            <div class="kicker" id="round-kicker">
+              ROUND 1 · COMMITMENT / 确碳
+            </div>
+            <h1 id="round-title">接管BD汽车：先决定怎么经营，再承担碳责任</h1>
+            <p id="round-question">资源有限。你准备把企业带向什么方向？</p>
+          </div>
+          <div class="mission-meta">
+            <span class="tag decision">PLAYER DECISION</span>
+            <span id="round-phase">DECISION COLLECTION</span>
+          </div>
+        </header>
+
+        <section class="state-strip" aria-label="当前企业状态">
+          <article>
+            <small>Cash / 现金</small>
+            <strong>教学期初状态</strong>
+            <span class="tag sim">SIM STATE</span>
+          </article>
+          <article>
+            <small>Carbon Truth</small>
+            <strong>BD基线已载入</strong>
+            <span class="tag fact">CORE FACT</span>
+          </article>
+          <article>
+            <small>Market</small>
+            <strong>基础市场环境</strong>
+            <span class="tag param">SIM PARAM</span>
+          </article>
+          <article>
+            <small>Round</small>
+            <strong id="round-counter">1 / 8</strong>
+            <span class="tag outcome">RUNTIME</span>
+          </article>
+        </section>
+
+        <div class="console-grid">
+          <section class="panel finance" aria-labelledby="finance-title">
+            <header class="panel-title">
+              <div>
+                <small>01</small>
+                <h2 id="finance-title">Financial Position</h2>
+              </div>
+              <span>经营约束</span>
+            </header>
+            <div class="metric-row">
+              <div><small>现金</small><b>可用</b></div>
+              <div><small>经营利润</small><b>独立核算</b></div>
+              <div><small>投资支出</small><b>单独占用现金</b></div>
+            </div>
+            <p class="formula">
+              Cash ≠ Simulation Operating Profit · Investment ≠ Operating Cost
+            </p>
+          </section>
+
+          <section class="panel resources" aria-labelledby="resource-title">
+            <header class="panel-title">
+              <div>
+                <small>02</small>
+                <h2 id="resource-title">Resource Allocation</h2>
+              </div>
+              <span id="resource-hint">本轮资源姿态</span>
+            </header>
+            <div class="allocation-bars" aria-label="资源分配教学示意">
+              <div>
+                <span>经营流动性</span><i><b style="width: 72%"></b></i>
+              </div>
+              <div>
+                <span>碳管理投入</span><i><b style="width: 46%"></b></i>
+              </div>
+              <div>
+                <span>长期能力</span><i><b style="width: 34%"></b></i>
+              </div>
+            </div>
+            <small class="caption"
+              >示意条仅帮助理解资源冲突，不代表 Carbon Truth。</small
+            >
+          </section>
+
+          <section class="panel carbon" aria-labelledby="carbon-title">
+            <header class="panel-title">
+              <div>
+                <small>03</small>
+                <h2 id="carbon-title">Carbon & Capability</h2>
+              </div>
+              <span class="tag fact">CORE FACT</span>
+            </header>
+            <div class="carbon-facts">
+              <p><span>Carbon In</span><b>225 t</b></p>
+              <p><span>Carbon Add</span><b>200 t</b></p>
+              <p><span>Baseline Operating Net</span><b>97.725 t</b></p>
+              <p><span>Actual Reduction</span><b id="actual-reduction">—</b></p>
+            </div>
+            <div class="capability-line">
+              <span>Energy</span><span>Equipment</span><span>Process</span
+              ><span>Carbon Mgmt</span><span>Data</span><span>Disclosure</span>
+            </div>
+            <p class="formula">
+              Capability ≠ Actual Reduction until activity occurs.
+            </p>
+          </section>
+
+          <section class="panel market" aria-labelledby="market-title">
+            <header class="panel-title">
+              <div>
+                <small>04</small>
+                <h2 id="market-title">Market Board</h2>
+              </div>
+              <span class="tag param">SIMULATION</span>
+            </header>
+            <div class="market-grid">
+              <p><small>Carbon price</small><b id="market-carbon">BASE</b></p>
+              <p><small>Energy price</small><b id="market-energy">BASE</b></p>
+              <p><small>Green demand</small><b id="market-green">BASE</b></p>
+              <p>
+                <small>Verification</small><b id="market-verification">BASE</b>
+              </p>
+            </div>
+            <div class="market-note" id="market-note">
+              本轮尚未产生需要展示的新市场后果。
+            </div>
+          </section>
+
+          <section class="panel roles" aria-labelledby="roles-title">
+            <header class="panel-title">
+              <div>
+                <small>05</small>
+                <h2 id="roles-title">Role / Decision Panel</h2>
+              </div>
+              <span>团队协同</span>
+            </header>
+            <div
+              id="role-tabs"
+              class="role-tabs"
+              role="tablist"
+              aria-label="企业角色"
+            ></div>
+            <div class="role-position">
+              <span id="active-role-name">CEO · 总经理</span>
+              <p id="active-role-insight">
+                关注企业总体方向、现金安全与长期竞争力之间的平衡。
+              </p>
+              <div class="position-fields">
+                <span
+                  ><small>POSITION</small><b id="role-position">待提出</b></span
+                >
+                <span
+                  ><small>RECOMMENDATION</small
+                  ><b id="role-recommendation">请选择本轮方案</b></span
+                >
+                <span><small>REASON</small><b>团队讨论后记录</b></span>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="panel decision-panel panel-accent"
+            aria-labelledby="decision-title"
+          >
+            <header class="panel-title">
+              <div>
+                <small>06</small>
+                <h2 id="decision-title">Team Decision</h2>
+              </div>
+              <span class="tag decision">DRAFT ONLY</span>
+            </header>
+            <p id="decision-prompt" class="decision-prompt">
+              选择一个资源姿态，形成团队初始承诺。
+            </p>
+            <div id="decision-options" class="decision-options"></div>
+            <div class="decision-footer">
+              <div>
+                <small>当前草案</small
+                ><strong id="draft-decision">尚未选择</strong>
+              </div>
+              <button id="lock-preview" class="primary" disabled>
+                锁定本轮预览决策 →
+              </button>
+            </div>
+            <p class="preview-warning">
+              预览按钮只演示交互结构：不执行经营活动、不产生 Carbon
+              Truth、不写入数据库。
+            </p>
+          </section>
+        </div>
+
+        <section class="round-result" aria-labelledby="result-title">
+          <header>
+            <div>
+              <small>ROUND RESULT</small>
+              <h2 id="result-title">决策后会发生什么？</h2>
+            </div>
+            <span class="tag outcome">SIMULATION OUTCOME</span>
+          </header>
+          <div class="result-flow">
+            <article>
+              <small>BEFORE</small><b>期初状态</b><span>已知状态</span>
+            </article>
+            <i>→</i>
+            <article class="decision-step">
+              <small>YOUR DECISION</small><b id="result-decision">待选择</b
+              ><span>PLAYER DECISION</span>
+            </article>
+            <i>→</i>
+            <article>
+              <small>BUSINESS CHANGE</small
+              ><b id="business-change">UNRESOLVED</b><span>需执行后解析</span>
+            </article>
+            <i>→</i>
+            <article>
+              <small>CARBON / MARKET</small><b id="carbon-change">UNRESOLVED</b
+              ><span>不可由UI推断</span>
+            </article>
+            <i>→</i>
+            <article>
+              <small>AFTER</small><b id="after-state">UNRESOLVED</b
+              ><span>等待Resolver</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="teaching-layer" aria-label="教学反馈与学习证据">
+          <div class="feedback-card">
+            <header>
+              <small>TEACHING FEEDBACK</small>
+              <h2>错在哪里，要分清楚</h2>
+            </header>
+            <div class="feedback-types">
+              <span><b>Knowledge Error</b><small>概念理解错误</small></span>
+              <span><b>Management Failure</b><small>经营选择后果</small></span>
+              <span
+                ><b>Governance Violation</b
+                ><small>治理规则被确认违反</small></span
+              >
+            </div>
+            <p>FLAG ≠ VIOLATION · Low Disclosure ≠ Greenwashing</p>
+          </div>
+          <div class="provenance-card">
+            <header>
+              <small>PROVENANCE</small>
+              <h2>每个数字从哪里来</h2>
+            </header>
+            <div class="provenance-list">
+              <span class="tag fact">CORE FACT</span>
+              <span class="tag param">SIM PARAM</span>
+              <span class="tag event">SIM EVENT</span>
+              <span class="tag decision">PLAYER DECISION</span>
+              <span class="tag outcome">SIM OUTCOME</span>
+              <span class="tag feedback">TEACHING FEEDBACK</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="profile" aria-labelledby="profile-title">
+          <header>
+            <div>
+              <small>FINAL DEBRIEF PREVIEW</small>
+              <h2 id="profile-title">不是总分，而是企业管理画像</h2>
+            </div>
+            <span>NO TOTAL SCORE</span>
+          </header>
+          <div class="profile-grid">
+            <span>Business Health</span><span>Actual Reduction</span
+            ><span>Product Carbon Competitiveness</span
+            ><span>Offset Dependency</span
+            ><span>Disclosure Credibility / Reputation</span
+            ><span>Long-term Capability</span><span>Textbook Sincerity</span>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <strong>Teaching UI ≠ Carbon Truth authority</strong>
+      <span
+        >本页用于 v0.8 整体验收预览。决策草案是客户端演示状态；未经过执行与
+        Resolver 的后果必须保持 UNRESOLVED。</span
+      >
+    </footer>
+  </body>
+</html>
