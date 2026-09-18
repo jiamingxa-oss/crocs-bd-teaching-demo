@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="CROCS Teaching v1 Phase A · 六工作区教学沙盘审阅版"
+    />
+    <title>CROCS Teaching v1 · Phase A Sandbox</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">跳到当前工作区</a>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <div>
+          <strong>CROCS</strong>
+          <small>Teaching v1 · 企业智能碳管理教学沙盘</small>
+        </div>
+      </div>
+      <div class="phase">
+        <span>BD AUTOMOTIVE</span>
+        <b id="phase-banner">TEACHING v1 · PHASE A / PARTIAL AUTHORITY</b>
+      </div>
+      <div class="authority-pill">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Governed projection · Carbon Truth read-only</span>
+      </div>
+    </header>
+
+    <div class="app-shell">
+      <aside class="workspace-rail" aria-label="Teaching v1 六工作区">
+        <div class="rail-intro">
+          <small>YEAR 1 · REVIEW CYCLE</small>
+          <h1>六个管理工作区</h1>
+          <p>
+            决策、执行、碳事实、经营结果与教学反馈分层呈现。未批准模型保持
+            BLOCKED / UNRESOLVED。
+          </p>
+        </div>
+        <nav id="workspace-nav" class="workspace-nav"></nav>
+
+        <div class="rail-guard">
+          <b>Authority Guard</b>
+          <span>UI_DRAFT ≠ PLAYER_DECISION</span>
+          <span>PLAYER_DECISION ≠ EXECUTED FACT</span>
+          <span>Simulation Outcome ≠ Carbon Truth</span>
+        </div>
+
+        <button id="reset-drafts" class="secondary" type="button">
+          清空本机草稿
+        </button>
+      </aside>
+
+      <main id="workspace" class="workspace" tabindex="-1">
+        <section class="workspace-hero">
+          <div>
+            <div class="eyebrow" id="workspace-id">BUSINESS_DECISION</div>
+            <h2 id="workspace-title">Business Decision / 企业经营决策</h2>
+            <p id="workspace-question"></p>
+          </div>
+          <div class="hero-meta">
+            <span id="workspace-status" class="status-badge">CAPTURE_ONLY</span>
+            <span id="source-head" class="source-head"></span>
+          </div>
+        </section>
+
+        <section class="semantic-strip" aria-label="核心语义边界">
+          <span>Reduction ≠ Offset</span>
+          <span>Actual Reduction ≠ Operating Net Change</span>
+          <span>Missing ≠ Zero</span>
+          <span>WITHHELD ≠ FAIL</span>
+        </section>
+
+        <div class="workspace-grid">
+          <section
+            class="panel decision-panel"
+            aria-labelledby="decision-heading"
+          >
+            <header class="panel-header">
+              <div>
+                <small>01 · PLAYER INPUT</small>
+                <h3 id="decision-heading">Decision Drafts / 决策草稿</h3>
+              </div>
+              <span class="tag draft">UI_DRAFT</span>
+            </header>
+            <p class="panel-copy">
+              本页只创建浏览器草稿。除 D19/D20
+              的既有领域授权边界外，本阶段不把浏览器输入冒充正式执行结果。
+            </p>
+            <div id="decision-list" class="decision-list"></div>
+          </section>
+
+          <section class="panel facts-panel" aria-labelledby="facts-heading">
+            <header class="panel-header">
+              <div>
+                <small>02 · GOVERNED EVIDENCE</small>
+                <h3 id="facts-heading">Governed Facts / 治理事实</h3>
+              </div>
+              <span class="tag fact">READ ONLY</span>
+            </header>
+            <div id="fact-list" class="fact-list"></div>
+          </section>
+
+          <section
+            class="panel authority-panel"
+            aria-labelledby="authority-heading"
+          >
+            <header class="panel-header">
+              <div>
+                <small>03 · AUTHORITY STATUS</small>
+                <h3 id="authority-heading">Execution Boundary / 执行边界</h3>
+              </div>
+            </header>
+            <div id="authority-list" class="authority-list"></div>
+          </section>
+
+          <section
+            class="panel teaching-panel"
+            aria-labelledby="teaching-heading"
+          >
+            <header class="panel-header">
+              <div>
+                <small>04 · TEACHING LAYER</small>
+                <h3 id="teaching-heading">Roles & Evidence / 角色与学习证据</h3>
+              </div>
+              <span class="tag feedback">TEACHING FEEDBACK</span>
+            </header>
+
+            <div>
+              <h4>五个角色</h4>
+              <div id="role-list" class="chip-list"></div>
+            </div>
+
+            <div>
+              <h4>反馈分类</h4>
+              <div id="feedback-list" class="chip-list"></div>
+            </div>
+
+            <div>
+              <h4>角色表达</h4>
+              <div id="role-expression-list" class="chip-list"></div>
+              <p id="role-rotation-status" class="panel-copy"></p>
+            </div>
+
+            <div class="teaching-evidence-grid">
+              <article>
+                <h4>Meaningful Mistake</h4>
+                <div id="mistake-chain" class="chain-list"></div>
+              </article>
+              <article>
+                <h4>Explainability</h4>
+                <p id="explainability-status" class="panel-copy"></p>
+              </article>
+              <article>
+                <h4>D19 / D20 Authorization</h4>
+                <p id="next-cycle-authorization" class="panel-copy"></p>
+              </article>
+            </div>
+
+            <details>
+              <summary>K1–K8 Knowledge Cards</summary>
+              <div id="knowledge-list" class="knowledge-list"></div>
+            </details>
+          </section>
+        </div>
+
+        <section class="model-status" aria-labelledby="model-status-heading">
+          <header>
+            <div>
+              <small>MODEL ACCEPTANCE / OPEN POLICY</small>
+              <h3 id="model-status-heading">模型接受与开放策略</h3>
+            </div>
+            <button id="open-evidence" class="secondary" type="button">
+              查看证据与来源
+            </button>
+          </header>
+          <div id="validation-list" class="validation-list"></div>
+          <div id="open-policy-list" class="open-policy-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="evidence-dialog" aria-labelledby="evidence-title">
+      <form method="dialog">
+        <header class="dialog-header">
+          <div>
+            <small>TRACEABILITY</small>
+            <h2 id="evidence-title">证据、来源与限制</h2>
+          </div>
+          <button class="icon-button" aria-label="关闭" value="cancel">
+            ×
+          </button>
+        </header>
+        <div id="evidence-content" class="dialog-content"></div>
+        <footer>
+          <button class="primary" value="cancel">关闭</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <footer class="footer">
+      <strong>Phase A is not full sandbox completion.</strong>
+      <span>
+        当前页面用于 Design Master
+        对齐后的教师/产品审阅。未批准的模型、参数与执行路径不会被补成默认值。
+      </span>
+    </footer>
+  </body>
+</html>

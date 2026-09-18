@@ -1,0 +1,612 @@
+{
+  "schema": "CROCS_TEACHING_V1_SANDBOX_PHASE_A_STATIC_PROJECTION_V1",
+  "projectionVersion": "CROCS_TEACHING_V1_SANDBOX_PHASE_A_V1",
+  "sourceHead": "3938b3204eb3be31c624a3d8d8be25617e932fd9",
+  "sourceReference": "SANDBOX_V1_CONSOLIDATED_IMPLEMENTATION_CONTRACT_V1_0",
+  "reviewYear": 1,
+  "cycleReference": "BD_TEACHING_REFERENCE_REVIEW_CYCLE_Y1",
+  "authorityMode": "READ_ONLY_GOVERNED_PROJECTION",
+  "decisionDraftMode": "UI_DRAFT_ONLY_EXCEPT_D19_D20_DOMAIN_CAPTURE",
+  "phaseBanner": "TEACHING v1 · PHASE A / PARTIAL AUTHORITY",
+  "workspaces": [
+    {
+      "id": "BUSINESS_DECISION",
+      "title": "Business Decision / 企业经营决策",
+      "question": "今年首先采用怎样的经营与碳管理姿态？",
+      "slots": [
+        {
+          "id": "D1",
+          "name": "Initial Strategic Commitment",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "STABILIZE_CARBON_TRUTH",
+            "PRIORITIZE_REAL_REDUCTION",
+            "BUILD_LOW_CARBON_VALUE"
+          ]
+        },
+        {
+          "id": "D2",
+          "name": "Initial Resource Posture",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "LIQUIDITY_PROTECTED",
+            "DISCIPLINED_DEPLOYMENT",
+            "TRANSFORMATION_CAPACITY"
+          ]
+        }
+      ],
+      "facts": []
+    },
+    {
+      "id": "COMMITMENT",
+      "title": "Commitment / 确碳",
+      "question": "面对数据不确定性，哪些责任事实先确认、哪些证据先修复？",
+      "slots": [
+        {
+          "id": "D3",
+          "name": "Data Uncertainty Response",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "PROCEED_WITH_LIMITATION",
+            "REMEDIATE_BEFORE_ACTION",
+            "WITHHOLD_AFFECTED_ACTION"
+          ]
+        },
+        {
+          "id": "D4",
+          "name": "Data / Evidence Remediation Priority",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "BLOCKED_POLICY",
+          "kind": "compound",
+          "fields": {
+            "domain": [
+              "ACTIVITY_DATA",
+              "PRODUCT_TRACEABILITY",
+              "DISCLOSURE_EVIDENCE"
+            ],
+            "intensity": [
+              "BASIC",
+              "STANDARD",
+              "DEEP"
+            ]
+          }
+        }
+      ],
+      "facts": [
+        {
+          "key": "commitment.procurement-carbon-in",
+          "label": "Procurement / Carbon In",
+          "value": "225",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "CORE_FACT",
+          "sourceReference": "BD_REFERENCE_SCENARIO_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "COMMITMENT"
+        },
+        {
+          "key": "commitment.production-carbon-add",
+          "label": "Production / Carbon Add",
+          "value": "200",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "CORE_FACT",
+          "sourceReference": "BD_REFERENCE_SCENARIO_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "COMMITMENT"
+        },
+        {
+          "key": "commitment.purchased-electricity",
+          "label": "Purchased-electricity production carbon",
+          "value": "120",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "TEXTBOOK_TEACHING_ANCHOR",
+          "sourceReference": "20230503 企业碳中和管理教材-附录B / BD case",
+          "workspace": "COMMITMENT"
+        }
+      ]
+    },
+    {
+      "id": "REDUCTION",
+      "title": "Reduction / 减碳",
+      "question": "怎样配置减排投入、项目、生产与后续承诺，同时不把投入直接当成减排？",
+      "slots": [
+        {
+          "id": "D5",
+          "name": "Reduction Investment Intensity",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "UNRESOLVED",
+          "kind": "single",
+          "options": [
+            "LOW",
+            "MODERATE",
+            "HIGH"
+          ]
+        },
+        {
+          "id": "D6",
+          "name": "Reduction Portfolio",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "UNRESOLVED",
+          "kind": "multi",
+          "options": [
+            "SOLAR_ENERGY_SHARE",
+            "DECARBONIZATION_TECHNOLOGY",
+            "EQUIPMENT_OPERATION_EFFICIENCY",
+            "LOW_CARBON_SALES_LOGISTICS"
+          ]
+        },
+        {
+          "id": "D7",
+          "name": "Investment Horizon",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "UNRESOLVED",
+          "kind": "single",
+          "options": [
+            "SHORT",
+            "MEDIUM",
+            "LONG"
+          ]
+        },
+        {
+          "id": "D8",
+          "name": "Product / Production Mix",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "UNRESOLVED",
+          "kind": "productionMix"
+        },
+        {
+          "id": "D9",
+          "name": "Market Targeting",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "BLOCKED_POLICY",
+          "kind": "single",
+          "options": [
+            "REGULAR",
+            "GREEN",
+            "MIXED"
+          ]
+        },
+        {
+          "id": "D10",
+          "name": "Remaining Reduction Commitment",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "HOLD_CURRENT_PLAN",
+            "CONTINUE_APPROVED_PLAN",
+            "ACCELERATE_APPROVED_PLAN"
+          ]
+        }
+      ],
+      "facts": [
+        {
+          "key": "reduction.enterprise-actual-reduction",
+          "label": "Enterprise Actual Reduction",
+          "value": "19.6",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        },
+        {
+          "key": "reduction.c1-product-carbon-after",
+          "label": "C1 Product Carbon After",
+          "value": "6.00825",
+          "unit": "tCO2e/vehicle",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        },
+        {
+          "key": "reduction.c2-product-carbon-after",
+          "label": "C2 Product Carbon After",
+          "value": "10.657",
+          "unit": "tCO2e/vehicle",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        },
+        {
+          "key": "reduction.carbon-out-after",
+          "label": "Carbon Out After",
+          "value": "311.97675",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        },
+        {
+          "key": "reduction.operating-net-after",
+          "label": "Operating Carbon Net After",
+          "value": "94.92325",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        },
+        {
+          "key": "reduction.operating-net-change",
+          "label": "Operating Carbon Net Change",
+          "value": "2.80175",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        }
+      ]
+    },
+    {
+      "id": "OFFSET",
+      "title": "Offset / 抵碳",
+      "question": "如何处理剩余责任，同时保持 Reduction 与 Offset 的边界？",
+      "slots": [
+        {
+          "id": "D11",
+          "name": "Offset Intensity",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "BLOCKED_POLICY",
+          "kind": "single",
+          "options": [
+            "NONE",
+            "PARTIAL",
+            "FULL_REMAINING_REQUIREMENT"
+          ]
+        },
+        {
+          "id": "D12",
+          "name": "Carbon Asset Buffer",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "BLOCKED_POLICY",
+          "kind": "single",
+          "options": [
+            "NO_BUFFER",
+            "LIMITED_BUFFER",
+            "ROBUST_BUFFER"
+          ]
+        }
+      ],
+      "facts": [
+        {
+          "key": "offset.requirement",
+          "label": "Offset Requirement",
+          "value": "94.92325",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "CORE_FACT",
+          "sourceReference": "OFFSET_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "OFFSET"
+        },
+        {
+          "key": "offset.closing-balance",
+          "label": "Closing Balance",
+          "value": "4.97175",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "CORE_FACT",
+          "sourceReference": "OFFSET_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "OFFSET"
+        },
+        {
+          "key": "offset.neutrality-status",
+          "label": "Neutrality Status",
+          "value": "ACHIEVED_SURPLUS",
+          "unit": null,
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "OFFSET_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "OFFSET"
+        }
+      ]
+    },
+    {
+      "id": "COMMUNICATION",
+      "title": "Communication / 披碳",
+      "question": "披露什么、在哪里披露、何时披露、需要什么证据，以及出现质疑后如何回应？",
+      "slots": [
+        {
+          "id": "D13",
+          "name": "WHAT Disclosure",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "multi",
+          "options": [
+            "ACTUAL_REDUCTION",
+            "PRODUCT_CARBON",
+            "OFFSET",
+            "CARBON_NEUTRALITY",
+            "FUTURE_COMMITMENT"
+          ]
+        },
+        {
+          "id": "D14",
+          "name": "HOW / WHERE",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "FORMAL_REPORT",
+            "CSR_REPORT",
+            "WEBSITE",
+            "PRESS_CONFERENCE",
+            "DIRECT_GREEN_CUSTOMER"
+          ]
+        },
+        {
+          "id": "D15",
+          "name": "WHEN",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "SCHEDULED",
+            "IMMEDIATE",
+            "BEFORE_GREEN_ORDER",
+            "AFTER_MAJOR_CARBON_ACTION"
+          ]
+        },
+        {
+          "id": "D16",
+          "name": "Evidence × Communication Intensity",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "compound",
+          "fields": {
+            "evidence": [
+              "BASIC",
+              "VERIFIED",
+              "ASSURED"
+            ],
+            "intensity": [
+              "LOW",
+              "STANDARD",
+              "ACTIVE"
+            ]
+          }
+        },
+        {
+          "id": "D17",
+          "name": "Verification / Audit Response",
+          "captureStatus": "CONFORMANCE_DRIFT",
+          "effectStatus": "CONFORMANCE_DRIFT",
+          "kind": "single",
+          "options": [
+            "SUBMIT_EXISTING_EVIDENCE",
+            "OBTAIN_ADDITIONAL_VERIFICATION",
+            "ACKNOWLEDGE_AND_CORRECT"
+          ]
+        },
+        {
+          "id": "D18",
+          "name": "Disclosure Correction / Crisis",
+          "captureStatus": "CONFORMANCE_DRIFT",
+          "effectStatus": "CONFORMANCE_DRIFT",
+          "kind": "single",
+          "options": [
+            "CORRECT_CLAIM",
+            "WITHDRAW_CLAIM",
+            "MAINTAIN_WITH_SUPPORTING_EVIDENCE"
+          ]
+        }
+      ],
+      "facts": [
+        {
+          "key": "communication.core-status",
+          "label": "CROCS Communication Core",
+          "value": "PASS",
+          "unit": null,
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "TEACHING_COMMUNICATION_V1_IMPLEMENTATION_REPORT.md",
+          "workspace": "COMMUNICATION"
+        }
+      ]
+    },
+    {
+      "id": "STIMULATION",
+      "title": "Stimulation / 激碳",
+      "question": "本周期产生了什么效果，哪些仍无法评价，以及下一周期由谁重新作出决定？",
+      "slots": [
+        {
+          "id": "D19",
+          "name": "Next-cycle Strategic Priority",
+          "captureStatus": "EXECUTABLE_GOVERNED",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "FINANCIAL_RECOVERY",
+            "DEEP_REDUCTION",
+            "PRODUCT_LOW_CARBON_LEADERSHIP",
+            "REPUTATION_REBUILDING",
+            "BALANCED_TRANSITION"
+          ]
+        },
+        {
+          "id": "D20",
+          "name": "Next-cycle Commitment Ambition",
+          "captureStatus": "EXECUTABLE_GOVERNED",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "nextCycleAmbition",
+          "options": [
+            "CONSERVATIVE",
+            "MODERATE",
+            "AMBITIOUS"
+          ]
+        }
+      ],
+      "facts": [
+        {
+          "key": "stimulation.carbon-outcome",
+          "label": "Carbon Outcome",
+          "value": "RESOLVED",
+          "unit": null,
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "packages/carbon-core/src/stimulation-bd-end-to-end.test.ts",
+          "workspace": "STIMULATION"
+        },
+        {
+          "key": "stimulation.composite-status",
+          "label": "Composite Status",
+          "value": "WITHHELD",
+          "unit": null,
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "packages/carbon-core/src/stimulation-bd-end-to-end.test.ts",
+          "workspace": "STIMULATION"
+        },
+        {
+          "key": "stimulation.sincerity",
+          "label": "Sincerity / Quality",
+          "value": null,
+          "unit": null,
+          "status": "UNRESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "packages/carbon-core/src/stimulation-bd-end-to-end.test.ts",
+          "workspace": "STIMULATION"
+        },
+        {
+          "key": "stimulation.economic-benefit",
+          "label": "Economic Benefit",
+          "value": null,
+          "unit": null,
+          "status": "UNRESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "packages/carbon-core/src/stimulation-bd-end-to-end.test.ts",
+          "workspace": "STIMULATION"
+        }
+      ]
+    }
+  ],
+  "roles": [
+    "CEO",
+    "CFO",
+    "COO",
+    "CCO",
+    "CMO"
+  ],
+  "knowledgeCards": [
+    {
+      "id": "K1",
+      "title": "Carbon Truth",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K2",
+      "title": "Reduction Semantics",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K3",
+      "title": "Product Carbon",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K4",
+      "title": "Reduction vs Offset",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K5",
+      "title": "Communication Choice",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K6",
+      "title": "Claim & Evidence",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K7",
+      "title": "Sincerity",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K8",
+      "title": "Stimulation",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    }
+  ],
+  "feedbackCategories": [
+    "KNOWLEDGE_ERROR",
+    "MANAGEMENT_FAILURE",
+    "GOVERNANCE_VIOLATION"
+  ],
+  "communicationStatus": "PASS",
+  "stimulationStatus": "WITHHELD",
+  "validation": {
+    "A1": "UNRESOLVED",
+    "A2": "PASS",
+    "A3": "BLOCKED_POLICY",
+    "A4": "UNRESOLVED"
+  },
+  "openPolicyReferences": [
+    "PARAM-MKT-*",
+    "PARAM-ORG-*",
+    "PARAM-QUAL-*",
+    "PARAM-ECON-*",
+    "PARAM-HASH-*"
+  ],
+  "semanticGuards": [
+    "Enterprise Actual Reduction != Operating Carbon Net Change",
+    "Reduction != Offset",
+    "Carbon Neutrality != Low-Carbon Product",
+    "Missing != Zero",
+    "WITHHELD != FAIL",
+    "UI_DRAFT != PLAYER_DECISION",
+    "PLAYER_DECISION != EXECUTED FACT",
+    "Simulation Outcome != Carbon Truth"
+  ],
+  "interaction": {
+    "roleRotation": {
+      "trigger": "HISTORICAL_V080_R5",
+      "annualPhaseMapping": null,
+      "status": "PRESERVED_MECHANISM"
+    },
+    "roleExpressionFields": [
+      "POSITION",
+      "RECOMMENDATION",
+      "REASON"
+    ],
+    "meaningfulMistake": {
+      "chain": [
+        "DECISION",
+        "IMMEDIATE_EFFECT",
+        "LATER_EFFECT",
+        "FINAL_CONSEQUENCE"
+      ],
+      "incompleteLinksAllowed": true,
+      "automaticPenalty": false
+    },
+    "explainability": {
+      "minimum": 0,
+      "maximum": 4,
+      "authority": "TEACHER_REVIEW_ONLY",
+      "aiAuthoritative": false
+    },
+    "nextCycleAuthorization": {
+      "D19": "EXPLICIT_LEARNER_AUTHORIZATION_REQUIRED",
+      "D20": "EXPLICIT_LEARNER_AUTHORIZATION_REQUIRED"
+    }
+  },
+  "evidenceReferences": [
+    "BD_REFERENCE_SCENARIO_END_TO_END_VALIDATION_REPORT.md",
+    "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+    "OFFSET_CORE_END_TO_END_VALIDATION_REPORT.md",
+    "TEACHING_COMMUNICATION_V1_IMPLEMENTATION_REPORT.md",
+    "TEACHING_CALIBRATION_ROBUSTNESS_V1_IMPLEMENTATION_REPORT.md",
+    "00_Governance/TEACHING_SANDBOX_V1_DESIGN_MASTER_CONFORMANCE_AUDIT_001.md"
+  ]
+}
