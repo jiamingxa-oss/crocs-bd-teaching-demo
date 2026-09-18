@@ -1,0 +1,13 @@
+{
+  "schema": "CROCS_TEACHING_V1_PHASE_A_PUBLICATION_V1",
+  "sourceRepository": "jiamingxa-oss/crocs-carbon-management-system",
+  "sourceHead": "3938b3204eb3be31c624a3d8d8be25617e932fd9",
+  "sourcePullRequest": 195,
+  "sourceQualityRun": 35332899912,
+  "sourceQualityConclusion": "SUCCESS",
+  "contract": "SANDBOX_V1_CONSOLIDATED_IMPLEMENTATION_CONTRACT_V1_0",
+  "targetRoute": "/v100-sandbox/",
+  "phase": "TEACHING_V1_PHASE_A_PARTIAL_AUTHORITY",
+  "authorityMode": "READ_ONLY_GOVERNED_PROJECTION_WITH_UI_DRAFTS",
+  "fullSandboxComplete": false
+}
