@@ -1409,6 +1409,12 @@ summary:focus-visible {
   outline: 3px solid #bd7b16;
   outline-offset: 3px;
 }
+@media (min-width: 1051px) {
+  html {
+    /* Keep skip-link and keyboard scroll targets below the sticky header. */
+    scroll-padding-block-start: 6rem;
+  }
+}
 @media (max-width: 1050px) {
   .g1-shell {
     grid-template-columns: minmax(0, 1fr);
