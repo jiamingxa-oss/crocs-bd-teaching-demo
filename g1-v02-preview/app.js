@@ -1,4 +1,4 @@
-import { mountG1, createG1Callbacks } from './g1-view.js';
+import { mountG1, createG1Callbacks, displayText } from './g1-view.js?v=b8b3eb29911baec2de8e0efe841cda4b61bbafd43dcf48d2f99fdd1827524abb';
 import {
   buildSimUi2BrowserDraft,
   buildSimUi3ProductionBrowserDraft,
@@ -143,17 +143,14 @@ function bind() {
 function render() {
   const d = WORKBENCHES[state.active];
   const w = state.projection.workspaces.find((item) => item.id === d[1]);
-  setText('#year-label', `YEAR ${state.year} / 6`);
+  setText('#year-label', `第 ${state.year} 年 / 共 6 年`);
   setText('#flow-label', d[1]);
   setText('#scene-index', d[0]);
   setText('#scene-title', d[2]);
   setText('#role-lead', d[4]);
   const art = document.querySelector('#scene-art');
   art.dataset.sceneAsset = d[3];
-  art.setAttribute(
-    'aria-label',
-    `${d[3]} context placeholder; approved artifact missing`,
-  );
+  art.setAttribute('aria-label', `${d[2]}情境占位，已批准素材待补`);
   setText('#workspace-code', `${d[0]} · SITUATION → DECISION → CONSEQUENCE`);
   setText('#workspace-title', `${d[2]} 工作台`);
   setText('#lifecycle', LIFECYCLE[state.lifecycle[state.active]]);
@@ -220,14 +217,14 @@ function d20Control(ui4) {
   const inputs = ['target', 'capabilityGap', 'budgetIntent'].map((name) => {
     const input = document.createElement('input');
     input.name = name;
-    input.placeholder = name;
-    input.setAttribute('aria-label', `D20 ${name}`);
+    input.placeholder = displayText(name);
+    input.setAttribute('aria-label', `D20 ${displayText(name)}`);
     return input;
   });
   const button = document.createElement('button');
   const output = document.createElement('output');
   button.type = 'button';
-  button.textContent = 'Preview D20';
+  button.textContent = displayText('Preview D20');
   button.addEventListener('click', async () => {
     await captureBrowserDraft(
       'D20',
@@ -337,7 +334,7 @@ function communicationCatalogControl(slotId, communication) {
   );
   const button = document.createElement('button');
   button.type = 'button';
-  button.textContent = 'Preview D16';
+  button.textContent = displayText('Preview D16');
   const output = document.createElement('output');
   const saved = state.uiDrafts.D16;
   if (saved) {
@@ -364,8 +361,10 @@ function communicationCatalogControl(slotId, communication) {
 }
 function explicitSelect(options, placeholder) {
   const select = document.createElement('select');
-  select.append(new Option(placeholder, ''));
-  options.forEach((option) => select.append(new Option(option, option)));
+  select.append(new Option(displayText(placeholder), ''));
+  options.forEach((option) =>
+    select.append(new Option(displayText(option), option)),
+  );
   return select;
 }
 function productionDecisionControl(slotId, options, communication) {
@@ -376,7 +375,7 @@ function productionDecisionControl(slotId, options, communication) {
   const select = explicitSelect(options, '-- Please select --');
   const button = document.createElement('button');
   button.type = 'button';
-  button.textContent = `Preview ${slotId}`;
+  button.textContent = displayText(`Preview ${slotId}`);
   const output = document.createElement('output');
   const saved = state.uiDrafts[slotId];
   if (saved) {
@@ -427,7 +426,7 @@ async function captureProductionBrowserDraft(
     state.uiDrafts[slotId] = draft;
     showDraft(output, draft);
   } catch (error) {
-    output.textContent = `REJECTED · ${error.message}`;
+    output.textContent = displayText(`REJECTED · ${error.message}`);
   }
 }
 function multiDecisionControl(slotId, options) {
@@ -447,12 +446,12 @@ function multiDecisionControl(slotId, options) {
     input.addEventListener('change', () =>
       input.checked ? selected.add(option) : selected.delete(option),
     );
-    label.append(input, option);
+    label.append(input, displayText(option));
     root.append(label);
   });
   const button = document.createElement('button');
   button.type = 'button';
-  button.textContent = `Preview ${slotId}`;
+  button.textContent = displayText(`Preview ${slotId}`);
   button.disabled = isCurrentWorkbenchLocked();
   const output = document.createElement('output');
   if (state.uiDrafts[slotId]) showDraft(output, state.uiDrafts[slotId]);
@@ -469,7 +468,7 @@ function renderNav() {
   WORKBENCHES.forEach((item, index) => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.textContent = `${item[0]} ${item[2].split(' · ')[0]}`;
+    b.textContent = displayText(`${item[0]} ${item[2].split(' · ')[0]}`);
     b.disabled = index > state.unlocked;
     if (index === state.active) b.setAttribute('aria-current', 'page');
     b.addEventListener('click', () => {
@@ -491,13 +490,14 @@ function renderDecisions(workspace) {
       ['D14', 'D15', 'D16'].includes(slot.id)
         ? state.projection.simUi3.communication.productionCatalogStatus[slot.id]
         : null;
-    badge.textContent =
+    badge.textContent = displayText(
       productionStatus === 'PRODUCTION_AVAILABLE'
         ? `${productionStatus} · downstream ${state.projection.simUi3.communication.productionDownstreamReadiness[slot.id]}`
-        : blockedStatus(slot.effectStatus);
+        : blockedStatus(slot.effectStatus),
+    );
     el.append(badge);
     const draft = document.createElement('small');
-    draft.textContent = 'UI_DRAFT · no executed fact';
+    draft.textContent = displayText('UI_DRAFT · no executed fact');
     el.append(draft);
     list.append(el);
   });
@@ -543,7 +543,7 @@ function renderTeaching(workspace) {
   );
   const p = state.projection;
   document.querySelector('#provenance').innerHTML =
-    `<dt>Data baseline</dt><dd>${escapeHtml(p.dataBaselineHead)}</dd><dt>Design authority</dt><dd>${escapeHtml(p.designAuthorityReference)}</dd><dt>Implementation head</dt><dd>${escapeHtml(p.implementationHead ?? p.implementationHeadStatus)}</dd>`;
+    `<dt>数据基线</dt><dd>${escapeHtml(p.dataBaselineHead)}</dd><dt>设计依据</dt><dd>${escapeHtml(p.designAuthorityReference)}</dd><dt>实现版本</dt><dd>${escapeHtml(p.implementationHead ?? p.implementationHeadStatus)}</dd>`;
 }
 function renderP2() {
   const panel = document.querySelector('#p2-gate');
@@ -609,7 +609,7 @@ function renderSimUi2() {
       const el = card(item, 'CURRENT TEACHING V1 · D6');
       const input = document.createElement('input');
       input.type = 'checkbox';
-      input.setAttribute('aria-label', item);
+      input.setAttribute('aria-label', displayText(item));
       input.checked = state.d6Selection.has(item);
       input.disabled = isCurrentWorkbenchLocked();
       input.addEventListener('change', () => {
@@ -656,12 +656,21 @@ function decisionControl(slotId, options) {
   root.id = `g1-control-${slotId}`;
   root.tabIndex = -1;
   const select = document.createElement('select');
-  select.setAttribute('aria-label', `${slotId} explicit choice`);
-  select.append(new Option('-- Please select --', ''));
-  options.forEach((option) => select.append(new Option(option, option)));
+  select.setAttribute('aria-label', `${slotId} 明确选择`);
+  select.append(new Option('请选择', ''));
+  options.forEach((option) =>
+    select.append(
+      new Option(
+        slotId === 'D7' && option === 'MEDIUM'
+          ? '中期（MEDIUM）'
+          : displayText(option),
+        option,
+      ),
+    ),
+  );
   const button = document.createElement('button');
   button.type = 'button';
-  button.textContent = `Preview ${slotId}`;
+  button.textContent = displayText(`Preview ${slotId}`);
   const output = document.createElement('output');
   const saved = state.uiDrafts[slotId];
   if (saved) {
@@ -681,17 +690,17 @@ function structuredD4Control(catalog) {
   const root = card('D4 governed UI draft', 'NON-AUTHORITATIVE CAPTURE');
   const domain = document.createElement('select');
   const intensity = document.createElement('select');
-  domain.append(new Option('-- Please select domain --', ''));
-  intensity.append(new Option('-- Please select intensity --', ''));
+  domain.append(new Option('请选择领域', ''));
+  intensity.append(new Option('请选择强度', ''));
   catalog.D4_DOMAIN.forEach((option) =>
-    domain.append(new Option(option, option)),
+    domain.append(new Option(displayText(option), option)),
   );
   catalog.D4_INTENSITY.forEach((option) =>
-    intensity.append(new Option(option, option)),
+    intensity.append(new Option(displayText(option), option)),
   );
   const button = document.createElement('button');
   button.type = 'button';
-  button.textContent = 'Preview D4';
+  button.textContent = displayText('Preview D4');
   const output = document.createElement('output');
   const saved = state.uiDrafts.D4;
   if (saved) {
@@ -723,7 +732,7 @@ function d6Control() {
   root.tabIndex = -1;
   const button = document.createElement('button');
   button.type = 'button';
-  button.textContent = 'Preview D6 portfolio';
+  button.textContent = displayText('Preview D6 portfolio');
   const output = document.createElement('output');
   const saved = state.uiDrafts.D6;
   if (saved) showDraft(output, saved);
@@ -768,14 +777,16 @@ async function captureBrowserDraft(slotId, selection, output) {
     if (slotId === 'D6') state.d6Selection = new Set(draft.selection);
     showDraft(output, draft);
   } catch (error) {
-    output.textContent = `REJECTED · ${error.message}`;
+    output.textContent = displayText(`REJECTED · ${error.message}`);
   }
 }
 function showDraft(output, draft) {
   const admission = draft.catalogAdmissionStatus
     ? ` · catalog ${draft.catalogAdmissionStatus} · downstream ${draft.downstreamExecutionReadiness}`
     : '';
-  output.textContent = `${draft.slotId} · ${draft.captureStatus} / ${draft.effectStatus}${admission} · UI_DRAFT · non-authoritative · ${draft.reference} · no executed fact`;
+  output.textContent = displayText(
+    `${draft.slotId} · ${draft.captureStatus} / ${draft.effectStatus}${admission} · UI_DRAFT · non-authoritative · ${draft.reference} · no executed fact`,
+  );
 }
 function isCurrentWorkbenchLocked() {
   return state.lifecycle[state.active] === 3;
@@ -852,21 +863,21 @@ function renderChips(selector, names) {
   root.replaceChildren();
   names.forEach((name) => {
     const span = document.createElement('span');
-    span.textContent = name;
+    span.textContent = displayText(name);
     root.append(span);
   });
 }
 function card(name, kind) {
   const el = document.createElement('article');
   const small = document.createElement('small');
-  small.textContent = kind;
+  small.textContent = displayText(kind);
   const strong = document.createElement('b');
-  strong.textContent = name;
+  strong.textContent = displayText(name);
   el.append(small, strong);
   return el;
 }
 function setText(selector, value) {
-  document.querySelector(selector).textContent = value;
+  document.querySelector(selector).textContent = displayText(value);
 }
 function escapeHtml(value) {
   const el = document.createElement('span');

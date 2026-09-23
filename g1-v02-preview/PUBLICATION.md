@@ -1,30 +1,18 @@
-# G1 v0.2 Desktop review preview
+# G1 v0.2 桌面插画原型 · 中文优先
 
-Status: PREVIEW / NOT CLASSROOM ACCEPTED. This is an unmerged candidate.
+状态：集中审阅预览（PREVIEW / NOT CLASSROOM ACCEPTED），源候选尚未合并。
 
-- Source repository: jiamingxa-oss/crocs-carbon-management-system
-- Exact source: a0a45c8a30743057120b6acb8f035425b70785df (PR #259)
-- Source quality: Batch 1 Quality #857 / 35871031019 SUCCESS
-- Publication authority: DCS-TEACHING-G1-PREVIEW-007 / Design Master v1.10
-- Original approval-first commit: a3a161cccea5be04fa329f04ab36cfeba07fd9ce
-- Maintenance scope: approved G1-BROWSER-001 v1.1 accessible skip link; continued bounded fixes under Product Owner instruction.
-- Route: /g1-v02-preview/
-- D6: five current A01 classes; four old icons preserved as history without mapping.
-- D8/D9: BUSINESS_DECISION ownership; Factory cross-references read-only.
+- 精确源提交：37d4cd21fa415d0693ceddd4f1142a1800144b44（PR #259）
+- 数据基线：805ae081b31705814d61e416b15fd0bab441f0c0
+- 发布授权：DCS-TEACHING-G1-PREVIEW-007。
+- 语言规范：DCS-TEACHING-G1-LANGUAGE-008 / Design Master v1.11。
+- 语言批准先行提交：dc9b7dd6081d5b2f3f734751d539129e1fefb152。
+- 路径：/g1-v02-preview/。
 
-This maintenance snapshot adds desktop scroll clearance for keyboard focus under
-the sticky header. The exported stylesheet URL includes the SHA-256 of its CSS
-bytes to avoid reuse of an older stylesheet. Publication hashes describe the
-transformed HTML. It preserves all JavaScript, asset bytes, business values and
-permission rules from the prior published implementation. The standard export
-records the new implementation head while preserving the original data baseline.
-Only publication metadata identifies this route, review state and authority.
+保留结构，以中文呈现主要操作、角色、状态、选项与解释；英文术语作为辅助。底层输入 value、草稿引用、源投影业务值和状态规则不变。D6 五类当前选项与四个历史图标的边界、D8/D9 经营归属与工厂只读关联保持。
 
-publication.json records generated-file hashes and source/data authority
-separately. UI drafts are not authoritative decisions, execution or Carbon Truth.
-All unresolved model parameters remain open. Browser/classroom acceptance is not
-implied by a deployment or quality job.
+导出 HTML、应用模块与展示模块通过内容哈希关联，避免缓存旧英文文案；publication.json 记录实际发布文件的 SHA-256。脚本中英文展示字典不参与业务计算。
 
-Existing public routes remain unchanged. This publication does not merge the source
-PR or replace the established sandbox. Rollback: restore the preceding preview
-prefix through a normal follow-up commit, retaining history and existing routes.
+所有未决规则与参数保留。界面草稿不等于正式决策、执行事实或碳事实。部署成功不代表课堂验收完成。
+
+既有公开路径保持不变；此更新不合并源 main，也不替换正式沙盘。回退可通过正常后续提交恢复上一个预览目录，保留历史。

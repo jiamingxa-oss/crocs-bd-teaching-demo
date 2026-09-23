@@ -13,7 +13,7 @@
     "DCS-SIM-VIS-001-A03_PreClosing_NextCycle_Decision_Bundle_v1.0",
     "CROCS_SANDBOX_SIM_UI4_CODEX_IMPLEMENTATION_CONTRACT_V1_0"
   ],
-  "implementationHead": "a0a45c8a30743057120b6acb8f035425b70785df",
+  "implementationHead": "37d4cd21fa415d0693ceddd4f1142a1800144b44",
   "contract": "CROCS_SANDBOX_SIM_UI4_CODEX_IMPLEMENTATION_CONTRACT_V1_0",
   "presentationAuthority": "G1-BROWSER-001",
   "presentationContractVersion": "1.1",
@@ -50,7 +50,7 @@
     "projection.json"
   ],
   "sha256": {
-    "g1-view.js": "266584d4afe7904f9351d64a0e27f60e061c691f60a57c4c684d258e8e794ce3",
+    "g1-view.js": "b8b3eb29911baec2de8e0efe841cda4b61bbafd43dcf48d2f99fdd1827524abb",
     "g1-assets.json": "06e24dbf497b9fed662ee7d9613074ac4e1e57f6dc85bdc677f1b1e8c10ba3a6",
     "assets/g1/factory-0.jpg": "0c184c97719514a310190559d73c16264ffd0aaf192a9fa9f555c328a02ada7d",
     "assets/g1/factory-1.jpg": "27742b365c3e0f6e1225251b65270315cd0abecfcc25829c82c78c0e031874d1",
@@ -69,15 +69,17 @@
     "assets/g1/role-COO.jpg": "3d68d23caf04385434d80916c636b2aee6dfd86b4f2f18182c0b3c310d356866",
     "assets/g1/role-CCO.jpg": "de6e5bd912890eb0e9b14dbf1ea9de342ab869ed7cbfc4a3fe91d70c515fbc25",
     "assets/g1/role-CMO.jpg": "5610ba2751b5eb6f5b9bc24e048b385e4e70c51474f659088c0f2546bb33bf48",
-    "index.html": "2d4a6ff36853d53192ff01f8e9b5c94367ff160bbfe6e93112617586857cd7db",
-    "styles.css": "9256ffef4c6da8cfa95940392624f1e6005ed3f07db526696a71bd135f14dc50",
-    "app.js": "f14f2e5354b51af1eeb3c1074d4b2309cd03d63de72f0c1246af02ac11377228",
+    "index.html": "b11a01b5cddbcd8c1963ec4d8b0c52c495b4edb39ef9331638db5a55d43c265e",
+    "styles.css": "891fd0fe8086deb7187ac0eab43f7d82f8b988269f2c255a9add25620a6bc477",
+    "app.js": "be30943849a9e7bfa708654ad00a90d5fc75db2fb2ed5684f31bea291b55f7f1",
     "sim-ui2-browser-draft.js": "99be6644639a6d47ca5c92557aac75cddc181e47b81e016dca136484a8b044c8",
     "README.md": "7938bf9891a4e2d94327e6b4787918b94db43062f273e0b0fa2476777421c018",
-    "projection.json": "8c04278160cf332880d045621b2e2d72fde994f14d3a6fb2da484e58a74b9498"
+    "projection.json": "ac64dc9105b3cffb577f82ea8f217b14af2e486bc3d3fd82c9c1695dbb79def1"
   },
   "reviewStatus": "PREVIEW_NOT_CLASSROOM_ACCEPTED",
-  "previewPublicationAuthority": "DCS-TEACHING-G1-PREVIEW-007",
-  "previewGovernanceCommit": "a3a161cccea5be04fa329f04ab36cfeba07fd9ce",
-  "maintenanceReference": "CROCS_TEACHING_G1_KEYBOARD_FIX_V1_1"
+  "publicationAuthority": "DCS-TEACHING-G1-PREVIEW-007",
+  "presentationLanguageAuthority": "DCS-TEACHING-G1-LANGUAGE-008",
+  "primaryLanguage": "zh-CN",
+  "secondaryLanguage": "en",
+  "sourceMergeStatus": "UNMERGED_CANDIDATE"
 }
