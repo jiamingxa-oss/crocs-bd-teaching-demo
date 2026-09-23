@@ -3,8 +3,8 @@
 Status: PREVIEW / NOT CLASSROOM ACCEPTED. This is an unmerged candidate.
 
 - Source repository: jiamingxa-oss/crocs-carbon-management-system
-- Exact source: 9ccf0507923cdd863e9f191dadd29edbd1ac3293 (PR #259)
-- Source quality: Batch 1 Quality #855 / 35869917039 SUCCESS
+- Exact source: a0a45c8a30743057120b6acb8f035425b70785df (PR #259)
+- Source quality: Batch 1 Quality #857 / 35871031019 SUCCESS
 - Publication authority: DCS-TEACHING-G1-PREVIEW-007 / Design Master v1.10
 - Original approval-first commit: a3a161cccea5be04fa329f04ab36cfeba07fd9ce
 - Maintenance scope: approved G1-BROWSER-001 v1.1 accessible skip link; continued bounded fixes under Product Owner instruction.
@@ -13,7 +13,9 @@ Status: PREVIEW / NOT CLASSROOM ACCEPTED. This is an unmerged candidate.
 - D8/D9: BUSINESS_DECISION ownership; Factory cross-references read-only.
 
 This maintenance snapshot adds desktop scroll clearance for keyboard focus under
-the sticky header. It preserves all JavaScript, asset bytes, business values and
+the sticky header. The exported stylesheet URL includes the SHA-256 of its CSS
+bytes to avoid reuse of an older stylesheet. Publication hashes describe the
+transformed HTML. It preserves all JavaScript, asset bytes, business values and
 permission rules from the prior published implementation. The standard export
 records the new implementation head while preserving the original data baseline.
 Only publication metadata identifies this route, review state and authority.
