@@ -1,0 +1,1556 @@
+{
+  "schema": "CROCS_TEACHING_V1_SIM_UI_4_STATIC_PROJECTION_V1",
+  "projectionVersion": "CROCS_TEACHING_V1_SIM_UI_4_PROJECTION_V1",
+  "dataBaselineHead": "805ae081b31705814d61e416b15fd0bab441f0c0",
+  "designAuthorityReference": "CROCS_SANDBOX_SIM_UI4_CODEX_IMPLEMENTATION_CONTRACT_V1_0",
+  "implementationHead": "8adf0194348a1bc310da7eb042fcf205ed100f2a",
+  "implementationHeadStatus": "GENERATED_FROM_EXACT_HEAD",
+  "reviewYear": 1,
+  "cycleReference": "BD_TEACHING_REFERENCE_REVIEW_CYCLE_Y1",
+  "authorityMode": "READ_ONLY_GOVERNED_PROJECTION",
+  "decisionDraftMode": "UI_DRAFT_ONLY_EXCEPT_D19_D20_DOMAIN_CAPTURE",
+  "phaseBanner": "TEACHING v1 · SIM-UI-4 / STIMULATION + SIX-YEAR ANCHORS",
+  "workspaces": [
+    {
+      "id": "BUSINESS_DECISION",
+      "title": "Business Decision / 企业经营决策",
+      "question": "今年首先采用怎样的经营与碳管理姿态？",
+      "slots": [
+        {
+          "id": "D1",
+          "name": "Initial Strategic Commitment",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "STABILIZE_CARBON_TRUTH",
+            "PRIORITIZE_REAL_REDUCTION",
+            "BUILD_LOW_CARBON_VALUE"
+          ]
+        },
+        {
+          "id": "D2",
+          "name": "Initial Resource Posture",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "LIQUIDITY_PROTECTED",
+            "DISCIPLINED_DEPLOYMENT",
+            "TRANSFORMATION_CAPACITY"
+          ]
+        },
+        {
+          "id": "D8",
+          "name": "Product / Production Mix",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "UNRESOLVED",
+          "kind": "productionMix"
+        },
+        {
+          "id": "D9",
+          "name": "Market Targeting",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "BLOCKED_POLICY",
+          "kind": "single",
+          "options": [
+            "REGULAR",
+            "GREEN",
+            "MIXED"
+          ]
+        }
+      ],
+      "facts": []
+    },
+    {
+      "id": "COMMITMENT",
+      "title": "Commitment / 确碳",
+      "question": "面对数据不确定性，哪些责任事实先确认、哪些证据先修复？",
+      "slots": [
+        {
+          "id": "D3",
+          "name": "Data Uncertainty Response",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "PROCEED_WITH_LIMITATION",
+            "REMEDIATE_BEFORE_ACTION",
+            "WITHHOLD_AFFECTED_ACTION"
+          ]
+        },
+        {
+          "id": "D4",
+          "name": "Data / Evidence Remediation Priority",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "BLOCKED_POLICY",
+          "kind": "compound",
+          "fields": {
+            "domain": [
+              "ACTIVITY_DATA",
+              "PRODUCT_TRACEABILITY",
+              "DISCLOSURE_EVIDENCE"
+            ],
+            "intensity": [
+              "BASIC",
+              "STANDARD",
+              "DEEP"
+            ]
+          }
+        }
+      ],
+      "facts": [
+        {
+          "key": "commitment.procurement-carbon-in",
+          "label": "Procurement / Carbon In",
+          "value": "225",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "CORE_FACT",
+          "sourceReference": "BD_REFERENCE_SCENARIO_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "COMMITMENT"
+        },
+        {
+          "key": "commitment.production-carbon-add",
+          "label": "Production / Carbon Add",
+          "value": "200",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "CORE_FACT",
+          "sourceReference": "BD_REFERENCE_SCENARIO_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "COMMITMENT"
+        },
+        {
+          "key": "commitment.purchased-electricity",
+          "label": "Purchased-electricity production carbon",
+          "value": "120",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "TEXTBOOK_TEACHING_ANCHOR",
+          "sourceReference": "20230503 企业碳中和管理教材-附录B / BD case",
+          "workspace": "COMMITMENT"
+        }
+      ]
+    },
+    {
+      "id": "REDUCTION",
+      "title": "Reduction / 减碳",
+      "question": "怎样配置减排投入、项目、生产与后续承诺，同时不把投入直接当成减排？",
+      "slots": [
+        {
+          "id": "D5",
+          "name": "Reduction Investment Intensity",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "UNRESOLVED",
+          "kind": "single",
+          "options": [
+            "LOW",
+            "MODERATE",
+            "HIGH"
+          ]
+        },
+        {
+          "id": "D6",
+          "name": "Reduction Portfolio",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "UNRESOLVED",
+          "kind": "multi",
+          "options": [
+            "GREEN_POWER_PROCUREMENT",
+            "EQUIPMENT_EFFICIENCY_RETROFIT",
+            "PROCESS_AND_ENERGY_MANAGEMENT_OPTIMIZATION",
+            "FULL_PRODUCTION_LINE_UPGRADE",
+            "LOW_CARBON_MATERIALS_SUPPLIER_SUBSTITUTION"
+          ]
+        },
+        {
+          "id": "D7",
+          "name": "Investment Horizon",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "UNRESOLVED",
+          "kind": "single",
+          "options": [
+            "SHORT",
+            "MEDIUM",
+            "LONG"
+          ]
+        },
+        {
+          "id": "D10",
+          "name": "Remaining Reduction Commitment",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "HOLD_CURRENT_PLAN",
+            "CONTINUE_APPROVED_PLAN",
+            "ACCELERATE_APPROVED_PLAN"
+          ]
+        }
+      ],
+      "facts": [
+        {
+          "key": "reduction.enterprise-actual-reduction",
+          "label": "Enterprise Actual Reduction",
+          "value": "19.6",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        },
+        {
+          "key": "reduction.c1-product-carbon-after",
+          "label": "C1 Product Carbon After",
+          "value": "6.00825",
+          "unit": "tCO2e/vehicle",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        },
+        {
+          "key": "reduction.c2-product-carbon-after",
+          "label": "C2 Product Carbon After",
+          "value": "10.657",
+          "unit": "tCO2e/vehicle",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        },
+        {
+          "key": "reduction.carbon-out-after",
+          "label": "Carbon Out After",
+          "value": "311.97675",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        },
+        {
+          "key": "reduction.operating-net-after",
+          "label": "Operating Carbon Net After",
+          "value": "94.92325",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        },
+        {
+          "key": "reduction.operating-net-change",
+          "label": "Operating Carbon Net Change",
+          "value": "2.80175",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_CORE_EXACT",
+          "sourceReference": "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "REDUCTION"
+        }
+      ]
+    },
+    {
+      "id": "OFFSET",
+      "title": "Offset / 抵碳",
+      "question": "如何处理剩余责任，同时保持 Reduction 与 Offset 的边界？",
+      "slots": [
+        {
+          "id": "D11",
+          "name": "Offset Intensity",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "BLOCKED_POLICY",
+          "kind": "single",
+          "options": [
+            "NONE",
+            "PARTIAL",
+            "FULL_REMAINING_REQUIREMENT"
+          ]
+        },
+        {
+          "id": "D12",
+          "name": "Carbon Asset Buffer",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "BLOCKED_POLICY",
+          "kind": "single",
+          "options": [
+            "NO_BUFFER",
+            "LIMITED_BUFFER",
+            "ROBUST_BUFFER"
+          ]
+        }
+      ],
+      "facts": [
+        {
+          "key": "offset.requirement",
+          "label": "Offset Requirement",
+          "value": "94.92325",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "CORE_FACT",
+          "sourceReference": "OFFSET_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "OFFSET"
+        },
+        {
+          "key": "offset.closing-balance",
+          "label": "Closing Balance",
+          "value": "4.97175",
+          "unit": "tCO2e",
+          "status": "RESOLVED",
+          "provenance": "CORE_FACT",
+          "sourceReference": "OFFSET_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "OFFSET"
+        },
+        {
+          "key": "offset.neutrality-status",
+          "label": "Neutrality Status",
+          "value": "ACHIEVED_SURPLUS",
+          "unit": null,
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "OFFSET_CORE_END_TO_END_VALIDATION_REPORT.md",
+          "workspace": "OFFSET"
+        }
+      ]
+    },
+    {
+      "id": "COMMUNICATION",
+      "title": "Communication / 披碳",
+      "question": "披露什么、在哪里披露、何时披露、需要什么证据，以及出现质疑后如何回应？",
+      "slots": [
+        {
+          "id": "D13",
+          "name": "WHAT Disclosure",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "multi",
+          "options": [
+            "ACTUAL_REDUCTION",
+            "PRODUCT_CARBON",
+            "OFFSET",
+            "CARBON_NEUTRALITY",
+            "FUTURE_COMMITMENT"
+          ]
+        },
+        {
+          "id": "D14",
+          "name": "HOW / WHERE",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "BLOCKED_POLICY",
+          "kind": "single",
+          "options": [
+            "FORMAL_REPORT",
+            "CSR_REPORT",
+            "WEBSITE",
+            "PRESS_CONFERENCE",
+            "DIRECT_GREEN_CUSTOMER"
+          ]
+        },
+        {
+          "id": "D15",
+          "name": "WHEN",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "BLOCKED_POLICY",
+          "kind": "single",
+          "options": [
+            "SCHEDULED",
+            "IMMEDIATE",
+            "BEFORE_GREEN_ORDER",
+            "AFTER_MAJOR_CARBON_ACTION"
+          ]
+        },
+        {
+          "id": "D16",
+          "name": "Evidence × Communication Intensity",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "BLOCKED_POLICY",
+          "kind": "compound",
+          "fields": {
+            "evidence": [
+              "BASIC",
+              "VERIFIED",
+              "ASSURED"
+            ],
+            "intensity": [
+              "LOW",
+              "STANDARD",
+              "ACTIVE"
+            ]
+          }
+        },
+        {
+          "id": "D17",
+          "name": "Verification / Audit Response",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "SUBMIT_EXISTING_EVIDENCE",
+            "OBTAIN_ADDITIONAL_VERIFICATION",
+            "ACKNOWLEDGE_AND_CORRECT"
+          ]
+        },
+        {
+          "id": "D18",
+          "name": "Disclosure Correction / Crisis",
+          "captureStatus": "CAPTURE_ONLY",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "CORRECT_CLAIM",
+            "WITHDRAW_CLAIM",
+            "MAINTAIN_WITH_SUPPORTING_EVIDENCE"
+          ]
+        }
+      ],
+      "facts": [
+        {
+          "key": "communication.core-status",
+          "label": "CROCS Communication Core",
+          "value": "PASS",
+          "unit": null,
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "TEACHING_COMMUNICATION_V1_IMPLEMENTATION_REPORT.md",
+          "workspace": "COMMUNICATION"
+        }
+      ]
+    },
+    {
+      "id": "STIMULATION",
+      "title": "Stimulation / 激碳",
+      "question": "本周期产生了什么效果，哪些仍无法评价，以及下一周期由谁重新作出决定？",
+      "slots": [
+        {
+          "id": "D19",
+          "name": "Next-cycle Strategic Priority",
+          "captureStatus": "EXECUTABLE_GOVERNED",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "single",
+          "options": [
+            "FINANCIAL_RECOVERY",
+            "DEEP_REDUCTION",
+            "PRODUCT_LOW_CARBON_LEADERSHIP",
+            "REPUTATION_REBUILDING",
+            "BALANCED_TRANSITION"
+          ]
+        },
+        {
+          "id": "D20",
+          "name": "Next-cycle Commitment Ambition",
+          "captureStatus": "EXECUTABLE_GOVERNED",
+          "effectStatus": "CAPTURE_ONLY",
+          "kind": "nextCycleAmbition",
+          "options": [
+            "CONSERVATIVE",
+            "MODERATE",
+            "AMBITIOUS"
+          ]
+        }
+      ],
+      "facts": [
+        {
+          "key": "stimulation.carbon-outcome",
+          "label": "Carbon Outcome",
+          "value": "RESOLVED",
+          "unit": null,
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "packages/carbon-core/src/stimulation-bd-end-to-end.test.ts",
+          "workspace": "STIMULATION"
+        },
+        {
+          "key": "stimulation.composite-status",
+          "label": "Composite Status",
+          "value": "WITHHELD",
+          "unit": null,
+          "status": "RESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "packages/carbon-core/src/stimulation-bd-end-to-end.test.ts",
+          "workspace": "STIMULATION"
+        },
+        {
+          "key": "stimulation.sincerity",
+          "label": "Sincerity / Quality",
+          "value": null,
+          "unit": null,
+          "status": "UNRESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "packages/carbon-core/src/stimulation-bd-end-to-end.test.ts",
+          "workspace": "STIMULATION"
+        },
+        {
+          "key": "stimulation.economic-benefit",
+          "label": "Economic Benefit",
+          "value": null,
+          "unit": null,
+          "status": "UNRESOLVED",
+          "provenance": "GOVERNED_STATUS",
+          "sourceReference": "packages/carbon-core/src/stimulation-bd-end-to-end.test.ts",
+          "workspace": "STIMULATION"
+        }
+      ]
+    }
+  ],
+  "roles": [
+    "CEO",
+    "CFO",
+    "COO",
+    "CCO",
+    "CMO"
+  ],
+  "knowledgeCards": [
+    {
+      "id": "K1",
+      "title": "Carbon Truth",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K2",
+      "title": "Reduction Semantics",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K3",
+      "title": "Product Carbon",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K4",
+      "title": "Reduction vs Offset",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K5",
+      "title": "Communication Choice",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K6",
+      "title": "Claim & Evidence",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K7",
+      "title": "Sincerity",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    },
+    {
+      "id": "K8",
+      "title": "Stimulation",
+      "contentStatus": "CONTENT_UNAVAILABLE"
+    }
+  ],
+  "feedbackCategories": [
+    "KNOWLEDGE_ERROR",
+    "MANAGEMENT_FAILURE",
+    "GOVERNANCE_VIOLATION"
+  ],
+  "communicationStatus": "PASS",
+  "stimulationStatus": "WITHHELD",
+  "validation": {
+    "A1": "UNRESOLVED",
+    "A2": "PASS",
+    "A3": "BLOCKED_POLICY",
+    "A4": "UNRESOLVED"
+  },
+  "openPolicyReferences": [
+    "PARAM-MKT-*",
+    "PARAM-ORG-*",
+    "PARAM-QUAL-*",
+    "PARAM-ECON-*",
+    "PARAM-HASH-*"
+  ],
+  "semanticGuards": [
+    "Enterprise Actual Reduction != Operating Carbon Net Change",
+    "Reduction != Offset",
+    "Carbon Neutrality != Low-Carbon Product",
+    "Missing != Zero",
+    "WITHHELD != FAIL",
+    "UI_DRAFT != PLAYER_DECISION",
+    "PLAYER_DECISION != EXECUTED FACT",
+    "Simulation Outcome != Carbon Truth",
+    "Measurement Confidence != Allocation Confidence",
+    "Investment != Capability != Actual Reduction",
+    "Plan COMPLETED != Effect VERIFIED",
+    "Allowance Ledger != Offset Ledger",
+    "Banked asset != current-period revenue",
+    "SUPPORTED != FLAGGED != AMBIGUOUS != CONFIRMED_VIOLATION",
+    "Missing evidence != violation"
+  ],
+  "interaction": {
+    "roleRotation": {
+      "trigger": "HISTORICAL_V080_R5",
+      "annualPhaseMapping": null,
+      "status": "PRESERVED_MECHANISM"
+    },
+    "roleExpressionFields": [
+      "POSITION",
+      "RECOMMENDATION",
+      "REASON"
+    ],
+    "meaningfulMistake": {
+      "chain": [
+        "DECISION",
+        "IMMEDIATE_EFFECT",
+        "LATER_EFFECT",
+        "FINAL_CONSEQUENCE"
+      ],
+      "incompleteLinksAllowed": true,
+      "automaticPenalty": false
+    },
+    "explainability": {
+      "minimum": 0,
+      "maximum": 4,
+      "authority": "TEACHER_REVIEW_ONLY",
+      "aiAuthoritative": false
+    },
+    "nextCycleAuthorization": {
+      "D19": "EXPLICIT_LEARNER_AUTHORIZATION_REQUIRED",
+      "D20": "EXPLICIT_LEARNER_AUTHORIZATION_REQUIRED"
+    }
+  },
+  "evidenceReferences": [
+    "BD_REFERENCE_SCENARIO_END_TO_END_VALIDATION_REPORT.md",
+    "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+    "OFFSET_CORE_END_TO_END_VALIDATION_REPORT.md",
+    "TEACHING_COMMUNICATION_V1_IMPLEMENTATION_REPORT.md",
+    "TEACHING_CALIBRATION_ROBUSTNESS_V1_IMPLEMENTATION_REPORT.md",
+    "00_Governance/TEACHING_SANDBOX_V1_DESIGN_MASTER_CONFORMANCE_AUDIT_001.md"
+  ],
+  "simUi2": {
+    "authorityReferences": [
+      "DCS-SIM-VIS-001_v1.0",
+      "CROCS_SANDBOX_SIM_UI1_CODEX_IMPLEMENTATION_CONTRACT_V1_0",
+      "DCS-SIM-VIS-001-A01_D6_Reduction_Portfolio_v1.0",
+      "CROCS_SANDBOX_SIM_UI2_CODEX_IMPLEMENTATION_CONTRACT_V1_0"
+    ],
+    "commitment": {
+      "informationHomes": [
+        {
+          "homeId": "CARBON_FLOW_CONTEXT",
+          "status": "STRUCTURAL_CONTEXT",
+          "value": "procurement → energy / production → C1 / C2 → sales",
+          "unit": null,
+          "sourceReferences": [
+            "DCS-SIM-VIS-001_v1.0"
+          ],
+          "limitation": "Structural context only; no new emission boundary.",
+          "authority": "GOVERNED_PROJECTION"
+        },
+        {
+          "homeId": "MEASUREMENT_CONFIDENCE",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "CROCS_SANDBOX_SIM_UI2_CODEX_IMPLEMENTATION_CONTRACT_V1_0"
+          ],
+          "limitation": "No approved current value; missing is not zero.",
+          "authority": "GOVERNED_PROJECTION"
+        },
+        {
+          "homeId": "CARBON_UNCERTAINTY",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "CROCS_SANDBOX_SIM_UI2_CODEX_IMPLEMENTATION_CONTRACT_V1_0"
+          ],
+          "limitation": "No approved current value; missing is not zero.",
+          "authority": "GOVERNED_PROJECTION"
+        },
+        {
+          "homeId": "ALLOCATION_CONFIDENCE",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "CROCS_SANDBOX_SIM_UI2_CODEX_IMPLEMENTATION_CONTRACT_V1_0"
+          ],
+          "limitation": "Separate from Measurement Confidence; no approved current value.",
+          "authority": "GOVERNED_PROJECTION"
+        },
+        {
+          "homeId": "PRODUCT_CARBON_RESULTS",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "CROCS_SANDBOX_SIM_UI2_CODEX_IMPLEMENTATION_CONTRACT_V1_0"
+          ],
+          "limitation": "No governed P2 product-carbon result is available; UI performs no allocation.",
+          "authority": "GOVERNED_PROJECTION"
+        },
+        {
+          "homeId": "RESPONSIBILITY_BASELINE",
+          "status": "SHELL_STATE",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "DCS-SIM-VIS-001_v1.0"
+          ],
+          "limitation": "C1→C2→C3 shell state only; no percentage or amount.",
+          "authority": "SHELL_GOVERNANCE"
+        },
+        {
+          "homeId": "EVIDENCE_PROVENANCE",
+          "status": "AVAILABLE",
+          "value": "BD_REFERENCE_SCENARIO_END_TO_END_VALIDATION_REPORT.md | REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md | OFFSET_CORE_END_TO_END_VALIDATION_REPORT.md | TEACHING_COMMUNICATION_V1_IMPLEMENTATION_REPORT.md | TEACHING_CALIBRATION_ROBUSTNESS_V1_IMPLEMENTATION_REPORT.md | 00_Governance/TEACHING_SANDBOX_V1_DESIGN_MASTER_CONFORMANCE_AUDIT_001.md",
+          "unit": null,
+          "sourceReferences": [
+            "BD_REFERENCE_SCENARIO_END_TO_END_VALIDATION_REPORT.md",
+            "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md",
+            "OFFSET_CORE_END_TO_END_VALIDATION_REPORT.md",
+            "TEACHING_COMMUNICATION_V1_IMPLEMENTATION_REPORT.md",
+            "TEACHING_CALIBRATION_ROBUSTNESS_V1_IMPLEMENTATION_REPORT.md",
+            "00_Governance/TEACHING_SANDBOX_V1_DESIGN_MASTER_CONFORMANCE_AUDIT_001.md"
+          ],
+          "limitation": "Confidence is limited to the cited governed references.",
+          "authority": "GOVERNED_PROJECTION"
+        }
+      ],
+      "blockedControls": {
+        "measurementInvestment": {
+          "status": "BLOCKED",
+          "reason": "MISSING_PARAMETER",
+          "value": null,
+          "ruleSource": "DCS-SIM-VIS-001 §8: measurement range is OPEN",
+          "confidenceLimitation": "No approved rule or parameter is available; no value was inferred."
+        },
+        "allocationDriver": {
+          "status": "BLOCKED",
+          "reason": "BLOCKED_BY_DESIGN",
+          "value": null,
+          "ruleSource": "SIM-UI-2 Contract §2: no approved Allocation Driver catalog",
+          "confidenceLimitation": "No approved rule or parameter is available; no value was inferred."
+        },
+        "responsibilityCoverage": {
+          "status": "BLOCKED",
+          "reason": "MISSING_PARAMETER",
+          "value": null,
+          "ruleSource": "DCS-SIM-VIS-001 §8: responsibility-coverage range is OPEN",
+          "confidenceLimitation": "No approved rule or parameter is available; no value was inferred."
+        }
+      },
+      "captureCatalog": {
+        "D3": [
+          "PROCEED_WITH_LIMITATION",
+          "REMEDIATE_BEFORE_ACTION",
+          "WITHHOLD_AFFECTED_ACTION"
+        ],
+        "D4_DOMAIN": [
+          "ACTIVITY_DATA",
+          "PRODUCT_TRACEABILITY",
+          "DISCLOSURE_EVIDENCE"
+        ],
+        "D4_INTENSITY": [
+          "BASIC",
+          "STANDARD",
+          "DEEP"
+        ]
+      }
+    },
+    "reduction": {
+      "d6": {
+        "decisionSlotId": "D6",
+        "activePortfolioItemCatalog": "TEACHING_V1_REDUCTION_PROJECT_CATALOG",
+        "activePortfolioItems": [
+          "GREEN_POWER_PROCUREMENT",
+          "EQUIPMENT_EFFICIENCY_RETROFIT",
+          "PROCESS_AND_ENERGY_MANAGEMENT_OPTIMIZATION",
+          "FULL_PRODUCTION_LINE_UPGRADE",
+          "LOW_CARBON_MATERIALS_SUPPLIER_SUBSTITUTION"
+        ],
+        "legacyPrototypeOptions": [
+          "SOLAR_ENERGY_SHARE",
+          "DECARBONIZATION_TECHNOLOGY",
+          "EQUIPMENT_OPERATION_EFFICIENCY",
+          "LOW_CARBON_SALES_LOGISTICS"
+        ],
+        "legacyPrototypeProvenance": "DCS-SIM-VIS-001-A01_D6_Reduction_Portfolio_v1.0 §2",
+        "legacyToCurrentMapping": null
+      },
+      "projectClasses": [
+        "GREEN_POWER_PROCUREMENT",
+        "EQUIPMENT_EFFICIENCY_RETROFIT",
+        "PROCESS_AND_ENERGY_MANAGEMENT_OPTIMIZATION",
+        "FULL_PRODUCTION_LINE_UPGRADE",
+        "LOW_CARBON_MATERIALS_SUPPLIER_SUBSTITUTION"
+      ],
+      "planLifecycle": [
+        "DRAFT",
+        "AUTHORIZED",
+        "IN_EXECUTION",
+        "COMPLETED"
+      ],
+      "effectLifecycle": [
+        "PLANNED",
+        "UNDER_IMPLEMENTATION",
+        "OPERATIONAL",
+        "VERIFIED"
+      ],
+      "captureCatalog": {
+        "D5": [
+          "LOW",
+          "MODERATE",
+          "HIGH"
+        ],
+        "D6": [
+          "GREEN_POWER_PROCUREMENT",
+          "EQUIPMENT_EFFICIENCY_RETROFIT",
+          "PROCESS_AND_ENERGY_MANAGEMENT_OPTIMIZATION",
+          "FULL_PRODUCTION_LINE_UPGRADE",
+          "LOW_CARBON_MATERIALS_SUPPLIER_SUBSTITUTION"
+        ],
+        "D7": [
+          "SHORT",
+          "MEDIUM",
+          "LONG"
+        ],
+        "D10": [
+          "HOLD_CURRENT_PLAN",
+          "CONTINUE_APPROVED_PLAN",
+          "ACCELERATE_APPROVED_PLAN"
+        ]
+      }
+    }
+  },
+  "authorityReferences": [
+    "DCS-SIM-VIS-001_v1.0",
+    "CROCS_SANDBOX_SIM_UI1_CODEX_IMPLEMENTATION_CONTRACT_V1_0",
+    "DCS-SIM-VIS-001-A01_D6_Reduction_Portfolio_v1.0",
+    "CROCS_SANDBOX_SIM_UI2_CODEX_IMPLEMENTATION_CONTRACT_V1_0",
+    "DCS-SIM-VIS-001-A02_D17_D18_Communication_Runtime_Action_Adapter_v1.0",
+    "CROCS_SANDBOX_SIM_UI3_CODEX_IMPLEMENTATION_CONTRACT_V1_0",
+    "DCS-SIM-VIS-001-A03_PreClosing_NextCycle_Decision_Bundle_v1.0",
+    "CROCS_SANDBOX_SIM_UI4_CODEX_IMPLEMENTATION_CONTRACT_V1_0"
+  ],
+  "simUi3": {
+    "authorityReferences": [
+      "DCS-SIM-VIS-001_v1.0",
+      "CROCS_SANDBOX_SIM_UI1_CODEX_IMPLEMENTATION_CONTRACT_V1_0",
+      "DCS-SIM-VIS-001-A01_D6_Reduction_Portfolio_v1.0",
+      "CROCS_SANDBOX_SIM_UI2_CODEX_IMPLEMENTATION_CONTRACT_V1_0",
+      "DCS-SIM-VIS-001-A02_D17_D18_Communication_Runtime_Action_Adapter_v1.0",
+      "CROCS_SANDBOX_SIM_UI3_CODEX_IMPLEMENTATION_CONTRACT_V1_0"
+    ],
+    "offset": {
+      "informationHomes": [
+        {
+          "homeId": "ACTUAL_REDUCTION_READ_ONLY",
+          "status": "AVAILABLE_READ_ONLY",
+          "value": "19.6",
+          "unit": "tCO2e",
+          "sourceReferences": [
+            "REDUCTION_CORE_END_TO_END_VALIDATION_REPORT.md"
+          ],
+          "limitation": "Read only; asset settlement cannot modify this value.",
+          "authority": "CARBON_CORE"
+        },
+        {
+          "homeId": "RESIDUAL_OR_COMPLIANCE_REQUIREMENT",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_V1_ALLOWANCE_ASSET_CONTRACT"
+          ],
+          "limitation": "No exact current compliance authority was supplied.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "ALLOWANCE_LEDGER",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "teaching-v100-b3-carbon-assets.ts"
+          ],
+          "limitation": "Factory-issued Allowance Ledger only; browser creation is prohibited.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "OFFSET_LEDGER",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "teaching-v100-b3-carbon-assets.ts"
+          ],
+          "limitation": "Factory-issued Offset Ledger only; never merged with Allowance Ledger.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "COMPLIANCE_RECONCILIATION",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "teaching-v100-b3-carbon-assets.ts"
+          ],
+          "limitation": "No exact reconciled ledgers were supplied.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "BANK_CARRY_FORWARD",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_V1_ALLOWANCE_ASSET_CONTRACT"
+          ],
+          "limitation": "Bank is closing balance → successor opening lineage, not a transaction or revenue.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "ASSET_EVIDENCE_PROVENANCE",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_V1_ALLOWANCE_ASSET_CONTRACT"
+          ],
+          "limitation": "Exact factory evidence is required.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "D11_UI_DRAFT",
+          "status": "UI_DRAFT_ONLY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "DCS-SIM-VIS-001_v1.0"
+          ],
+          "limitation": "No quantity, transaction or compliance effect.",
+          "authority": "UI_DRAFT"
+        },
+        {
+          "homeId": "D12_UI_DRAFT",
+          "status": "UI_DRAFT_ONLY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "DCS-SIM-VIS-001_v1.0"
+          ],
+          "limitation": "Safety Reserve remains MISSING_PARAMETER; no quantity is inferred.",
+          "authority": "UI_DRAFT"
+        }
+      ],
+      "allowanceMovementTypes": [
+        "ALLOCATION",
+        "PURCHASE",
+        "SALE",
+        "SURRENDER"
+      ],
+      "offsetMovementTypes": [
+        "ACQUISITION",
+        "APPLICATION",
+        "EXPIRATION",
+        "CANCELLATION"
+      ],
+      "bankSemantics": "CLOSING_BALANCE_TO_SUCCESSOR_OPENING_BALANCE",
+      "bankIsRevenue": false,
+      "captureCatalog": {
+        "D11": [
+          "NONE",
+          "PARTIAL",
+          "FULL_REMAINING_REQUIREMENT"
+        ],
+        "D12": [
+          "NO_BUFFER",
+          "LIMITED_BUFFER",
+          "ROBUST_BUFFER"
+        ]
+      }
+    },
+    "communication": {
+      "productBlocks": [
+        "ANNUAL_CARBON_ASSET_ACCOUNTING_STATEMENT",
+        "ANNUAL_CARBON_INFORMATION_DISCLOSURE_REPORT",
+        "VERIFICATION_AND_DISCLOSURE_STRATEGY",
+        "FORMAL_PUBLICATION"
+      ],
+      "informationHomes": [
+        {
+          "homeId": "ACCOUNTING_STATEMENT",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "Exact governed artifact/version/context was not supplied; unavailable is not synthesized.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "DISCLOSURE_REPORT",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "Exact governed artifact/version/context was not supplied; unavailable is not synthesized.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "VERIFICATION_DISCLOSURE_STRATEGY",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "Exact governed artifact/version/context was not supplied; unavailable is not synthesized.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "FORMAL_PUBLICATION",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "Exact governed artifact/version/context was not supplied; unavailable is not synthesized.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "CLAIM_ASSESSMENTS",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "Exact governed artifact/version/context was not supplied; unavailable is not synthesized.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "FOLLOW_UP_HISTORY",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "Exact governed artifact/version/context was not supplied; unavailable is not synthesized.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "COMMUNICATION_EVIDENCE_PROVENANCE",
+          "status": "MISSING_AUTHORITY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "Exact governed artifact/version/context was not supplied; unavailable is not synthesized.",
+          "authority": "GOVERNED_RUNTIME"
+        },
+        {
+          "homeId": "D13_UI_DRAFT",
+          "status": "UI_DRAFT_ONLY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "Non-authoritative explicit learner draft only.",
+          "authority": "UI_DRAFT"
+        },
+        {
+          "homeId": "D14_UI_DRAFT",
+          "status": "BLOCKED_POLICY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "No Production-approved catalog; TEST/FIXTURE catalogs are not active learner choices.",
+          "authority": "UI_DRAFT"
+        },
+        {
+          "homeId": "D15_UI_DRAFT",
+          "status": "BLOCKED_POLICY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "No Production-approved catalog; TEST/FIXTURE catalogs are not active learner choices.",
+          "authority": "UI_DRAFT"
+        },
+        {
+          "homeId": "D16_UI_DRAFT",
+          "status": "BLOCKED_POLICY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "No Production-approved catalog; TEST/FIXTURE catalogs are not active learner choices.",
+          "authority": "UI_DRAFT"
+        },
+        {
+          "homeId": "D17_UI_DRAFT",
+          "status": "UI_DRAFT_ONLY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "Non-authoritative explicit learner draft only.",
+          "authority": "UI_DRAFT"
+        },
+        {
+          "homeId": "D18_UI_DRAFT",
+          "status": "UI_DRAFT_ONLY",
+          "value": null,
+          "unit": null,
+          "sourceReferences": [
+            "TEACHING_COMMUNICATION_V1_BINDING_IMPLEMENTATION_SUPPLEMENT_V1_0"
+          ],
+          "limitation": "Non-authoritative explicit learner draft only.",
+          "authority": "UI_DRAFT"
+        }
+      ],
+      "captureCatalog": {
+        "D13": [
+          "ACTUAL_REDUCTION",
+          "PRODUCT_CARBON",
+          "OFFSET",
+          "CARBON_NEUTRALITY",
+          "FUTURE_COMMITMENT"
+        ],
+        "D14": [],
+        "D15": [],
+        "D16_EVIDENCE": [],
+        "D16_INTENSITY": [],
+        "D17": [
+          "SUBMIT_EXISTING_EVIDENCE",
+          "OBTAIN_ADDITIONAL_VERIFICATION",
+          "ACKNOWLEDGE_AND_CORRECT"
+        ],
+        "D18": [
+          "CORRECT_CLAIM",
+          "WITHDRAW_CLAIM",
+          "MAINTAIN_WITH_SUPPORTING_EVIDENCE"
+        ]
+      },
+      "productionCatalogStatus": {
+        "D14": "BLOCKED_POLICY",
+        "D15": "BLOCKED_POLICY",
+        "D16": "BLOCKED_POLICY"
+      },
+      "productionDownstreamReadiness": {
+        "D14": "BLOCKED_MISSING_CONTEXT",
+        "D15": "BLOCKED_MISSING_CONTEXT",
+        "D16": "BLOCKED_MISSING_CONTEXT"
+      },
+      "productionCatalogProvenance": {
+        "D14": null,
+        "D15": null,
+        "D16_EVIDENCE": null,
+        "D16_INTENSITY": null
+      },
+      "responseAdapter": {
+        "D17": {
+          "SUBMIT_EXISTING_EVIDENCE": "SUBMIT_EXISTING_EVIDENCE",
+          "OBTAIN_ADDITIONAL_VERIFICATION": "OBTAIN_SUPPLEMENTARY_VERIFICATION",
+          "ACKNOWLEDGE_AND_CORRECT": "ACKNOWLEDGE_AND_CORRECT"
+        },
+        "D18": {
+          "CORRECT_CLAIM": "ISSUE_CORRECTION_STATEMENT",
+          "WITHDRAW_CLAIM": "WITHDRAW_STATEMENT",
+          "MAINTAIN_WITH_SUPPORTING_EVIDENCE": "RETAIN_WITH_EVIDENCE"
+        }
+      },
+      "adapterCapability": "A02_ADAPTER_AVAILABLE",
+      "executionReadiness": {
+        "D17": "BLOCKED_MISSING_CONTEXT",
+        "D18": "BLOCKED_MISSING_CONTEXT"
+      },
+      "assessmentStates": [
+        "SUPPORTED",
+        "FLAGGED",
+        "AMBIGUOUS",
+        "CONFIRMED_VIOLATION"
+      ]
+    }
+  },
+  "simUi4": {
+    "authorityReferences": [
+      "DCS-SIM-VIS-001_v1.0",
+      "DCS-SIM-VIS-001-A03_PreClosing_NextCycle_Decision_Bundle_v1.0",
+      "CROCS_SANDBOX_SIM_UI4_CODEX_IMPLEMENTATION_CONTRACT_V1_0"
+    ],
+    "informationHomes": [
+      {
+        "homeId": "ANNUAL_RESULT_OVERVIEW",
+        "status": "MISSING_AUTHORITY",
+        "value": null,
+        "sourceReferences": [
+          "teaching-v100-phase9-11.ts#Phase10SettlementV100"
+        ],
+        "limitation": "No settled Phase10 object was injected into the static reference.",
+        "authority": "PHASE10"
+      },
+      {
+        "homeId": "ECONOMIC_AND_CARBON_RESULTS",
+        "status": "MISSING_AUTHORITY",
+        "value": null,
+        "sourceReferences": [
+          "teaching-v100-phase9-11.ts#Phase10SettlementV100",
+          "Carbon Core"
+        ],
+        "limitation": "Finance is separate from read-only Carbon Truth; neither is synthesized.",
+        "authority": "CARBON_CORE_READ_ONLY"
+      },
+      {
+        "homeId": "CUSTOMER_FEEDBACK_CHAIN",
+        "status": "MISSING_AUTHORITY",
+        "value": null,
+        "sourceReferences": [
+          "teaching-v100-phase9-11.ts#Phase9SettlementV100"
+        ],
+        "limitation": "No authoritative PHASE9 settlement object was supplied.",
+        "authority": "PHASE9"
+      },
+      {
+        "homeId": "EMPLOYEE_FEEDBACK_CHAIN",
+        "status": "MISSING_AUTHORITY",
+        "value": null,
+        "sourceReferences": [
+          "teaching-v100-phase9-11.ts#Phase9SettlementV100"
+        ],
+        "limitation": "No authoritative PHASE9 settlement object was supplied.",
+        "authority": "PHASE9"
+      },
+      {
+        "homeId": "QUALIFICATION_STATUS_AND_HISTORY",
+        "status": "MISSING_AUTHORITY",
+        "value": null,
+        "sourceReferences": [
+          "teaching-v100-phase9-11.ts#Phase10SettlementV100"
+        ],
+        "limitation": "No authoritative PHASE10 settlement object was supplied.",
+        "authority": "PHASE10"
+      },
+      {
+        "homeId": "CAUSAL_REVIEW",
+        "status": "MISSING_INPUT",
+        "value": null,
+        "sourceReferences": [
+          "TEACHING_INTERACTION_LAYER_ARCHITECTURE_CONTRACT_V1_0"
+        ],
+        "limitation": "Incomplete causal links remain missing rather than fabricated.",
+        "authority": "TEACHING_GOVERNANCE"
+      },
+      {
+        "homeId": "UNRESOLVED_RISKS",
+        "status": "RESOLVED",
+        "value": "BLOCKED_BY_DESIGN: PARAM-MKT-* / PARAM-ORG-* / PARAM-QUAL-* / CIPI formula",
+        "sourceReferences": [
+          "PARAM-MKT-*",
+          "PARAM-ORG-*",
+          "PARAM-QUAL-*",
+          "PARAM-ECON-*",
+          "PARAM-HASH-*"
+        ],
+        "limitation": "These unresolved paths do not become zero.",
+        "authority": "TEACHING_GOVERNANCE"
+      },
+      {
+        "homeId": "D19_NEXT_CYCLE_STRATEGIC_PRIORITY",
+        "status": "UI_DRAFT_ONLY",
+        "value": null,
+        "sourceReferences": [
+          "DCS-SIM-VIS-001-A03_PreClosing_NextCycle_Decision_Bundle_v1.0"
+        ],
+        "limitation": "Explicit selection only; authorization context is absent.",
+        "authority": "LEARNER_DRAFT"
+      },
+      {
+        "homeId": "D20_NEXT_CYCLE_COMMITMENT_AMBITION",
+        "status": "UI_DRAFT_ONLY",
+        "value": null,
+        "sourceReferences": [
+          "DCS-SIM-VIS-001-A03_PreClosing_NextCycle_Decision_Bundle_v1.0"
+        ],
+        "limitation": "Ambition, target, capability gap and budget intent are all explicit.",
+        "authority": "LEARNER_DRAFT"
+      },
+      {
+        "homeId": "NEXT_CYCLE_DECISION_BUNDLE",
+        "status": "MISSING_AUTHORITY",
+        "value": null,
+        "sourceReferences": [
+          "DCS-SIM-VIS-001-A03_PreClosing_NextCycle_Decision_Bundle_v1.0"
+        ],
+        "limitation": "Static BD has no governed learner/team authorization context.",
+        "authority": "TEACHING_GOVERNANCE"
+      },
+      {
+        "homeId": "CLOSING_HANDOFF",
+        "status": "MISSING_AUTHORITY",
+        "value": null,
+        "sourceReferences": [
+          "DCS-SIM-VIS-001-A03_PreClosing_NextCycle_Decision_Bundle_v1.0"
+        ],
+        "limitation": "REQUIRED_FOR_CLOSING until a valid current A03 bundle exists.",
+        "authority": "TEACHING_GOVERNANCE"
+      },
+      {
+        "homeId": "SIX_YEAR_FINAL_REVIEW",
+        "status": "NOT_APPLICABLE",
+        "value": null,
+        "sourceReferences": [
+          "DCS-SIM-VIS-001_v1.0"
+        ],
+        "limitation": "Available only in Y6.",
+        "authority": "TEACHING_GOVERNANCE"
+      },
+      {
+        "homeId": "CIPI_STATUS",
+        "status": "NOT_FROZEN",
+        "value": null,
+        "sourceReferences": [
+          "TEACHING_V1_INVARIANT_CATALOG#SIM-I12"
+        ],
+        "limitation": "Final formula, weights, normalization, thresholds and grades are not approved.",
+        "authority": "TEACHING_GOVERNANCE"
+      }
+    ],
+    "captureCatalog": {
+      "D19": [
+        "FINANCIAL_RECOVERY",
+        "DEEP_REDUCTION",
+        "PRODUCT_LOW_CARBON_LEADERSHIP",
+        "REPUTATION_REBUILDING",
+        "BALANCED_TRANSITION"
+      ],
+      "D20": [
+        "CONSERVATIVE",
+        "MODERATE",
+        "AMBITIOUS"
+      ]
+    },
+    "authorizationStatus": "MISSING_AUTHORITY",
+    "bundleStatus": "MISSING_AUTHORITY",
+    "closingStatus": "REQUIRED_FOR_CLOSING",
+    "successorStatus": "MISSING_AUTHORITY",
+    "anchors": [
+      {
+        "year": 1,
+        "anchorId": "E-Y1-01",
+        "primaryWorkbench": "P2",
+        "decisionSlotIds": [
+          "D3",
+          "D4"
+        ],
+        "allowedChannels": [
+          "Visibility",
+          "Uncertainty",
+          "Evidence"
+        ],
+        "forbiddenDirectEffects": [
+          "Carbon Truth",
+          "Actual Reduction",
+          "Qualification",
+          "Market Share"
+        ],
+        "annualWorkbenches": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6"
+        ],
+        "authority": "READ_ONLY_TEACHING_CONTEXT",
+        "eventEngineAuthority": false
+      },
+      {
+        "year": 2,
+        "anchorId": "E-Y2-01",
+        "primaryWorkbench": "P3",
+        "decisionSlotIds": [
+          "D5",
+          "D6",
+          "D7",
+          "D10"
+        ],
+        "allowedChannels": [
+          "project availability",
+          "timing",
+          "Capability"
+        ],
+        "forbiddenDirectEffects": [
+          "direct Actual Reduction"
+        ],
+        "annualWorkbenches": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6"
+        ],
+        "authority": "READ_ONLY_TEACHING_CONTEXT",
+        "eventEngineAuthority": false
+      },
+      {
+        "year": 3,
+        "anchorId": "QUALIFICATION_REVIEW_MILESTONE",
+        "primaryWorkbench": "P6",
+        "decisionSlotIds": [
+          "D19",
+          "D20"
+        ],
+        "allowedChannels": [
+          "settled Y1-Y3 history",
+          "Continuous Action",
+          "cumulative Actual Reduction",
+          "Evidence",
+          "Qualification"
+        ],
+        "forbiddenDirectEffects": [
+          "qualification slider",
+          "fixed direct profit"
+        ],
+        "annualWorkbenches": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6"
+        ],
+        "authority": "READ_ONLY_TEACHING_CONTEXT",
+        "eventEngineAuthority": false
+      },
+      {
+        "year": 4,
+        "anchorId": "E-Y4-01",
+        "primaryWorkbench": "P1_REVEAL_TO_P6_SETTLEMENT",
+        "decisionSlotIds": [
+          "D8",
+          "D9"
+        ],
+        "allowedChannels": [
+          "PARAM-MKT-* environment channel only"
+        ],
+        "forbiddenDirectEffects": [
+          "direct P1 revenue settlement"
+        ],
+        "annualWorkbenches": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6"
+        ],
+        "authority": "READ_ONLY_TEACHING_CONTEXT",
+        "eventEngineAuthority": false
+      },
+      {
+        "year": 5,
+        "anchorId": "E-Y5-01",
+        "primaryWorkbench": "P5",
+        "decisionSlotIds": [
+          "D17",
+          "D18"
+        ],
+        "allowedChannels": [
+          "Verification",
+          "Evidence",
+          "Disclosure Risk",
+          "Statement Version"
+        ],
+        "forbiddenDirectEffects": [
+          "Carbon Truth rewrite",
+          "Actual Reduction rewrite",
+          "production facts rewrite"
+        ],
+        "annualWorkbenches": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6"
+        ],
+        "authority": "READ_ONLY_TEACHING_CONTEXT",
+        "eventEngineAuthority": false
+      },
+      {
+        "year": 6,
+        "anchorId": "FINAL_STRATEGIC_REVIEW_SCENARIO",
+        "primaryWorkbench": "P6",
+        "decisionSlotIds": [
+          "D19",
+          "D20"
+        ],
+        "allowedChannels": [
+          "six-year settled history"
+        ],
+        "forbiddenDirectEffects": [
+          "random shock",
+          "historical recalculation",
+          "Y7 creation"
+        ],
+        "annualWorkbenches": [
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "P5",
+          "P6"
+        ],
+        "authority": "READ_ONLY_TEACHING_CONTEXT",
+        "eventEngineAuthority": false
+      }
+    ],
+    "currentAnchor": {
+      "year": 1,
+      "anchorId": "E-Y1-01",
+      "primaryWorkbench": "P2",
+      "decisionSlotIds": [
+        "D3",
+        "D4"
+      ],
+      "allowedChannels": [
+        "Visibility",
+        "Uncertainty",
+        "Evidence"
+      ],
+      "forbiddenDirectEffects": [
+        "Carbon Truth",
+        "Actual Reduction",
+        "Qualification",
+        "Market Share"
+      ],
+      "annualWorkbenches": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "authority": "READ_ONLY_TEACHING_CONTEXT",
+      "eventEngineAuthority": false
+    },
+    "cipi": {
+      "identity": "CROCS Integrated Performance Index",
+      "status": "NOT_FROZEN",
+      "usage": "EX_POST_ONLY",
+      "value": null,
+      "limitation": "Final formula, weights, normalization, thresholds and grades are not approved."
+    }
+  }
+}

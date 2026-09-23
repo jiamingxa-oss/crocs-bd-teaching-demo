@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="CROCS Teaching v1 SIM-UI-4 Stimulation + Six-Year Anchors教学沙盘"
+    />
+    <title>CROCS Teaching · G1 Desktop</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <span hidden>SIM-UI-1 shell preserved</span>
+    <a class="skip-link" href="#workspace">跳到当前工作台</a>
+    <header class="topbar" data-region="HEADER">
+      <div class="brand">
+        <span class="brand-mark">C</span
+        ><span
+          ><strong>CROCS</strong><small>企业智能碳管理教学沙盘</small></span
+        >
+      </div>
+      <div class="year-state">
+        <b id="year-label">YEAR 1 / 6</b><span id="flow-label">OPENING</span>
+      </div>
+      <div class="authority-pill">Carbon Truth · READ ONLY</div>
+    </header>
+    <div class="g1-toolbar">
+      <button id="g1-open-world" type="button">企业世界</button
+      ><span id="g1-current-status"></span
+      ><button id="g1-open-authority" type="button">权限与来源</button>
+    </div>
+    <main class="shell g1-shell">
+      <aside class="scene" data-region="SCENE">
+        <div class="g1-scene-heading">
+          <span id="g1-scene-caption"></span><b>情境 ≠ 事实</b>
+        </div>
+        <div id="g1-scene" class="g1-scene"></div>
+        <div
+          id="g1-role-portraits"
+          class="g1-roles"
+          aria-label="五个教学角色"
+        ></div>
+        <details class="g1-legacy">
+          <summary>场景历史与角色依据</summary>
+          <div
+            class="scene-art"
+            id="scene-art"
+            data-scene-asset="takeover"
+            role="img"
+            aria-label="Takeover management context"
+          >
+            <span id="scene-index">P1</span
+            ><b id="scene-artifact-status">MISSING_ARTIFACT</b>
+          </div>
+          <small>MANAGEMENT CONTEXT · CONTEXT ONLY</small>
+          <h1 id="scene-title">经营 · Business</h1>
+          <p id="scene-copy">
+            场景仅承载管理情境；正式状态、数值与决策由界面单独呈现。
+          </p>
+          <section class="role-card" aria-labelledby="team-roles-heading">
+            <b id="team-roles-heading">Team Roles</b
+            ><strong id="role-lead">CEO</strong>
+            <span>Shared Facts + Role Lens</span>
+            <div id="role-list" class="chip-list"></div>
+            <div id="role-expression-list" class="chip-list"></div>
+            <p id="role-rotation-status"></p>
+          </section>
+        </details>
+      </aside>
+      <section
+        class="workspace"
+        id="workspace"
+        tabindex="-1"
+        data-region="WORKSPACE"
+      >
+        <nav id="workspace-nav" aria-label="年度工作台执行顺序"></nav>
+        <header class="workbench-head">
+          <div>
+            <small id="workspace-code"
+              >P1 · SITUATION → DECISION → CONSEQUENCE</small
+            >
+            <h2 id="workspace-title">经营工作台</h2>
+          </div>
+          <span class="state-badge" id="lifecycle">DRAFT</span>
+        </header>
+        <div id="g1-task-rail" class="g1-task-rail"></div>
+        <details id="g1-decision-detail">
+          <summary>展开决策、项目与工作台详情</summary>
+          <div class="identity-row" aria-label="信息身份">
+            <span>DECISION</span><span>PREVIEW</span><span>EXECUTED FACT</span
+            ><span>CARBON TRUTH</span><span>EVIDENCE</span
+            ><span>SETTLEMENT</span><span>AI TEACHING COMMENT</span>
+          </div>
+
+          <section class="structural-panel">
+            <h3>Approved structural homes</h3>
+            <div id="structural-homes" class="home-grid"></div>
+          </section>
+          <section id="p2-gate" class="p2-gate" hidden>
+            <h3>P2 · C1 → C2 → C3 progressive gate</h3>
+            <div id="p2-substages"></div>
+            <p id="p2-baseline-status"></p>
+            <button id="confirm-p2-substage" type="button">
+              Confirm active substage
+            </button>
+          </section>
+          <section id="sim-ui2-panel" class="sim-ui2-panel" hidden>
+            <h3 id="sim-ui2-title">SIM-UI-2 core interaction</h3>
+            <p id="sim-ui2-boundary"></p>
+            <div id="sim-ui2-content" class="home-grid"></div>
+          </section>
+          <section id="sim-ui3-panel" class="sim-ui2-panel" hidden>
+            <h3 id="sim-ui3-title">SIM-UI-3 core interaction</h3>
+            <p id="sim-ui3-boundary"></p>
+            <div id="sim-ui3-content" class="home-grid"></div>
+          </section>
+          <section id="sim-ui4-panel" class="sim-ui2-panel" hidden>
+            <h3>SIM-UI-4 · P6 governed stimulation</h3>
+            <p>
+              Market ≠ Organization · Finance ≠ Qualification · P6 cannot write
+              Carbon Truth
+            </p>
+            <div id="sim-ui4-content" class="home-grid"></div>
+          </section>
+          <section
+            class="decision-panel"
+            aria-labelledby="team-decision-heading"
+          >
+            <h3 id="team-decision-heading">
+              Team Decision · D1–D20 stable identities
+            </h3>
+            <p>
+              <span class="tag draft">UI_DRAFT</span> Browser presentation only;
+              Confirmed decision ≠ Executed Fact.
+            </p>
+            <div id="decision-list" class="decision-list"></div>
+          </section>
+        </details>
+      </section>
+      <aside class="explanation" data-region="EXPLANATION_EVIDENCE">
+        <details id="g1-evidence-detail">
+          <summary>完整证据、教学状态与治理边界</summary>
+          <small>EXPLANATION / EVIDENCE</small>
+          <h2>Authority boundary</h2>
+          <div class="equations">
+            <span>Measurement Investment ≠ Actual Reduction</span
+            ><span>Measurement Confidence ≠ Allocation Confidence</span
+            ><span>Investment ≠ Capability ≠ Actual Reduction</span
+            ><span>Plan COMPLETED ≠ Effect VERIFIED</span
+            ><span>Actual Reduction ≠ Allowance ≠ Offset</span
+            ><span>Fact Layer ≠ Communication Layer</span
+            ><span>FLAGGED ≠ VIOLATION</span>
+          </div>
+          <article class="blocked">
+            <b>BLOCKED_BY_DESIGN</b>
+            <p>
+              OPEN parameters and later-package behavior are unavailable.
+              Missing is not zero; this shell emits no guessed value.
+            </p>
+            <small>Rule: DCS-SIM-VIS-001 §8 · SIM-UI-1 Contract §6</small>
+          </article>
+          <section aria-labelledby="round-result-heading">
+            <h3 id="round-result-heading">Round Result</h3>
+            <div id="fact-list" class="fact-list"></div>
+          </section>
+          <section aria-labelledby="what-if-heading">
+            <h3 id="what-if-heading">What-if</h3>
+            <p>Structural reflection only; no outcome is calculated.</p>
+            <div id="mistake-chain" class="chain-list"></div>
+          </section>
+          <section aria-labelledby="learning-evidence-heading">
+            <h3 id="learning-evidence-heading">Learning Evidence</h3>
+            <p id="explainability-status"></p>
+            <p id="next-cycle-authorization"></p>
+            <div id="validation-list"></div>
+            <div id="open-policy-list"></div>
+            <button id="open-evidence" type="button">
+              Evidence / source drill-down
+            </button>
+          </section>
+          <article>
+            <b>Provenance</b>
+            <dl id="provenance"></dl>
+            <b>Confidence limitation</b>
+            <p>No UI path creates or recalculates Carbon Truth.</p>
+          </article>
+        </details>
+      </aside>
+    </main>
+    <dialog id="g1-dialog" aria-labelledby="g1-dialog-title">
+      <header class="g1-dialog-header">
+        <h2 id="g1-dialog-title"></h2>
+        <button type="button" id="g1-close" autofocus>关闭</button>
+      </header>
+      <div id="g1-dialog-content"></div>
+    </dialog>
+    <dialog id="evidence-dialog" aria-labelledby="evidence-title">
+      <form method="dialog">
+        <h2 id="evidence-title">Evidence, sources & limitations</h2>
+        <div id="evidence-content"></div>
+        <button value="close">Close</button>
+      </form>
+    </dialog>
+    <footer class="delivery" data-region="FOOTER_DELIVERY">
+      <div>
+        <small>ANNUAL DELIVERY</small
+        ><b id="gate-status">OPENING → P1 is the next approved gate</b>
+      </div>
+      <div class="footer-actions">
+        <button id="back" type="button">Read previous</button
+        ><button id="advance" type="button">Confirm & lock step</button>
+      </div>
+    </footer>
+  </body>
+</html>

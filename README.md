@@ -2,6 +2,8 @@
 
 Public showcase:
 
+- G1 v0.2 Desktop candidate preview (not classroom accepted): https://jiamingxa-oss.github.io/crocs-bd-teaching-demo/g1-v02-preview/
+
 - Teaching v1 Phase-A Sandbox: https://jiamingxa-oss.github.io/crocs-bd-teaching-demo/v100-sandbox/
 
 - Current v1 read-only preview: https://jiamingxa-oss.github.io/crocs-bd-teaching-demo/v100-preview/

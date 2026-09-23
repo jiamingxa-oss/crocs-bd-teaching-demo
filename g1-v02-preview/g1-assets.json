@@ -1,0 +1,163 @@
+{
+  "schema": "CROCS_G1_CONTEXT_ASSETS_V1",
+  "authority": "G1-BROWSER-001 / DCS-TEACHING-G1-BROWSER-005",
+  "reconciliationAuthority": "DCS-TEACHING-G1-RECONCILIATION-006 / G1-BROWSER-001 v1.1",
+  "figmaFile": "lRr408sZeJEuXoeYSCkEDe",
+  "originalSceneStatus": "MISSING_ARTIFACT",
+  "historicalProjectPictograms": "PRESERVED_IN_FIGMA_NOT_MAPPED_TO_ACTIVE_A01_CHOICES",
+  "assets": [
+    {
+      "id": "g1-factory-0",
+      "path": "assets/g1/factory-0.jpg",
+      "sha256": "0c184c97719514a310190559d73c16264ffd0aaf192a9fa9f555c328a02ada7d",
+      "sourceOriginalSha256": "d67c2cdef9e517939907cd3b303530f069875ec2f967bde89575dcff7c982cde",
+      "figmaNode": "38:2",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 0; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-factory-1",
+      "path": "assets/g1/factory-1.jpg",
+      "sha256": "27742b365c3e0f6e1225251b65270315cd0abecfcc25829c82c78c0e031874d1",
+      "sourceOriginalSha256": "d67c2cdef9e517939907cd3b303530f069875ec2f967bde89575dcff7c982cde",
+      "figmaNode": "38:55",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 1; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-factory-2",
+      "path": "assets/g1/factory-2.jpg",
+      "sha256": "ca67f6c4b50bd60e445191aa471f69b8267d155c26fedab54d6326b96688161e",
+      "sourceOriginalSha256": "d67c2cdef9e517939907cd3b303530f069875ec2f967bde89575dcff7c982cde",
+      "figmaNode": "38:56",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 2; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-factory-3",
+      "path": "assets/g1/factory-3.jpg",
+      "sha256": "e7338135f73662416a896cfa3df8fac98cf63892f9bab980ea059f98c18b52fa",
+      "sourceOriginalSha256": "d67c2cdef9e517939907cd3b303530f069875ec2f967bde89575dcff7c982cde",
+      "figmaNode": "38:57",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 3; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-factory-4",
+      "path": "assets/g1/factory-4.jpg",
+      "sha256": "87fbb861c0ccd31ca3e4c45e6f78a5e6136d008a9f74be0b682d816fe4558be1",
+      "sourceOriginalSha256": "d67c2cdef9e517939907cd3b303530f069875ec2f967bde89575dcff7c982cde",
+      "figmaNode": "38:58",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 4; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-factory-5",
+      "path": "assets/g1/factory-5.jpg",
+      "sha256": "2966aa6bec8c1fadccac3baa5d3cc96eb106e07e08f672a792a639dcd63251fd",
+      "sourceOriginalSha256": "d67c2cdef9e517939907cd3b303530f069875ec2f967bde89575dcff7c982cde",
+      "figmaNode": "38:59",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 5; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-campus-0",
+      "path": "assets/g1/campus-0.jpg",
+      "sha256": "f047549d1df0cf9682411a6ea9ef2fb2ef4f71c1323a08d70d3600eb1bd20877",
+      "sourceOriginalSha256": "ec9fd28684eb4baeaedccbc8b01a2545dacf0f4b3a2fb57f605eea0bd82ea82f",
+      "figmaNode": "40:2",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 0; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-campus-1",
+      "path": "assets/g1/campus-1.jpg",
+      "sha256": "a966e936fa15114f79c6d5c7d69f78b6c8fb858b85a42960f0b1aef0e33c3f01",
+      "sourceOriginalSha256": "ec9fd28684eb4baeaedccbc8b01a2545dacf0f4b3a2fb57f605eea0bd82ea82f",
+      "figmaNode": "40:55",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 1; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-campus-2",
+      "path": "assets/g1/campus-2.jpg",
+      "sha256": "8e99fab90d39dc9f1c8f233ca3a46754ece808d4cd02be14cd057d68e84136ba",
+      "sourceOriginalSha256": "ec9fd28684eb4baeaedccbc8b01a2545dacf0f4b3a2fb57f605eea0bd82ea82f",
+      "figmaNode": "40:56",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 2; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-campus-3",
+      "path": "assets/g1/campus-3.jpg",
+      "sha256": "c2b163f14bc0f4befbbbd6bdc1cb5d60cf02d42dd11d3fdff5481bf585931d27",
+      "sourceOriginalSha256": "ec9fd28684eb4baeaedccbc8b01a2545dacf0f4b3a2fb57f605eea0bd82ea82f",
+      "figmaNode": "40:57",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 3; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-campus-4",
+      "path": "assets/g1/campus-4.jpg",
+      "sha256": "a4235ae57ed54917190f0b28cdeed6cd1b14231fbb592bb2e6166ddd273aadc3",
+      "sourceOriginalSha256": "ec9fd28684eb4baeaedccbc8b01a2545dacf0f4b3a2fb57f605eea0bd82ea82f",
+      "figmaNode": "40:58",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 4; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-campus-5",
+      "path": "assets/g1/campus-5.jpg",
+      "sha256": "9ff07d805b3c30a5cccbfb087dd5ad3a23a929d15f16c5196bd8ee59dca697f5",
+      "sourceOriginalSha256": "ec9fd28684eb4baeaedccbc8b01a2545dacf0f4b3a2fb57f605eea0bd82ea82f",
+      "figmaNode": "40:59",
+      "transform": "Accepted JPEG transport tile; 3 columns x 2 rows, row-major tile 5; no additional transformation",
+      "usage": "CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-role-CEO",
+      "path": "assets/g1/role-CEO.jpg",
+      "sha256": "511ccac9a8cb6504d0a50c6698dc8ec487a671baa415b679247b32ff81551d3e",
+      "sourceOriginalSha256": "469dbcc3dd81a3ccc103336d0518996a33400e413165b195bdc688e202e15aef",
+      "figmaNode": "41:36",
+      "transform": "Accepted portrait rendition; display uses top-aligned CSS cover crop",
+      "usage": "FICTIONAL_ROLE_CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-role-CFO",
+      "path": "assets/g1/role-CFO.jpg",
+      "sha256": "a8bc92b41e621d7a942ca220f1a16941ec6b27de90456c623ecc4cd1a5d2a42a",
+      "sourceOriginalSha256": "469dbcc3dd81a3ccc103336d0518996a33400e413165b195bdc688e202e15aef",
+      "figmaNode": "41:91",
+      "transform": "Accepted portrait rendition; display uses top-aligned CSS cover crop",
+      "usage": "FICTIONAL_ROLE_CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-role-COO",
+      "path": "assets/g1/role-COO.jpg",
+      "sha256": "3d68d23caf04385434d80916c636b2aee6dfd86b4f2f18182c0b3c310d356866",
+      "sourceOriginalSha256": "469dbcc3dd81a3ccc103336d0518996a33400e413165b195bdc688e202e15aef",
+      "figmaNode": "41:94",
+      "transform": "Accepted portrait rendition; display uses top-aligned CSS cover crop",
+      "usage": "FICTIONAL_ROLE_CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-role-CCO",
+      "path": "assets/g1/role-CCO.jpg",
+      "sha256": "de6e5bd912890eb0e9b14dbf1ea9de342ab869ed7cbfc4a3fe91d70c515fbc25",
+      "sourceOriginalSha256": "469dbcc3dd81a3ccc103336d0518996a33400e413165b195bdc688e202e15aef",
+      "figmaNode": "41:97",
+      "transform": "Accepted portrait rendition; display uses top-aligned CSS cover crop",
+      "usage": "FICTIONAL_ROLE_CONTEXT_ONLY"
+    },
+    {
+      "id": "g1-role-CMO",
+      "path": "assets/g1/role-CMO.jpg",
+      "sha256": "5610ba2751b5eb6f5b9bc24e048b385e4e70c51474f659088c0f2546bb33bf48",
+      "sourceOriginalSha256": "469dbcc3dd81a3ccc103336d0518996a33400e413165b195bdc688e202e15aef",
+      "figmaNode": "42:2",
+      "transform": "Accepted portrait rendition; display uses top-aligned CSS cover crop",
+      "usage": "FICTIONAL_ROLE_CONTEXT_ONLY"
+    }
+  ]
+}
