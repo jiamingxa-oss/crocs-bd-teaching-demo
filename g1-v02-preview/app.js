@@ -218,6 +218,7 @@ function d20Control(ui4) {
     ui4.captureCatalog.D20,
     '-- Please select ambition --',
   );
+  ambition.setAttribute('aria-label', 'D20 承诺水平（ambition）');
   const inputs = ['target', 'capabilityGap', 'budgetIntent'].map((name) => {
     const input = document.createElement('input');
     input.name = name;
@@ -241,6 +242,14 @@ function d20Control(ui4) {
       output,
     );
   });
+  const saved = state.uiDrafts.D20;
+  if (saved) {
+    ambition.value = saved.selection.ambition;
+    inputs.forEach((input) => {
+      input.value = saved.selection[input.name];
+    });
+    showDraft(output, saved);
+  }
   const locked = state.lifecycle[5] === 3;
   ambition.disabled = locked;
   inputs.forEach((input) => {

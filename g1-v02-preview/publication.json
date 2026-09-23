@@ -13,7 +13,7 @@
     "DCS-SIM-VIS-001-A03_PreClosing_NextCycle_Decision_Bundle_v1.0",
     "CROCS_SANDBOX_SIM_UI4_CODEX_IMPLEMENTATION_CONTRACT_V1_0"
   ],
-  "implementationHead": "e85ade948b588edd960d2d900acbf7a72a932c7e",
+  "implementationHead": "8f4ad13c71f8be5a9eaaa611ee1f942f69d3a8d5",
   "contract": "CROCS_SANDBOX_SIM_UI4_CODEX_IMPLEMENTATION_CONTRACT_V1_0",
   "presentationAuthority": "G1-BROWSER-001",
   "presentationContractVersion": "1.1",
@@ -69,12 +69,12 @@
     "assets/g1/role-COO.jpg": "3d68d23caf04385434d80916c636b2aee6dfd86b4f2f18182c0b3c310d356866",
     "assets/g1/role-CCO.jpg": "de6e5bd912890eb0e9b14dbf1ea9de342ab869ed7cbfc4a3fe91d70c515fbc25",
     "assets/g1/role-CMO.jpg": "5610ba2751b5eb6f5b9bc24e048b385e4e70c51474f659088c0f2546bb33bf48",
-    "index.html": "731442a539b4b03e56663b48e598f42d92349f0995375e0cf81a42c610a8c85a",
+    "index.html": "0f1208e1108e10bcb493ed7657d8203582fa93119d0ce14eb4723632df2c1029",
     "styles.css": "3eba476de64784a6dd311807e581259f3a3395d51e72692b01e7239b6ad3affb",
-    "app.js": "74af893336019307cb87f61f7019bc3e2f42d3c4827dc27081e0a4ea8c9b834e",
+    "app.js": "e6d840dc88e99e1b337a52644beee95fa8078e85f753d95fd0984ad2bb485a2d",
     "sim-ui2-browser-draft.js": "99be6644639a6d47ca5c92557aac75cddc181e47b81e016dca136484a8b044c8",
     "README.md": "7938bf9891a4e2d94327e6b4787918b94db43062f273e0b0fa2476777421c018",
-    "projection.json": "79227c744cbd8c8ec17ab697361e072467e861fa926572c126c0970ec9a65d54"
+    "projection.json": "0a0b9d8b388fb0174cc74563c3ae37006fcc243f610b9134870d32afa919777b"
   },
   "reviewStatus": "PREVIEW_NOT_CLASSROOM_ACCEPTED",
   "publicationAuthority": "DCS-TEACHING-G1-PREVIEW-007",
