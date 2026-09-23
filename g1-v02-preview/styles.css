@@ -827,7 +827,7 @@ dialog form {
   overflow: hidden;
 }
 .scene-art::after {
-  content: attr(data-scene-asset);
+  content: attr(data-scene-label);
   font-size: 0.75rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1009,7 +1009,7 @@ dialog form {
   border: 1px dashed var(--line);
 }
 .scene-art::after {
-  content: attr(data-scene-asset) ' · APPROVED PIXEL ASSET UNAVAILABLE';
+  content: attr(data-scene-label) ' · 已批准素材暂不可用';
   color: var(--muted);
 }
 #scene-artifact-status {

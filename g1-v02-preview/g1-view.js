@@ -1,5 +1,25 @@
 // DCS-008: display labels only; never use translated strings as machine values.
 const CHINESE_LABELS = {
+  measurementInvestment: '测量投入',
+  allocationDriver: '分配依据',
+  responsibilityCoverage: '责任覆盖范围',
+  'procurement → energy / production → C1 / C2 → sales':
+    '采购 → 能源 / 生产 → C1 / C2 → 销售',
+  QUALIFICATION_REVIEW_MILESTONE:
+    '资格复核节点（QUALIFICATION_REVIEW_MILESTONE）',
+  FINAL_STRATEGIC_REVIEW_SCENARIO:
+    '最终战略复盘情境（FINAL_STRATEGIC_REVIEW_SCENARIO）',
+  'BLOCKED_BY_DESIGN:': '设计边界内暂不可用（BLOCKED_BY_DESIGN）：',
+  'CIPI formula': '综合绩效指数公式',
+  'D8/D9 归属经营 BUSINESS_DECISION': 'D8/D9 归属经营（BUSINESS_DECISION）',
+  D11_UI_DRAFT: 'D11 界面草稿',
+  D12_UI_DRAFT: 'D12 界面草稿',
+  D13_UI_DRAFT: 'D13 界面草稿',
+  D14_UI_DRAFT: 'D14 界面草稿',
+  D15_UI_DRAFT: 'D15 界面草稿',
+  D16_UI_DRAFT: 'D16 界面草稿',
+  D17_UI_DRAFT: 'D17 界面草稿',
+  D18_UI_DRAFT: 'D18 界面草稿',
   'Plan:': '计划：',
   'Effect:': '效果：',
   'Explainability:': '解释充分性：',
@@ -80,7 +100,7 @@ const CHINESE_LABELS = {
   MISSING_AUTHORITY: '缺少授权依据（MISSING_AUTHORITY）',
   MISSING_INPUT: '缺少输入（MISSING_INPUT）',
   CONTENT_UNAVAILABLE: '正文未提供（CONTENT_UNAVAILABLE）',
-  RESOLVED: '已解决（RESOLVED）',
+  RESOLVED: '已提供（RESOLVED）',
   CAPTURE_ONLY: '仅记录选择（CAPTURE_ONLY）',
   EXECUTABLE_GOVERNED: '可按已批准规则执行（EXECUTABLE_GOVERNED）',
   UI_DRAFT: '界面草稿（UI_DRAFT）',
@@ -317,7 +337,7 @@ const CHINESE_LABELS = {
   'OPEN / BLOCKED_BY_DESIGN':
     '未决 / 设计边界内暂不可用（OPEN / BLOCKED_BY_DESIGN）',
   REJECTED: '未接受（REJECTED）',
-  Preview: '预览（Preview）',
+  Preview: '预览',
   Explainability: '解释充分性（Explainability）',
   'Carbon Truth': '碳事实（Carbon Truth）',
   'Carbon Core': '碳核算核心（Carbon Core）',
@@ -639,7 +659,7 @@ export function mountG1(doc, { getState, navigate, openDecision }) {
   };
   function picture(src, alt, parent) {
     const img = el('img');
-    img.alt = alt;
+    img.alt = displayText(alt);
     img.addEventListener(
       'error',
       () => {

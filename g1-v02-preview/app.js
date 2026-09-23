@@ -1,4 +1,4 @@
-import { mountG1, createG1Callbacks, displayText } from './g1-view.js?v=b8b3eb29911baec2de8e0efe841cda4b61bbafd43dcf48d2f99fdd1827524abb';
+import { mountG1, createG1Callbacks, displayText } from './g1-view.js?v=ee6bac3793f4dd92bc949d67faba0a75e3ebf8b7b72402eda055da756e2f2491';
 import {
   buildSimUi2BrowserDraft,
   buildSimUi3ProductionBrowserDraft,
@@ -144,15 +144,19 @@ function render() {
   const d = WORKBENCHES[state.active];
   const w = state.projection.workspaces.find((item) => item.id === d[1]);
   setText('#year-label', `第 ${state.year} 年 / 共 6 年`);
-  setText('#flow-label', d[1]);
+  setText('#flow-label', d[2].split(' · ')[0]);
   setText('#scene-index', d[0]);
   setText('#scene-title', d[2]);
   setText('#role-lead', d[4]);
   const art = document.querySelector('#scene-art');
   art.dataset.sceneAsset = d[3];
+  art.dataset.sceneLabel = d[2].split(' · ')[0];
   art.setAttribute('aria-label', `${d[2]}情境占位，已批准素材待补`);
-  setText('#workspace-code', `${d[0]} · SITUATION → DECISION → CONSEQUENCE`);
-  setText('#workspace-title', `${d[2]} 工作台`);
+  setText('#workspace-code', `${d[0]} · 情境 → 决策 → 后果`);
+  document
+    .querySelector('#workspace-code')
+    .append(` · ${d[2].split(' · ')[1]}`);
+  setText('#workspace-title', `${d[2].split(' · ')[0]}工作台`);
   setText('#lifecycle', LIFECYCLE[state.lifecycle[state.active]]);
   renderNav();
   renderCards('#structural-homes', d[5], 'STRUCTURAL HOME');

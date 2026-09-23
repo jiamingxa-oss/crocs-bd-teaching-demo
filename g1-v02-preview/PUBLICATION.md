@@ -2,7 +2,7 @@
 
 状态：集中审阅预览（PREVIEW / NOT CLASSROOM ACCEPTED），源候选尚未合并。
 
-- 精确源提交：37d4cd21fa415d0693ceddd4f1142a1800144b44（PR #259）
+- 精确源提交：e85ade948b588edd960d2d900acbf7a72a932c7e（PR #259）
 - 数据基线：805ae081b31705814d61e416b15fd0bab441f0c0
 - 发布授权：DCS-TEACHING-G1-PREVIEW-007。
 - 语言规范：DCS-TEACHING-G1-LANGUAGE-008 / Design Master v1.11。
