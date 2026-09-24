@@ -1596,6 +1596,7 @@ summary:focus-visible {
   height: 64px;
   border-radius: 8px;
   object-fit: cover;
+  object-position: center top;
 }
 .g1-p6-role small {
   color: var(--muted);
