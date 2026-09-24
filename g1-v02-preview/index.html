@@ -8,8 +8,8 @@
       content="CROCS 企业碳管理教学沙盘 · 桌面插画原型"
     />
     <title>CROCS 企业碳管理教学沙盘 · G1 桌面版</title>
-    <link rel="stylesheet" href="styles.css?v=3eba476de64784a6dd311807e581259f3a3395d51e72692b01e7239b6ad3affb" />
-    <script type="module" src="app.js?v=e6d840dc88e99e1b337a52644beee95fa8078e85f753d95fd0984ad2bb485a2d"></script>
+    <link rel="stylesheet" href="styles.css?v=5e69d90bdb7109f69551fa2c3cc1e67f7ad9c9a8f5082e55223670dd7c6baa2e" />
+    <script type="module" src="app.js?v=e22861d09751fb5f78c2fad41aeeb5961331982f9bd4948a9ec6d2c072902251"></script>
   </head>
   <body>
     <span hidden>SIM-UI-1 shell preserved</span>
@@ -86,6 +86,13 @@
           <span class="state-badge" id="lifecycle">草稿</span>
         </header>
         <div id="g1-task-rail" class="g1-task-rail"></div>
+        <section id="p2-gate" class="p2-gate" hidden>
+          <h3>P2 · C1 → C2 → C3 逐步确认</h3>
+          <div id="p2-substages"></div>
+          <p id="p2-guidance" role="status"></p>
+          <p id="p2-baseline-status"></p>
+          <button id="confirm-p2-substage" type="button">确认当前子阶段</button>
+        </section>
         <details id="g1-decision-detail">
           <summary>展开决策、项目与工作台详情</summary>
           <div class="identity-row" aria-label="信息身份">
@@ -97,14 +104,6 @@
           <section class="structural-panel">
             <h3>已批准的信息分区</h3>
             <div id="structural-homes" class="home-grid"></div>
-          </section>
-          <section id="p2-gate" class="p2-gate" hidden>
-            <h3>P2 · C1 → C2 → C3 逐步确认</h3>
-            <div id="p2-substages"></div>
-            <p id="p2-baseline-status"></p>
-            <button id="confirm-p2-substage" type="button">
-              确认当前子阶段
-            </button>
           </section>
           <section id="sim-ui2-panel" class="sim-ui2-panel" hidden>
             <h3 id="sim-ui2-title">确碳与减碳决策</h3>
@@ -200,7 +199,9 @@
       </div>
       <div class="footer-actions">
         <button id="back" type="button">回看上一步</button
-        ><button id="advance" type="button">确认并锁定本步</button>
+        ><button id="advance" type="button" aria-describedby="gate-status">
+          确认并锁定本步
+        </button>
       </div>
     </footer>
   </body>

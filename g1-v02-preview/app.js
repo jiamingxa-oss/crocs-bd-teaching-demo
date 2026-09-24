@@ -7,6 +7,7 @@ import {
 
 /* global document, fetch, crypto, TextEncoder, Option */
 const LIFECYCLE = ['DRAFT', 'PREVIEW', 'CONFIRMED', 'LOCKED'];
+const P2_STAGES = ['C1 看得见', 'C2 分得准', 'C3 认得够'];
 const WORKBENCHES = [
   [
     'P1',
@@ -168,15 +169,18 @@ function render() {
   renderSimUi4();
   document.querySelector('#back').disabled = state.active === 0;
   const locked = state.lifecycle[state.active] === 3;
+  const p2Pending =
+    state.active === 1 && state.p2 < 3 && state.lifecycle[1] >= 2;
   setText(
     '#gate-status',
-    locked
-      ? 'LOCKED · reading does not reopen or mutate this workbench'
-      : `${d[0]} · ${LIFECYCLE[state.lifecycle[state.active]]} · current approved shell gate`,
+    p2Pending
+      ? `暂不能锁定：请先在确碳工作台确认 ${P2_STAGES[state.p2]}，依次完成 C1 → C2 → C3。`
+      : locked
+        ? 'LOCKED · reading does not reopen or mutate this workbench'
+        : `${d[0]} · ${LIFECYCLE[state.lifecycle[state.active]]} · current approved shell gate`,
   );
   setText('#advance', lifecycleAction());
-  document.querySelector('#advance').disabled =
-    state.active === 1 && state.p2 < 3 && state.lifecycle[1] >= 2;
+  document.querySelector('#advance').disabled = p2Pending;
   g1.update();
 }
 function renderSimUi4() {
@@ -585,6 +589,16 @@ function renderP2() {
       : 'Annual Carbon Responsibility Baseline · NOT FORMED (not zero)',
   );
   document.querySelector('#confirm-p2-substage').disabled = state.p2 === 3;
+  setText(
+    '#confirm-p2-substage',
+    state.p2 === 3 ? '三个子阶段已确认' : `确认 ${P2_STAGES[state.p2]}`,
+  );
+  setText(
+    '#p2-guidance',
+    state.p2 === 3
+      ? 'C1 → C2 → C3 已确认，可继续底部流程；子阶段确认不代表生成碳事实。'
+      : `当前待确认：${P2_STAGES[state.p2]}。请依次完成三个子阶段，再锁定确碳工作台。`,
+  );
 }
 function renderSimUi2() {
   const panel = document.querySelector('#sim-ui2-panel');
