@@ -2,7 +2,7 @@
 
 状态：集中审阅预览（PREVIEW / NOT CLASSROOM ACCEPTED），源候选尚未合并。
 
-- 精确源提交：ea98a5e2cbdce612070fa215520921e20e8003c9（PR #259）
+- 精确源提交：795167a70054c9bc65e2d443de1f2aa7bc7243bd（PR #259）
 - 数据基线：805ae081b31705814d61e416b15fd0bab441f0c0
 - 发布授权：DCS-TEACHING-G1-PREVIEW-007。
 - 语言规范：DCS-TEACHING-G1-LANGUAGE-008 / Design Master v1.11。
@@ -22,3 +22,5 @@
 
 确碳必做的 C1/C2/C3 确认区域现直接显示在工作台；底部说明未满足的锁定条件，原有逐步确认与门控规则保持。确碳独立插画方案尚待批准，缺失素材未替换。
 
+
+本次 P6 激碳样板依据 DCS-TEACHING-G1-CLASSROOM-LAYOUT-010 / Design Master v1.12 / Browser Contract v1.2（批准先行：4d5123d59068695619dbf99f0d6a148d2953b2e3）。全宽「看反馈—做讨论—准备下一期」保留原信息分区与草稿门控，其余五步布局未扩展。Figma 样板：65:56。

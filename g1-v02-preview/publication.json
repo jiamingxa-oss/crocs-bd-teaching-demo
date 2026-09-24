@@ -13,10 +13,12 @@
     "DCS-SIM-VIS-001-A03_PreClosing_NextCycle_Decision_Bundle_v1.0",
     "CROCS_SANDBOX_SIM_UI4_CODEX_IMPLEMENTATION_CONTRACT_V1_0"
   ],
-  "implementationHead": "ea98a5e2cbdce612070fa215520921e20e8003c9",
+  "implementationHead": "795167a70054c9bc65e2d443de1f2aa7bc7243bd",
   "contract": "CROCS_SANDBOX_SIM_UI4_CODEX_IMPLEMENTATION_CONTRACT_V1_0",
   "presentationAuthority": "G1-BROWSER-001",
-  "presentationContractVersion": "1.1",
+  "presentationContractVersion": "1.2",
+  "presentationDesignMaster": "1.12",
+  "presentationLayoutAuthority": "DCS-TEACHING-G1-CLASSROOM-LAYOUT-010",
   "presentationReconciliation": "DCS-TEACHING-G1-RECONCILIATION-006",
   "presentationDesignChange": "DCS-TEACHING-G1-BROWSER-005",
   "targetRoute": "/g1-v02-preview/",
@@ -50,7 +52,7 @@
     "projection.json"
   ],
   "sha256": {
-    "g1-view.js": "ee6bac3793f4dd92bc949d67faba0a75e3ebf8b7b72402eda055da756e2f2491",
+    "g1-view.js": "5bd238ee9cad64e7ffea5e33b9ec2e9588acf7d842ad29c1e6835c09f6617ea3",
     "g1-assets.json": "06e24dbf497b9fed662ee7d9613074ac4e1e57f6dc85bdc677f1b1e8c10ba3a6",
     "assets/g1/factory-0.jpg": "0c184c97719514a310190559d73c16264ffd0aaf192a9fa9f555c328a02ada7d",
     "assets/g1/factory-1.jpg": "27742b365c3e0f6e1225251b65270315cd0abecfcc25829c82c78c0e031874d1",
@@ -69,12 +71,12 @@
     "assets/g1/role-COO.jpg": "3d68d23caf04385434d80916c636b2aee6dfd86b4f2f18182c0b3c310d356866",
     "assets/g1/role-CCO.jpg": "de6e5bd912890eb0e9b14dbf1ea9de342ab869ed7cbfc4a3fe91d70c515fbc25",
     "assets/g1/role-CMO.jpg": "5610ba2751b5eb6f5b9bc24e048b385e4e70c51474f659088c0f2546bb33bf48",
-    "index.html": "86cb8ca4eff47fe3e340e9777af0160ccacc28ddaf06f131d88d0c744968147f",
-    "styles.css": "5e69d90bdb7109f69551fa2c3cc1e67f7ad9c9a8f5082e55223670dd7c6baa2e",
-    "app.js": "e22861d09751fb5f78c2fad41aeeb5961331982f9bd4948a9ec6d2c072902251",
+    "index.html": "e034977d125cc73b8e30060b63703d950738f17150899333ef765a28f9e95801",
+    "styles.css": "84601f29e9ccf2829c59dca689685cfd7bfea952fa6e0f8880385cc4feeb4311",
+    "app.js": "2cbbe4c407901553581ecadd04fb0f9b9cb2249211fb1cc67d0918e366159fcc",
     "sim-ui2-browser-draft.js": "99be6644639a6d47ca5c92557aac75cddc181e47b81e016dca136484a8b044c8",
-    "README.md": "7938bf9891a4e2d94327e6b4787918b94db43062f273e0b0fa2476777421c018",
-    "projection.json": "b8456f4e43894e63fac070bb254cefe1900273662b78f7c8ceb81114bb47e5c2"
+    "README.md": "409f7654779e0840f2a1d98880f2fb504ec8703ff91fd568b379a5663613b42e",
+    "projection.json": "5e4f84b391c346f47a62625cf495ee680664eaab83ac3efd92ac4944ebaf6ee4"
   },
   "reviewStatus": "PREVIEW_NOT_CLASSROOM_ACCEPTED",
   "publicationAuthority": "DCS-TEACHING-G1-PREVIEW-007",

@@ -12,7 +12,7 @@ desktop presentation candidate over that existing authority.
 4. `CROCS_SANDBOX_SIM_UI2_CODEX_IMPLEMENTATION_CONTRACT_V1_0`
 5. `CROCS_SANDBOX_SIM_UI3_CODEX_IMPLEMENTATION_CONTRACT_v1.0` / A02
 6. `CROCS_SANDBOX_SIM_UI4_CODEX_IMPLEMENTATION_CONTRACT_v1.0` / A03
-7. `CROCS_TEACHING_G1_BROWSER_IMPLEMENTATION_CONTRACT_V1_1` / DCS-005 + DCS-006
+7. `CROCS_TEACHING_G1_BROWSER_IMPLEMENTATION_CONTRACT_V1_2` / DCS-005 + DCS-006 + DCS-010
 
 The browser consumes cumulative `simUi2`, `simUi3` and `simUi4` metadata produced
 by the governed projection model. P2 D3/D4 and P3 D5/D6/D7/D10 controls validate only canonical catalog
@@ -48,7 +48,7 @@ separately and does not revise the data schema.
 
 ## G1 presentation implementation candidate
 
-Authority: G1-BROWSER-001 v1.1 / DCS-005 + DCS-006 / Design Master v1.9. Original implementation approval was persisted at 466ff44abddc928d29d0a62e57ad0630b5d96ee8; the two-clause reconciliation was approved and persisted at eb795ae4207ea7b280b47c7196b968168d87ada5 before related copy/metadata/Figma updates. Cumulative SIM-UI-3/A02 and SIM-UI-4/A03 remain the business/browser authority.
+Authority: G1-BROWSER-001 v1.2 / DCS-005 + DCS-006 + DCS-010 / Design Master v1.12. P6 classroom layout approval was persisted at 4d5123d59068695619dbf99f0d6a148d2953b2e3 before implementation. Original implementation approval was persisted at 466ff44abddc928d29d0a62e57ad0630b5d96ee8; the two-clause reconciliation was approved and persisted at eb795ae4207ea7b280b47c7196b968168d87ada5 before related copy/metadata/Figma updates. Cumulative SIM-UI-3/A02 and SIM-UI-4/A03 remain the business/browser authority.
 
 The G1 scene, campus navigation, five fictional role portraits, read-only fact/event/reflection views and progressive detail use the existing browser state. The standalone G1 asset collection is governed by g1-assets.json, with source/generation hashes and Figma nodes. Original six SIM-UI assets remain MISSING_ARTIFACT; they have not been replaced or re-identified.
 

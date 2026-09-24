@@ -1,4 +1,4 @@
-import { mountG1, createG1Callbacks, displayText } from './g1-view.js?v=ee6bac3793f4dd92bc949d67faba0a75e3ebf8b7b72402eda055da756e2f2491';
+import { mountG1, createG1Callbacks, displayText } from './g1-view.js?v=5bd238ee9cad64e7ffea5e33b9ec2e9588acf7d842ad29c1e6835c09f6617ea3';
 import {
   buildSimUi2BrowserDraft,
   buildSimUi3ProductionBrowserDraft,
@@ -191,6 +191,16 @@ function renderSimUi4() {
   const content = document.querySelector('#sim-ui4-content');
   content.replaceChildren();
   renderGovernedHomes(content, ui4.informationHomes);
+  document
+    .querySelector('#g1-p6-decisions')
+    .replaceChildren(
+      decisionControl('D19', ui4.captureCatalog.D19),
+      d20Control(ui4),
+    );
+  setText(
+    '#g1-p6-authorization',
+    `下期决策组合：${ui4.bundleStatus}。结账条件：${ui4.closingStatus}。下一年度：${ui4.successorStatus}。`,
+  );
   const anchor = ui4.currentAnchor;
   content.append(
     card(
@@ -201,8 +211,6 @@ function renderSimUi4() {
       ui4.anchors.map((item) => `Y${item.year} ${item.anchorId}`).join(' → '),
       'READ-ONLY SIX-YEAR ANCHOR TIMELINE',
     ),
-    decisionControl('D19', ui4.captureCatalog.D19),
-    d20Control(ui4),
     card(
       `${ui4.authorizationStatus} · bundle ${ui4.bundleStatus} · closing ${ui4.closingStatus} · successor ${ui4.successorStatus}`,
       'A03 AUTHORITY / CLOSING GATE',
@@ -231,7 +239,7 @@ function d20Control(ui4) {
     return input;
   });
   const button = document.createElement('button');
-  const output = document.createElement('output');
+  const { output, container } = createDraftOutput(true);
   button.type = 'button';
   button.textContent = displayText('Preview D20');
   button.addEventListener('click', async () => {
@@ -260,7 +268,14 @@ function d20Control(ui4) {
     input.disabled = locked;
   });
   button.disabled = locked;
-  root.append(ambition, ...inputs, button, output);
+  const fields = [ambition, ...inputs].map((input, index) => {
+    const label = document.createElement('label');
+    const title = document.createElement('span');
+    title.textContent = ['承诺水平', '目标', '能力差距', '预算意向'][index];
+    label.append(title, input);
+    return label;
+  });
+  root.append(...fields, button, container);
   return root;
 }
 function renderSimUi3() {
@@ -698,7 +713,7 @@ function decisionControl(slotId, options) {
   const button = document.createElement('button');
   button.type = 'button';
   button.textContent = displayText(`Preview ${slotId}`);
-  const output = document.createElement('output');
+  const { output, container } = createDraftOutput(slotId === 'D19');
   const saved = state.uiDrafts[slotId];
   if (saved) {
     select.value = saved.selection;
@@ -710,7 +725,7 @@ function decisionControl(slotId, options) {
     'click',
     () => void captureBrowserDraft(slotId, select.value, output),
   );
-  root.append(select, button, output);
+  root.append(select, button, container);
   return root;
 }
 function structuredD4Control(catalog) {
@@ -805,9 +820,28 @@ async function captureBrowserDraft(slotId, selection, output) {
     showDraft(output, draft);
   } catch (error) {
     output.textContent = displayText(`REJECTED · ${error.message}`);
+    if (output.g1Feedback) output.g1Feedback.textContent = output.textContent;
   }
 }
+function createDraftOutput(compact) {
+  const output = document.createElement('output');
+  if (!compact) return { output, container: output };
+  const container = document.createElement('div');
+  const feedback = document.createElement('p');
+  feedback.className = 'g1-draft-feedback';
+  feedback.setAttribute('role', 'status');
+  feedback.textContent = '尚未记录草稿';
+  const details = document.createElement('details');
+  const summary = document.createElement('summary');
+  summary.textContent = '查看草稿完整状态与引用';
+  details.append(summary, output);
+  container.append(feedback, details);
+  output.g1Feedback = feedback;
+  return { output, container };
+}
 function showDraft(output, draft) {
+  if (output.g1Feedback)
+    output.g1Feedback.textContent = '草稿已记录 · 尚未形成执行事实';
   const admission = draft.catalogAdmissionStatus
     ? ` · catalog ${draft.catalogAdmissionStatus} · downstream ${draft.downstreamExecutionReadiness}`
     : '';

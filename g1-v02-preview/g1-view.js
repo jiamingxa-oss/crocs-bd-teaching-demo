@@ -863,10 +863,96 @@ export function mountG1(doc, { getState, navigate, openDecision }) {
   }
   q('#g1-open-world').addEventListener('click', world);
   q('#g1-open-authority').addEventListener('click', authority);
+  function p6Classroom(state) {
+    const active = state.active === 5;
+    q('.g1-shell').setAttribute(
+      'data-workspace',
+      state.projection.workspaces[state.active].id,
+    );
+    q('#g1-p6').hidden = !active;
+    q('#g1-detail-summary').textContent = active
+      ? '完整反馈、情境与治理依据'
+      : '展开决策、项目与工作台详情';
+    if (!active) return;
+    const feedback = q('#g1-p6-feedback');
+    feedback.replaceChildren();
+    for (const [id, title] of [
+      ['ANNUAL_RESULT_OVERVIEW', '年度结果'],
+      ['CUSTOMER_FEEDBACK_CHAIN', '客户反馈'],
+      ['EMPLOYEE_FEEDBACK_CHAIN', '员工反馈'],
+    ]) {
+      const home = state.projection.simUi4.informationHomes.find(
+        (item) => item.homeId === id,
+      );
+      const label =
+        home?.value == null ? '暂无权威结果' : '已提供结果，查看具体内容';
+      const control = button(
+        `${title} · ${label}`,
+        () => {
+          show(`${title} · 完整依据`, (root) => {
+            if (!home) {
+              note(root, '信息缺失', '未提供对应信息分区，不能生成结果。');
+              return;
+            }
+            note(root, '状态', home.status);
+            note(
+              root,
+              '结果',
+              home.value == null
+                ? '暂无权威结果，不等于零。'
+                : typeof home.value === 'object'
+                  ? JSON.stringify(home.value)
+                  : String(home.value),
+            );
+            note(root, '权威依据', home.authority);
+            note(root, '来源', home.sourceReferences.join('\n'));
+            note(root, '限制', home.limitation);
+          });
+        },
+        'g1-feedback-card',
+      );
+      feedback.append(control);
+    }
+    const roles = q('#g1-p6-roles');
+    roles.replaceChildren();
+    for (const [role, title, prompt] of [
+      ['CEO', '执行官', '综合本期反馈，下一期优先解决什么？'],
+      ['CFO', '财务官', '已有财务依据支持什么投入？哪些预算意向还缺依据？'],
+      ['COO', '运营官', '哪些执行问题暴露了能力缺口？'],
+      ['CCO', '碳管理官', '哪些碳结果有证据，哪些仍不能下结论？'],
+      ['CMO', '营销官', '客户反馈说明了什么？对外表达应如何调整？'],
+    ]) {
+      const control = button(
+        '',
+        () =>
+          show(`${title} · 本步讨论`, (root) => {
+            note(root, '本步关注', prompt);
+            note(
+              root,
+              '立场',
+              '你如何看待本步问题？先区分已提供的事实与未知信息。',
+            );
+            note(root, '建议', '你建议团队下一步做什么？');
+            note(root, '理由', '哪些已有证据支持建议？还缺哪些依据？');
+            note(
+              root,
+              '教学提示',
+              '仅作讨论引导，不分配角色身份，不提交角色声明，不新增操作权限或评分。',
+            );
+          }),
+        'g1-p6-role',
+      );
+      control.setAttribute('aria-label', `${title} ${role} · ${prompt}`);
+      picture(`assets/g1/role-${role}.jpg`, `${title}虚构角色肖像`, control);
+      control.append(el('strong', title), el('small', role), el('p', prompt));
+      roles.append(control);
+    }
+  }
   let priorWorkspace = null;
   return {
     update() {
       const state = getState();
+      p6Classroom(state);
       const factory =
         state.projection.workspaces[state.active].id === 'REDUCTION';
       const sceneRoot = q('#g1-scene');

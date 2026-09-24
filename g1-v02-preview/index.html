@@ -8,8 +8,8 @@
       content="CROCS 企业碳管理教学沙盘 · 桌面插画原型"
     />
     <title>CROCS 企业碳管理教学沙盘 · G1 桌面版</title>
-    <link rel="stylesheet" href="styles.css?v=5e69d90bdb7109f69551fa2c3cc1e67f7ad9c9a8f5082e55223670dd7c6baa2e" />
-    <script type="module" src="app.js?v=e22861d09751fb5f78c2fad41aeeb5961331982f9bd4948a9ec6d2c072902251"></script>
+    <link rel="stylesheet" href="styles.css?v=84601f29e9ccf2829c59dca689685cfd7bfea952fa6e0f8880385cc4feeb4311" />
+    <script type="module" src="app.js?v=2cbbe4c407901553581ecadd04fb0f9b9cb2249211fb1cc67d0918e366159fcc"></script>
   </head>
   <body>
     <span hidden>SIM-UI-1 shell preserved</span>
@@ -93,8 +93,50 @@
           <p id="p2-baseline-status"></p>
           <button id="confirm-p2-substage" type="button">确认当前子阶段</button>
         </section>
+        <section id="g1-p6" class="g1-p6" hidden aria-label="激碳课堂任务">
+          <div class="g1-p6-intro">
+            <p class="g1-eyebrow">本步任务</p>
+            <h3>读懂本期反馈，准备下一期行动</h3>
+            <p>
+              先区分已有证据与未知结果，再从五个角色视角讨论，记录下一期战略与承诺草稿。
+            </p>
+          </div>
+          <section aria-labelledby="g1-p6-feedback-title">
+            <h3 id="g1-p6-feedback-title">
+              <span class="g1-step-number">01</span> 看反馈
+            </h3>
+            <p class="g1-section-hint">
+              缺少结果时先识别证据缺口，不补造结论。点击卡片查看完整来源。
+            </p>
+            <div id="g1-p6-feedback" class="g1-feedback-grid"></div>
+          </section>
+          <section aria-labelledby="g1-p6-role-title">
+            <h3 id="g1-p6-role-title">
+              <span class="g1-step-number">02</span> 做讨论
+            </h3>
+            <p class="g1-section-hint">
+              营销官 →
+              执行官牵头讨论；五角色分别提出立场、建议与理由。点击角色查看表达提示。
+            </p>
+            <div id="g1-p6-roles" class="g1-p6-role-grid"></div>
+          </section>
+          <section aria-labelledby="g1-p6-next-title">
+            <h3 id="g1-p6-next-title">
+              <span class="g1-step-number">03</span> 准备下一期
+            </h3>
+            <p class="g1-section-hint">
+              明确选择后记录草稿。草稿不等于正式授权或已执行决策。
+            </p>
+            <div
+              id="g1-p6-authorization"
+              class="g1-p6-authorization"
+              role="status"
+            ></div>
+            <div id="g1-p6-decisions" class="g1-next-grid"></div>
+          </section>
+        </section>
         <details id="g1-decision-detail">
-          <summary>展开决策、项目与工作台详情</summary>
+          <summary id="g1-detail-summary">展开决策、项目与工作台详情</summary>
           <div class="identity-row" aria-label="信息身份">
             <span>决策</span><span>预览</span><span>执行事实</span
             ><span>碳事实</span><span>证据</span><span>结算</span
